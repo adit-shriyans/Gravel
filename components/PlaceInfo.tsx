@@ -84,17 +84,21 @@ const PlaceInfo = ({ stop, stops, setStops, setZoomLocation }: PIPropsType) => {
   }
   const todaysDate = getTodaysDate();
 
+  const [inputValues, setInputValues] = useState({
+    locationName: stop.locationName,
+    locationDist: 10,
+    homeDist: 20,
+    inDate: getTodaysDate(),
+    outDate: getTodaysDate(),
+    notesMsg: '',
+  });
+
   const [editMode, setEditMode] = useState(Array(arraySize).fill(false));
   const [showErr, setShowErr] = useState(Array(arraySize).fill(false));
-  const [locationDist, setLocationDist] = useState<number | ''>(10);
-  const [homeDist, setHomeDist] = useState<number | ''>(20);
-  const [locationName, setLocationName] = useState(name);
-  const [inDate, setInDate] = useState<string>(todaysDate);
-  const [outDate, setOutDate] = useState<string>(todaysDate);
   const [errMsg, setErrMsg] = useState('');
-  const [notesMsg, setNotesMsg] = useState('');
   const [showNotes, setShowNotes] = useState(false);
   const [showDropDown, setShowDropDown] = useState(false);
+
   const LNInputRef = useRef<HTMLInputElement | null>(null);
   const LDInputRef = useRef<HTMLInputElement | null>(null);
   const HDInputRef = useRef<HTMLInputElement | null>(null);
@@ -125,43 +129,20 @@ const PlaceInfo = ({ stop, stops, setStops, setZoomLocation }: PIPropsType) => {
     setShowDropDown(() => (!showDropDown));
   }
 
-  const handleLNChange = (e: ChangeEvent<HTMLInputElement>) => {
+  const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
     setErrMsg('');
     setShowErr(Array(arraySize).fill(false));
-    setLocationName(e.target.value);
+
+    setInputValues((prevValues) => ({
+      ...prevValues,
+      [e.target.name]: e.target.value,
+    }));
   };
 
-  const handleLDChange = (e: ChangeEvent<HTMLInputElement>) => {
-    setErrMsg('');
-    setShowErr(Array(arraySize).fill(false));
-    if (e.target.value === '') setLocationDist('');
-    else setLocationDist(parseInt(e.target.value));
-  };
-
-  const handleHDChange = (e: ChangeEvent<HTMLInputElement>) => {
-    setErrMsg('');
-    setShowErr(Array(arraySize).fill(false));
-    if (e.target.value === '') setHomeDist('');
-    else setHomeDist(parseInt(e.target.value));
-  };
-
-  const handleIDChange = (e: ChangeEvent<HTMLInputElement>) => {
-    setErrMsg('');
-    setShowErr(Array(arraySize).fill(false));
-    setInDate(e.target.value);
-  };
-
-  const handleODChange = (e: ChangeEvent<HTMLInputElement>) => {
-    setErrMsg('');
-    setShowErr(Array(arraySize).fill(false));
-    setOutDate(e.target.value);
-  };
-
-  const handleNotesChange = (e: ChangeEvent<HTMLInputElement>) => {
-    setNotesMsg(e.target.value);
-  };
 
   const handleInputBlur = () => {
+    const {locationName, locationDist, homeDist, inDate, outDate, notesMsg} = inputValues
+
     if (locationName && locationDist && homeDist && inDate && outDate) {
       if (isValidDate(inDate) && isValidDate(outDate) && locationDist > 0 && homeDist > 0) {
         if (notesMsg === '')
@@ -184,6 +165,7 @@ const PlaceInfo = ({ stop, stops, setStops, setZoomLocation }: PIPropsType) => {
   };
 
   const handleInputKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    const {locationName, locationDist, homeDist, inDate, outDate, notesMsg} = inputValues
     if (e.key === 'Enter') {
       if (locationName && locationDist && homeDist && inDate && outDate) {
         if (isValidDate(inDate) && isValidDate(outDate) && locationDist > 0 && homeDist > 0) {
@@ -239,9 +221,17 @@ const PlaceInfo = ({ stop, stops, setStops, setZoomLocation }: PIPropsType) => {
       navigator.geolocation.getCurrentPosition(function (location) {
         const { latitude, longitude } = location.coords;
         dist = calculateDistance(stop.location, [latitude, longitude]);
-        setHomeDist(dist);
+        // setHomeDist(dist);
+        setInputValues((prev) => ({
+          ...prev,
+          homeDist: dist
+        }))
         const index = stops.indexOf(stop);
-        if (index === 0) setLocationDist(dist);
+        if (index === 0) 
+          setInputValues((prev) => ({
+            ...prev,
+            locationDist: dist
+          }));
       }, function () {
         console.log('Could not get position');
       });
@@ -250,7 +240,10 @@ const PlaceInfo = ({ stop, stops, setStops, setZoomLocation }: PIPropsType) => {
     const index = stops.indexOf(stop);
     if (index > 0) {
       const dist2 = calculateDistance(stop.location, stops[index - 1].location);
-      setLocationDist(dist2);
+      setInputValues((prev) => ({
+        ...prev,
+        locationDist: dist2
+      }));
     }
   }
 
@@ -278,12 +271,12 @@ const PlaceInfo = ({ stop, stops, setStops, setZoomLocation }: PIPropsType) => {
   useEffect(() => {
     const newStops = stops.map((place) => {
       if (place.markerId === stop.markerId) {
-        place.locationName = locationName;
+        place.locationName = inputValues.locationName;
       }
       return place;
     });
     setStops(newStops);
-  }, [locationName])
+  }, [inputValues.locationName])
 
   useEffect(() => {
     const locationNameArr = stop.locationName.split(',');
@@ -291,19 +284,22 @@ const PlaceInfo = ({ stop, stops, setStops, setZoomLocation }: PIPropsType) => {
     if (locationNameArr.length > 1) {
       newName = newName + `, ${locationNameArr[1]}`
     }
-    setLocationName(newName);
+    setInputValues((prev) => ({
+      ...prev,
+      locationName: newName
+    }));
     setDists();
   }, [stop.location])
 
   useEffect(() => {
     const newStops = stops.map((place) => {
       if(stop.markerId === place.markerId) {
-        return {...place, startDate: inDate, endDate: outDate, notes: notesMsg}
+        return {...place, startDate: inputValues.inDate, endDate: inputValues.outDate, notes: inputValues.notesMsg}
       }
       return place;
     })
     setStops(newStops)
-  }, [inDate, outDate, notesMsg]);
+  }, [inputValues.inDate, inputValues.outDate, inputValues.notesMsg]);
 
   useEffect(() => {
     setDists();
@@ -351,16 +347,17 @@ const PlaceInfo = ({ stop, stops, setStops, setZoomLocation }: PIPropsType) => {
               <input
                 className='PlaceInfo__input'
                 type='text'
-                value={locationName}
+                value={inputValues.locationName}
                 placeholder='Location Name'
-                onChange={handleLNChange}
+                onChange={handleInputChange}
                 onBlur={handleInputBlur}
                 onKeyDown={handleInputKeyDown}
                 ref={LNInputRef}
+                name='locationName'
               />
             </form>
           ) : (
-            `${locationName}`
+            `${inputValues.locationName}`
           )}
         </div>
       </div>
@@ -381,16 +378,17 @@ const PlaceInfo = ({ stop, stops, setStops, setZoomLocation }: PIPropsType) => {
                 <input
                   className='PlaceInfo__input PlaceInfo__input-date'
                   type='text'
-                  value={inDate}
+                  value={inputValues.inDate}
                   placeholder='Check-In Date'
-                  onChange={handleIDChange}
+                  onChange={handleInputChange}
                   onBlur={handleInputBlur}
                   onKeyDown={handleInputKeyDown}
                   ref={IDInputRef}
+                  name="inDate"
                 />
               </form>
             ) : (
-              `${inDate}`
+              `${inputValues.inDate}`
             )}
           </div>
         </div>
@@ -410,16 +408,17 @@ const PlaceInfo = ({ stop, stops, setStops, setZoomLocation }: PIPropsType) => {
                 <input
                   className='PlaceInfo__input PlaceInfo__input-date'
                   type='text'
-                  value={outDate}
+                  value={inputValues.outDate}
                   placeholder='Check-Out Date'
-                  onChange={handleODChange}
+                  onChange={handleInputChange}
                   onBlur={handleInputBlur}
                   onKeyDown={handleInputKeyDown}
                   ref={ODInputRef}
+                  name="outDate"
                 />
               </form>
             ) : (
-              `${outDate}`
+              `${inputValues.outDate}`
             )}
           </div>
         </div>
@@ -445,16 +444,17 @@ const PlaceInfo = ({ stop, stops, setStops, setZoomLocation }: PIPropsType) => {
                 <input
                   className='PlaceInfo__input PlaceInfo__input-dist'
                   type='text'
-                  value={locationDist}
+                  value={inputValues.locationDist}
                   placeholder='Distance (in km)'
-                  onChange={handleLDChange}
+                  onChange={handleInputChange}
                   onBlur={handleInputBlur}
                   onKeyDown={handleInputKeyDown}
                   ref={LDInputRef}
+                  name="locationDist"
                 />
               </form>
             ) : (
-              `${locationDist}km`
+              `${inputValues.locationDist}km`
             )}
           </div>
         </div>
@@ -474,16 +474,17 @@ const PlaceInfo = ({ stop, stops, setStops, setZoomLocation }: PIPropsType) => {
                 <input
                   className='PlaceInfo__input PlaceInfo__input-dist'
                   type='text'
-                  value={homeDist}
+                  value={inputValues.homeDist}
                   placeholder='Distance to Home (in km)'
-                  onChange={handleHDChange}
+                  onChange={handleInputChange}
                   onBlur={handleInputBlur}
                   onKeyDown={handleInputKeyDown}
                   ref={HDInputRef}
+                  name="homeDist"
                 />
               </form>
             ) : (
-              `${homeDist}km`
+              `${inputValues.homeDist}km`
             )}
           </div>
         </div>
@@ -501,16 +502,17 @@ const PlaceInfo = ({ stop, stops, setStops, setZoomLocation }: PIPropsType) => {
               <input
                 className='PlaceInfo__input'
                 type='text'
-                value={notesMsg}
+                value={inputValues.notesMsg}
                 placeholder='Add notes'
-                onChange={handleNotesChange}
+                onChange={handleInputChange}
                 onBlur={handleInputBlur}
                 onKeyDown={handleInputKeyDown}
                 ref={NotesInputRef}
+                name="notesMsg"
               />
             </form>
           ) : (
-            `${notesMsg}`
+            `${inputValues.notesMsg}`
           )}
         </div>
       </div>

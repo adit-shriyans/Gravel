@@ -12,6 +12,7 @@ import "leaflet-defaulticon-compatibility";
 import '@styles/css/MapComponent.css'
 import DraggableMarker from './DraggableMarker';
 import { v4 as uuid } from 'uuid';
+import { z, ZodError } from 'zod';
 
 interface MCPropsType {
     stops: MarkerLocation[];
@@ -26,18 +27,32 @@ interface LMPropsType {
     setStops: React.Dispatch<React.SetStateAction<MarkerLocation[]>>;
 }
 
+const locationSchema = z.object({
+    display_name: z.string(),
+});
+
+const responseSchema = z.object({
+    data: locationSchema,
+});
+
 function LocationMarker({ stops, setStops }: LMPropsType) {
     const map = useMapEvents({
         async click(e) {
             try {
                 const response = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${e.latlng.lat}&lon=${e.latlng.lng}`);
                 const data = await response.json();
+                const parsedData = responseSchema.parse(data);
 
-                const locationName = data.display_name || 'Unknown Location';
+                const locationName = parsedData.data.display_name || 'Unknown Location';
+                
                 setStops([...stops, { markerId: uuid(), location: [e.latlng.lat, e.latlng.lng], locationName }])
-            } catch (error) {
-                console.error('Error fetching location name:', error);
-            }
+              } catch (error) {
+                if (error instanceof ZodError) {
+                  console.error('Validation error:', error.errors);
+                } else {
+                  console.error('Error fetching location name:', error);
+                }
+              }
         }
     })
 

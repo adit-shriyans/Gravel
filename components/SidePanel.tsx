@@ -11,6 +11,7 @@ import totalDistImg from '../assets/totalDistance.png';
 import { v4 as uuid } from 'uuid';
 import Image from 'next/image';
 import { MarkerLocation } from '@assets/types/types';
+import { z, ZodError } from 'zod';
 
 interface SPPropsType {
   stops: MarkerLocation[];
@@ -18,6 +19,30 @@ interface SPPropsType {
   setZoomLocation: React.Dispatch<React.SetStateAction<L.LatLngTuple>>;
   coord: L.LatLngTuple;
 }
+
+const locationSchema = z.object({
+  lat: z.string(),
+  lon: z.string(),
+});
+
+const geocodingResponseSchema = z.array(
+  z.object({
+    place_id: z.number(),
+    licence: z.string(),
+    osm_type: z.string(),
+    osm_id: z.number(),
+    lat: z.string(),
+    lon: z.string(),
+    class: z.string(),
+    type: z.string(),
+    place_rank: z.number(),
+    importance: z.number(),
+    addresstype: z.string(),
+    name: z.string(),
+    display_name: z.string(),
+    boundingbox: z.array(z.string()),
+  })
+);
 
 function compareDates(dateString1: string, dateString2: string): number {
   const [day1, month1, year1] = dateString1.split('/').map(Number);
@@ -95,21 +120,21 @@ const SidePanel = ({ stops, setStops, setZoomLocation, coord }: SPPropsType) => 
 
   useEffect(() => {
     let dist = 0;
-    let sDate = stops[0].startDate;
-    let eDate = stops[stops.length-1].endDate; 
-    if(sDate && eDate) setTripDates([sDate, eDate]);
-    for(let i = 0; i < stops.length; i++) {
-      if(stops[i].startDate !== undefined && compareDates(stops[i].startDate!, tripDates[0]) === -1) setTripDates([stops[i].startDate!, tripDates[1]])
-      if(stops[i].endDate !== undefined && compareDates(stops[i].endDate!, tripDates[1]) === 1) setTripDates([tripDates[0], stops[i].endDate!])
-      if(i === 0) dist += parseFloat(calculateDistance(stops[i].location, coord).toFixed(2))
-      else dist += parseFloat(calculateDistance(stops[i].location, stops[i-1].location).toFixed(2))
+    let sDate = stops[0]?.startDate || '07/01/24';
+    let eDate = stops[stops.length - 1]?.endDate || '07/01/24';
+    if (sDate && eDate) setTripDates([sDate, eDate]);
+    for (let i = 0; i < stops.length; i++) {
+      if (stops[i].startDate !== undefined && compareDates(stops[i].startDate!, tripDates[0]) === -1) setTripDates([stops[i].startDate!, tripDates[1]])
+      if (stops[i].endDate !== undefined && compareDates(stops[i].endDate!, tripDates[1]) === 1) setTripDates([tripDates[0], stops[i].endDate!])
+      if (i === 0) dist += parseFloat(calculateDistance(stops[i].location, coord).toFixed(2))
+      else dist += parseFloat(calculateDistance(stops[i].location, stops[i - 1].location).toFixed(2))
     }
     setTotalDistance(parseFloat(dist.toFixed(2)));
     setNoOfDays(getNumberOfDays(tripDates[0], tripDates[1]));
   }, [stops])
 
   useEffect(() => {
-    if(addingLocation) {
+    if (addingLocation) {
       inputRef.current?.focus();
     }
   }, [addingLocation])
@@ -137,21 +162,27 @@ const SidePanel = ({ stops, setStops, setZoomLocation, coord }: SPPropsType) => 
       fetch(apiUrl)
         .then(response => response.json())
         .then(data => {
-          if (data.length > 0) {
-            const location = data[0];
-            const latitude = location.lat;
-            const longitude = location.lon;
-            setAddCoords([latitude, longitude])
+          const parsedData = geocodingResponseSchema.safeParse(data);
+
+          if (parsedData.success) {
+            const location = parsedData.data[0];
+            const latitude = parseFloat(location.lat);
+            const longitude = parseFloat(location.lon);
+
+            if (!isNaN(latitude) && !isNaN(longitude)) {
+              setAddCoords([latitude, longitude]);
+            } else {
+              console.error(`Invalid latitude or longitude for ${reqLocation}`);
+            }
           } else {
-            console.error(`Geocoding failed for ${reqLocation}`);
+            console.error('Geocoding response validation error:', parsedData.error);
           }
         })
         .catch(error => console.error('Error fetching geocoding data', error));
-    }
-    else {
+    } else {
       console.log("req empty str");
     }
-  }, [reqLocation])
+  }, [reqLocation]);
 
   const markNewLocation = ([latitude, longitude]: L.LatLngTuple) => {
     const newStop: MarkerLocation = { markerId: uuid(), location: [latitude, longitude], locationName: reqLocation }
@@ -198,31 +229,31 @@ const SidePanel = ({ stops, setStops, setZoomLocation, coord }: SPPropsType) => 
         </div>
       </div>
       <div className='addStop'>
-        <div 
+        <div
           className='addStop__content'
           onClick={() => setAddingLocation(!addingLocation)}
         >
-          <div 
+          <div
             className='addStop__img'
           >
             <AddLocationAltIcon />
           </div>
-          <div 
+          <div
             className='addStop__heading'
           >
             Add Location
           </div>
         </div>
-          <form className={`addStop__form ${addingLocation ? '' : 'hidden'}`}>
-            <input
-              className='addStop__input'
-              value={reqLocation}
-              onChange={handleAddFormChange}
-              onKeyDown={handleInputKeyDown}
-              ref={inputRef}
-              placeholder='Enter Location Name'
-            />
-          </form>
+        <form className={`addStop__form ${addingLocation ? '' : 'hidden'}`}>
+          <input
+            className='addStop__input'
+            value={reqLocation}
+            onChange={handleAddFormChange}
+            onKeyDown={handleInputKeyDown}
+            ref={inputRef}
+            placeholder='Enter Location Name'
+          />
+        </form>
       </div>
       {stops.length > 0 ? (
         <div className='StopInfo__container'>
