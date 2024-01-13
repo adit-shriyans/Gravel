@@ -1,0 +1,8 @@
+.MapComponent {
+  height: 100vh;
+  width: 80vw;
+}
+.MapComponent .MapContainer {
+  height: 100%;
+  width: 100%;
+}

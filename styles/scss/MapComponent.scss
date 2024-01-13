@@ -1,0 +1,28 @@
+.MapComponent {
+    height: 100vh;
+    width: 80vw;
+
+    .MapContainer {
+        height: 100%;
+        width: 100%;
+    }
+
+    // .recentre {
+    //     position: absolute;
+    //     z-index: 1000;
+    //     bottom: 84vh;
+    //     right: 5vw;
+
+    //     &-btn {
+    //         padding: 1rem 1.5rem;
+    //         border: 2px solid rgb(36, 94, 255);
+    //         background: transparent;
+    //         backdrop-filter: blur(5px);
+    //         color: rgb(36, 94, 255);
+    //         font-family: sans-serif;
+    //         font-weight: 600;
+    //         border-radius: 1rem;
+    //         cursor: pointer;
+    //     }
+    // }
+}
