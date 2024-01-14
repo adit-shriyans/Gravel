@@ -27,12 +27,26 @@ interface LMPropsType {
     setStops: React.Dispatch<React.SetStateAction<MarkerLocation[]>>;
 }
 
-const locationSchema = z.object({
+const geocodingResponseSchema = z.object({
+    place_id: z.number(),
+    licence: z.string(),
+    osm_type: z.string(),
+    osm_id: z.number(),
+    lat: z.string(),
+    lon: z.string(),
+    class: z.string(),
+    type: z.string(),
+    place_rank: z.number(),
+    importance: z.number(),
+    addresstype: z.string(),
+    name: z.string(),
     display_name: z.string(),
-});
+    address: z.record(z.unknown()),
+    boundingbox: z.array(z.string()),
+  });
 
 const responseSchema = z.object({
-    data: locationSchema,
+    data: geocodingResponseSchema,
 });
 
 function LocationMarker({ stops, setStops }: LMPropsType) {
@@ -41,9 +55,10 @@ function LocationMarker({ stops, setStops }: LMPropsType) {
             try {
                 const response = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${e.latlng.lat}&lon=${e.latlng.lng}`);
                 const data = await response.json();
-                const parsedData = responseSchema.parse(data);
+                
+                const parsedData = geocodingResponseSchema.parse(data);
 
-                const locationName = parsedData.data.display_name || 'Unknown Location';
+                const locationName = parsedData.display_name || 'Unknown Location';
                 
                 setStops([...stops, { markerId: uuid(), location: [e.latlng.lat, e.latlng.lng], locationName }])
               } catch (error) {

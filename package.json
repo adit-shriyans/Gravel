@@ -13,6 +13,8 @@
     "@emotion/styled": "^11.11.0",
     "@mui/icons-material": "^5.15.2",
     "@mui/material": "^5.15.2",
+    "@types/cookie": "^0.6.0",
+    "@types/mongodb": "^4.0.7",
     "bcrypt": "^5.1.1",
     "leaflet": "^1.9.4",
     "leaflet-defaulticon-compatibility": "^0.1.2",

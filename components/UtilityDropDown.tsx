@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
@@ -17,7 +17,8 @@ interface PIPropsType {
 const UtilityDropDown = ({ stops, setStops, stop, setZoomLocation, setShowDropDown, handleAddNotes }: PIPropsType) => {
     const [copied, setCopied] = useState(false);
 
-    const handleDelete = () => {
+    const handleDelete = (e: React.MouseEvent<HTMLDivElement>) => {
+        e.stopPropagation();
         const newStops = stops.filter((place) => (place.markerId !== stop.markerId));
         setStops(newStops);
         if (navigator.geolocation) {
@@ -41,16 +42,16 @@ const UtilityDropDown = ({ stops, setStops, stop, setZoomLocation, setShowDropDo
     }
 
     return (
-        <div 
+        <div
             className='PlaceInfo__dropdown'
             onClick={handleClick}
         >
-            <CopyToClipboard 
-                text={`https://www.google.com/maps?q=${stop.location[0]},${stop.location[1]}`} 
+            <CopyToClipboard
+                text={`https://www.google.com/maps?q=${stop.location[0]},${stop.location[1]}`}
                 onCopy={() => {
                     setCopied(true);
                     setTimeout(() => setCopied(false), 1500);
-            }}>
+                }}>
                 <div
                     className='PlaceInfo__container PlaceInfo__container-copy'
                 >

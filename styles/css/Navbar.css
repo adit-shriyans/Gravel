@@ -1,0 +1,60 @@
+.Nav {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  margin-bottom: 16px;
+  padding-top: 3px;
+}
+.Nav__session {
+  display: flex;
+}
+@media (max-width: 640px) {
+  .Nav__session {
+    display: none;
+  }
+}
+.Nav__session__signOut {
+  display: flex;
+  gap: 3px;
+}
+@media (min-width: 768px) {
+  .Nav__session__signOut {
+    gap: 5px;
+  }
+}
+.Nav__session__signOut__signOut-btn {
+  border-radius: 100px;
+  background-color: black;
+  color: white;
+}
+.Nav__session__signOut__profilePic {
+  border-radius: 50%;
+}
+.Nav__session__signIn-btn {
+  border-radius: 100px;
+  background-color: black;
+  color: white;
+}
+.Nav__hamburger {
+  display: flex;
+  position: relative;
+}
+@media (min-width: 640px) {
+  .Nav__hamburger {
+    display: none;
+  }
+}
+.Nav__hamburger__profile {
+  display: flex;
+}
+.Nav__hamburger__profile__profilePic {
+  border-radius: 50%;
+}
+.Nav__hamburger__dropdown {
+  align-self: center;
+}
+.Nav__hamburger__dropdown__signOut-btn {
+  border-radius: 100px;
+  background-color: black;
+  color: white;
+}

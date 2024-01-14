@@ -12,6 +12,7 @@ import { v4 as uuid } from 'uuid';
 import Image from 'next/image';
 import { MarkerLocation } from '@assets/types/types';
 import { z, ZodError } from 'zod';
+import { calculateDistance, compareDates, getNumberOfDays, getTodaysDate, isValidDate } from '@assets/CalcFunctions';
 
 interface SPPropsType {
   stops: MarkerLocation[];
@@ -19,11 +20,6 @@ interface SPPropsType {
   setZoomLocation: React.Dispatch<React.SetStateAction<L.LatLngTuple>>;
   coord: L.LatLngTuple;
 }
-
-const locationSchema = z.object({
-  lat: z.string(),
-  lon: z.string(),
-});
 
 const geocodingResponseSchema = z.array(
   z.object({
@@ -44,85 +40,22 @@ const geocodingResponseSchema = z.array(
   })
 );
 
-function compareDates(dateString1: string, dateString2: string): number {
-  const [day1, month1, year1] = dateString1.split('/').map(Number);
-  const [day2, month2, year2] = dateString2.split('/').map(Number);
-
-  const date1 = new Date(year1 + 2000, month1 - 1, day1);
-  const date2 = new Date(year2 + 2000, month2 - 1, day2);
-
-  if (isNaN(date1.getTime()) || isNaN(date2.getTime())) {
-    console.error("Invalid date strings");
-    return 0;
-  }
-
-  if (date1 < date2) {
-    return -1;
-  } else if (date1 > date2) {
-    return 1;
-  } else {
-    return 0;
-  }
-}
-
-function getNumberOfDays(startDateStr: string, endDateStr: string): number {
-  const [day1, month1, year1] = startDateStr.split('/').map(Number);
-  const [day2, month2, year2] = endDateStr.split('/').map(Number);
-
-  const startDate = new Date(year1 + 2000, month1 - 1, day1);
-  const endDate = new Date(year2 + 2000, month2 - 1, day2);
-
-  if (isNaN(startDate.getTime()) || isNaN(endDate.getTime())) {
-    console.error("Invalid date strings");
-    return 0;
-  }
-  const timeDifference = endDate.getTime() - startDate.getTime();
-  const daysDifference = timeDifference / (1000 * 3600 * 24);
-  return Math.floor(daysDifference);
-}
-
-function calculateDistance(coord1: L.LatLngTuple, coord2: L.LatLngTuple) {
-  const R = 6371;
-
-  const lat1 = toRadians(coord1[0]);
-  const lon1 = toRadians(coord1[1]);
-  const lat2 = toRadians(coord2[0]);
-  const lon2 = toRadians(coord2[1]);
-
-  const dlat = lat2 - lat1;
-  const dlon = lon2 - lon1;
-
-  const a =
-    Math.sin(dlat / 2) * Math.sin(dlat / 2) +
-    Math.cos(lat1) * Math.cos(lat2) * Math.sin(dlon / 2) * Math.sin(dlon / 2);
-
-  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-
-  const distance = R * c;
-
-  return parseFloat(distance.toFixed(2));
-}
-
-function toRadians(degrees: number) {
-  return degrees * (Math.PI / 180);
-}
-
 const SidePanel = ({ stops, setStops, setZoomLocation, coord }: SPPropsType) => {
   const [scrolled, setScrolled] = useState(false);
   const [addingLocation, setAddingLocation] = useState(false);
   const [addCoords, setAddCoords] = useState<L.LatLngTuple | []>([]);
   const [reqLocation, setReqLocation] = useState('');
   const [totalDistance, setTotalDistance] = useState(0);
-  const [tripDates, setTripDates] = useState<string[]>(['07/01/24', '07/01/24']);
+  const [tripDates, setTripDates] = useState<string[]>([getTodaysDate(), getTodaysDate()]);
   const [noOfDays, setNoOfDays] = useState<number>(0);
 
   const inputRef = useRef<HTMLInputElement | null>(null);
 
   useEffect(() => {
     let dist = 0;
-    let sDate = stops[0]?.startDate || '07/01/24';
-    let eDate = stops[stops.length - 1]?.endDate || '07/01/24';
-    if (sDate && eDate) setTripDates([sDate, eDate]);
+    let sDate = stops[0]?.startDate || getTodaysDate();
+    let eDate = stops[stops.length - 1]?.endDate || getTodaysDate();
+    if (sDate && eDate && isValidDate(sDate) && isValidDate(eDate)) setTripDates([sDate, eDate]);
     for (let i = 0; i < stops.length; i++) {
       if (stops[i].startDate !== undefined && compareDates(stops[i].startDate!, tripDates[0]) === -1) setTripDates([stops[i].startDate!, tripDates[1]])
       if (stops[i].endDate !== undefined && compareDates(stops[i].endDate!, tripDates[1]) === 1) setTripDates([tripDates[0], stops[i].endDate!])
@@ -130,8 +63,12 @@ const SidePanel = ({ stops, setStops, setZoomLocation, coord }: SPPropsType) => 
       else dist += parseFloat(calculateDistance(stops[i].location, stops[i - 1].location).toFixed(2))
     }
     setTotalDistance(parseFloat(dist.toFixed(2)));
-    setNoOfDays(getNumberOfDays(tripDates[0], tripDates[1]));
   }, [stops])
+
+  useEffect(() => {
+    if(isValidDate(tripDates[0]) && isValidDate(tripDates[1]))
+      setNoOfDays(getNumberOfDays(tripDates[0], tripDates[1]));  
+  }, [tripDates[0], tripDates[1]]);
 
   useEffect(() => {
     if (addingLocation) {

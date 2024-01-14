@@ -1,5 +1,8 @@
+import Navbar from '@components/Navbar';
 import type { Metadata } from 'next'
 import { Inter } from 'next/font/google';
+import Provider from '@components/Provider'
+import { Session } from 'next-auth';
 
 export const metadata: Metadata = {
   title: 'Create Next App',
@@ -7,9 +10,15 @@ export const metadata: Metadata = {
 }
 
 export default function RootLayout({ children, }: { children: React.ReactNode }) {
+  const session: Session | null = null;
   return (
     <html lang="en">
-      <body className='Root' style={{margin:0}}>{children}</body>
+      <body className='Root' style={{ margin: 0 }}>
+        <Provider session={session}>
+          <Navbar />
+          {children}
+        </Provider>
+      </body>
     </html>
   )
 }

@@ -12,6 +12,7 @@ import EditNoteIcon from '@mui/icons-material/EditNote';
 import Image from 'next/image';
 import UtilityDropDown from './UtilityDropDown';
 import { MarkerLocation } from '@assets/types/types';
+import { calculateDistance, getTodaysDate, isValidDate } from '@assets/CalcFunctions';
 
 interface PIPropsType {
   stop: MarkerLocation;
@@ -21,60 +22,6 @@ interface PIPropsType {
 }
 
 const arraySize = 6;
-
-function calculateDistance(coord1: L.LatLngTuple, coord2: L.LatLngTuple) {
-  const R = 6371;
-
-  const lat1 = toRadians(coord1[0]);
-  const lon1 = toRadians(coord1[1]);
-  const lat2 = toRadians(coord2[0]);
-  const lon2 = toRadians(coord2[1]);
-
-  const dlat = lat2 - lat1;
-  const dlon = lon2 - lon1;
-
-  const a =
-    Math.sin(dlat / 2) * Math.sin(dlat / 2) +
-    Math.cos(lat1) * Math.cos(lat2) * Math.sin(dlon / 2) * Math.sin(dlon / 2);
-
-  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-
-  const distance = R * c;
-
-  return parseFloat(distance.toFixed(2));
-}
-
-function toRadians(degrees: number) {
-  return degrees * (Math.PI / 180);
-}
-
-function getTodaysDate() {
-  const today = new Date();
-
-  const dd = String(today.getDate()).padStart(2, '0');
-  const mm = String(today.getMonth() + 1).padStart(2, '0'); // January is 0!
-  const yy = String(today.getFullYear()).slice(-2);
-
-  return `${dd}/${mm}/${yy}`;
-}
-
-function isValidDate(dateString: string) {
-  const dateRegex = /^\d{2}\/\d{2}\/\d{2}$/;
-  if (!dateRegex.test(dateString)) {
-    return false;
-  }
-  const [day, month, year] = dateString.split('/').map(Number);
-  const currentYear = new Date().getFullYear() % 100;
-  if (month < 1 || month > 12 || day < 1 || day > 31 || year < currentYear) {
-    return false;
-  }
-  const date = new Date(year + 2000, month - 1, day);
-  return (
-    date.getFullYear() === year + 2000 &&
-    date.getMonth() === month - 1 &&
-    date.getDate() === day
-  );
-}
 
 const PlaceInfo = ({ stop, stops, setStops, setZoomLocation }: PIPropsType) => {
   const locationNameArr = stop.locationName.split(',');
@@ -221,7 +168,6 @@ const PlaceInfo = ({ stop, stops, setStops, setZoomLocation }: PIPropsType) => {
       navigator.geolocation.getCurrentPosition(function (location) {
         const { latitude, longitude } = location.coords;
         dist = calculateDistance(stop.location, [latitude, longitude]);
-        // setHomeDist(dist);
         setInputValues((prev) => ({
           ...prev,
           homeDist: dist
