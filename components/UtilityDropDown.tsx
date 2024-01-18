@@ -17,7 +17,7 @@ interface PIPropsType {
 const UtilityDropDown = ({ stops, setStops, stop, setZoomLocation, setShowDropDown, handleAddNotes }: PIPropsType) => {
     const [copied, setCopied] = useState(false);
 
-    const handleDelete = (e: React.MouseEvent<HTMLDivElement>) => {
+    const handleDelete = async (e: React.MouseEvent<HTMLDivElement>) => {
         e.stopPropagation();
         const newStops = stops.filter((place) => (place.markerId !== stop.markerId));
         setStops(newStops);
@@ -30,6 +30,14 @@ const UtilityDropDown = ({ stops, setStops, stop, setZoomLocation, setShowDropDo
             }, function () {
                 console.log('Could not get position');
             });
+        }
+
+        try {
+            await fetch(`/api/stop/${stop.markerId}`, {
+                method: 'DELETE',
+            });
+        } catch (error) {
+            console.log("Error in deleting" + error);
         }
     }
 

@@ -7,36 +7,13 @@ export const GET = async (request: NextApiRequest, { params }: { params: { id: s
     try {
         await connectToDB();
 
-        const prompt = await Stop.findById(params.id).populate('creator');
-        if (!prompt) return new Response("Prompt not found", { status: 404 });
-        return new Response(JSON.stringify(prompt), {
+        const trip = await Stop.findById(params.id).populate('Trip');
+        if (!trip) return new Response("Trip not found", { status: 404 });
+        return new Response(JSON.stringify(trip), {
             status: 200
         });
     } catch (error) {
-        return new Response("Failed to fetch all prompts", { status: 500 });
-    }
-}
-
-// PATCH
-export const PATCH = async (request: NextApiRequest, { params }: { params: { id: string } }) => {
-    try {
-        await connectToDB();
-        
-        const existingPrompt = await Stop.findById(params.id);
-
-        if (!existingPrompt) return new Response("Prompt not found", { status: 404 });
-
-        const requestBody = JSON.parse(request.body);
-        const { prompt, tag } = requestBody;
-
-        existingPrompt.prompt = prompt;
-        existingPrompt.tag = tag;
-
-        await existingPrompt.save();
-
-        return new Response(JSON.stringify(existingPrompt), { status: 200 });
-    } catch (error) {
-        return new Response("Failed to update prompt", { status: 500 });
+        return new Response("Failed to fetch trip", { status: 500 });
     }
 }
 
@@ -46,8 +23,8 @@ export const DELETE = async (request: NextApiRequest, { params }: { params: { id
         await connectToDB();
         await Stop.findByIdAndDelete(params.id);
 
-        return new Response("Prompt deleted successfully", { status: 200 });
+        return new Response("Trip deleted successfully", { status: 200 });
     } catch (error) {
-        return new Response("Failed to delete prompt", { status: 500 });
+        return new Response("Failed to delete trip", { status: 500 });
     }
 }

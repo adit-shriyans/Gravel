@@ -26,24 +26,13 @@ const Navbar = () => {
     return (
         <nav className='Nav'>
             <Link href='/'>
-                <p className='Nav__logo'>Map Project</p>
+                <p className='Nav__logo'>Map</p>
             </Link>
 
             <div className='Nav__session'>
                 {session?.user ? (
                     <div className='Nav__signOut'>
-                        <button 
-                            type='button' 
-                            onClick={(e) => {
-                                e.preventDefault();
-                                signOut();
-                            }}
-                            className='Nav__signOut-btn'
-                        >
-                            Sign Out
-                        </button>
-
-                        <Link href='/profile'>
+                        <Link href='/'>
                             <Image
                                 src={session?.user.image as string}
                                 width={37}
@@ -52,59 +41,16 @@ const Navbar = () => {
                                 alt='profile'
                             />
                         </Link>
-                    </div>
-                ) : (
-                    <>
-                        {providers &&
-                            Object.values(providers).map((provider) => (
-                                <button
-                                    type='button'
-                                    key={provider.name}
-                                    onClick={() => signIn(provider.id)}
-                                    className='Nav__signIn-btn'
-                                >
-                                    Sign In
-                                </button>
-                            ))}
-                    </>
-                )}
-            </div>
-
-            <div className='Nav__hamburger'>
-                {session?.user ? (
-                    <div className='Nav__profile'>
-                        <Image
-                            src={session?.user.image as string}
-                            width={37}
-                            height={37}
-                            className='Nav__profilePic'
-                            alt='profile'
-                            onClick={() => {
-                                setToggleDropdown((prev) => !prev);
+                        <button
+                            type='button'
+                            onClick={(e) => {
+                                e.preventDefault();
+                                signOut();
                             }}
-                        />
-
-                        {toggleDropdown && (
-                            <div className='Nav__dropdown'>
-                                <Link
-                                    href="/profile"
-                                    className='Nav__profile-link'
-                                    onClick={() => setToggleDropdown(false)}
-                                >
-                                    My Profile
-                                </Link>
-                                <button
-                                    type='button'
-                                    onClick={() => {
-                                        setToggleDropdown(false);
-                                        signOut();
-                                    }}
-                                    className='Nav__signOut-btn'
-                                >
-                                    Sign Out
-                                </button>
-                            </div>
-                        )}
+                            className='Nav__signOut-btn'
+                        >
+                            Sign Out
+                        </button>
                     </div>
                 ) : (
                     <>

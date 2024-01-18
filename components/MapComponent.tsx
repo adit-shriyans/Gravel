@@ -1,9 +1,8 @@
 'use client'
 
-import Image from 'next/image'
-import { useEffect, useState, FC } from 'react';
+import { useEffect, FC } from 'react';
 import L from 'leaflet';
-import MarkerIcon from '../node_modules/leaflet/dist/images/marker-icon.png';
+import CurrentLocationIcon from "../assets/currentlocation.png";
 import { MapContainer, TileLayer, Marker, Popup, useMap, useMapEvents } from 'react-leaflet';
 import { MarkerLocation } from '@assets/types/types';
 import "leaflet/dist/leaflet.css";
@@ -13,6 +12,7 @@ import '@styles/css/MapComponent.css'
 import DraggableMarker from './DraggableMarker';
 import { v4 as uuid } from 'uuid';
 import { z, ZodError } from 'zod';
+import { useParams } from 'next/navigation';
 
 interface MCPropsType {
     stops: MarkerLocation[];
@@ -25,6 +25,8 @@ interface MCPropsType {
 interface LMPropsType {
     stops: MarkerLocation[];
     setStops: React.Dispatch<React.SetStateAction<MarkerLocation[]>>;
+    tripId: String | String[];
+    setZoomLocation: React.Dispatch<React.SetStateAction<L.LatLngTuple>>;
 }
 
 const geocodingResponseSchema = z.object({
@@ -43,31 +45,55 @@ const geocodingResponseSchema = z.object({
     display_name: z.string(),
     address: z.record(z.unknown()),
     boundingbox: z.array(z.string()),
-  });
+});
 
 const responseSchema = z.object({
     data: geocodingResponseSchema,
 });
 
-function LocationMarker({ stops, setStops }: LMPropsType) {
+function LocationMarker({ stops, setStops, tripId, setZoomLocation }: LMPropsType) {
     const map = useMapEvents({
         async click(e) {
             try {
                 const response = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${e.latlng.lat}&lon=${e.latlng.lng}`);
                 const data = await response.json();
-                
+
                 const parsedData = geocodingResponseSchema.parse(data);
 
                 const locationName = parsedData.display_name || 'Unknown Location';
-                
-                setStops([...stops, { markerId: uuid(), location: [e.latlng.lat, e.latlng.lng], locationName }])
-              } catch (error) {
-                if (error instanceof ZodError) {
-                  console.error('Validation error:', error.errors);
-                } else {
-                  console.error('Error fetching location name:', error);
+
+                const createStopResponse = await fetch("/api/stop/new", {
+                    method: "POST",
+                    body: JSON.stringify({
+                        stopId: uuid(),
+                        tripId: tripId,
+                        location: [e.latlng.lat, e.latlng.lng],
+                        locationName,
+                        startDate: '',
+                        endDate: '',
+                        notes: ''
+                    }),
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                });
+
+                if (!createStopResponse.ok) {
+                    console.error('Failed to create trip:', createStopResponse.statusText);
+                    return;
                 }
-              }
+
+                const createdStop = await createStopResponse.json();
+
+                setStops([...stops, { markerId: createdStop._id, location: createdStop.location, locationName }])
+                setZoomLocation(createdStop.location);
+            } catch (error) {
+                if (error instanceof ZodError) {
+                    console.error('Validation error:', error.errors);
+                } else {
+                    console.error('Error fetching location name:', error);
+                }
+            }
         }
     })
 
@@ -75,6 +101,8 @@ function LocationMarker({ stops, setStops }: LMPropsType) {
 }
 
 export default function MapComponent({ stops, setStops, zoomLocation, setZoomLocation, coord }: MCPropsType) {
+    const params = useParams();
+
     useEffect(() => {
         setZoomLocation(coord);
     }, [coord]);
@@ -109,9 +137,9 @@ export default function MapComponent({ stops, setStops, zoomLocation, setZoomLoc
                 <Marker
                     icon={
                         new L.Icon({
-                            iconUrl: MarkerIcon.src,
-                            iconRetinaUrl: MarkerIcon.src,
-                            iconSize: [25, 41],
+                            iconUrl: CurrentLocationIcon.src,
+                            iconRetinaUrl: CurrentLocationIcon.src,
+                            iconSize: [30, 41],
                             iconAnchor: [12.5, 41],
                             popupAnchor: [0, -41],
                         })
@@ -119,14 +147,14 @@ export default function MapComponent({ stops, setStops, zoomLocation, setZoomLoc
                     position={coord}
                 >
                     <Popup>
-                        Popup
+                        Your Location
                     </Popup>
                 </Marker>
                 {stops.map((place) => (
                     <DraggableMarker stops={stops} setStops={setStops} key={place.markerId} id={place.markerId} setZoomLocation={setZoomLocation} center={place.location} />
                 ))}
                 <ZoomHandler />
-                <LocationMarker stops={stops} setStops={setStops} />
+                <LocationMarker stops={stops} setStops={setStops} tripId={params.id} setZoomLocation={setZoomLocation} />
             </MapContainer>
         </div>
     );

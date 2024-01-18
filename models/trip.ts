@@ -1,10 +1,9 @@
-import { Schema, model, models } from "mongoose";
+import mongoose, { Schema, model, models } from "mongoose";
 
 const TripSchema = new Schema({
     user: {
-        type: Schema.Types.ObjectId,
-        ref: "User",
-        required: true,
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User',
     },
     id:{
         type: String,
@@ -17,6 +16,6 @@ const TripSchema = new Schema({
     },
 })
 
-const Trip = models.User || model("User", TripSchema);
+const Trip = models.Trip || model("Trip", TripSchema);
 
 export default Trip;

@@ -2,69 +2,36 @@
 
 .Nav {
     display: flex;
-    justify-content: space-between;
-    width: 100%;
-    margin-bottom: 16px;
-    padding-top: 3px;
-  
-    &__session {
+    flex-direction: column;
+    align-items: center;
+    width: 3vw;
+    background-color: #fff;
+    
+    & a {
+      text-align: center;
+      font-size: 1.25rem;
+      color: #000;
+      text-decoration: none;
+      cursor: pointer;
+      font-family: sans-serif;
+    }
+
+    &__signOut {
       display: flex;
-  
-      @media (max-width: 640px) {
-        display: none;
-      }
-  
-      &__signOut {
-        display: flex;
-        gap: 3px;
-  
-        @media (min-width: 768px) {
-          gap: 5px;
-        }
-  
-        &__signOut-btn {
-          border-radius: 100px;
-          background-color: black;
-          color: white;
-        }
-  
-        &__profilePic {
-          border-radius: 50%;
-        }
-      }
-  
-      &__signIn-btn {
-        border-radius: 100px;
-        background-color: black;
-        color: white;
+      flex-direction: column;
+      align-items: center;
+
+      &-btn {
+        background-color: transparent;
+        border: 2px solid rgb(255, 157, 0);
+        border-radius: 5px;
+        margin: 0 0.4rem;
       }
     }
-  
-    &__hamburger {
-      display: flex;
-      position: relative;
-  
-      @media (min-width: 640px) {
-        display: none;
-      }
-  
-      &__profile {
-        display: flex;
-  
-        &__profilePic {
-          border-radius: 50%;
-        }
-      }
-  
-      &__dropdown {
-        align-self: center;
-  
-        &__signOut-btn {
-          border-radius: 100px;
-          background-color: black;
-          color: white;
-        }
-      }
+
+    &__profilePic {
+      border-radius: 50%;
+      border: 3px solid rgb(255, 157, 0);
     }
   }
   

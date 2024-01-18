@@ -13,6 +13,7 @@ import Image from 'next/image';
 import { MarkerLocation } from '@assets/types/types';
 import { z, ZodError } from 'zod';
 import { calculateDistance, compareDates, getNumberOfDays, getTodaysDate, isValidDate } from '@assets/CalcFunctions';
+import { useParams } from 'next/navigation';
 
 interface SPPropsType {
   stops: MarkerLocation[];
@@ -51,7 +52,9 @@ const SidePanel = ({ stops, setStops, setZoomLocation, coord }: SPPropsType) => 
 
   const inputRef = useRef<HTMLInputElement | null>(null);
 
-  useEffect(() => {
+  const params = useParams();
+
+  useEffect(() => {    
     let dist = 0;
     let sDate = stops[0]?.startDate || getTodaysDate();
     let eDate = stops[stops.length - 1]?.endDate || getTodaysDate();
@@ -116,14 +119,34 @@ const SidePanel = ({ stops, setStops, setZoomLocation, coord }: SPPropsType) => 
           }
         })
         .catch(error => console.error('Error fetching geocoding data', error));
-    } else {
-      console.log("req empty str");
     }
   }, [reqLocation]);
 
-  const markNewLocation = ([latitude, longitude]: L.LatLngTuple) => {
-    const newStop: MarkerLocation = { markerId: uuid(), location: [latitude, longitude], locationName: reqLocation }
-    setStops([newStop, ...stops]);
+  const markNewLocation = async ([latitude, longitude]: L.LatLngTuple) => {
+    const createStopResponse = await fetch("/api/stop/new", {
+      method: "POST",
+      body: JSON.stringify({
+          stopId: uuid(),
+          tripId: params.id,
+          location: [latitude, longitude],
+          locationName: reqLocation,
+          startDate: '',
+          endDate: '',
+          notes: ''
+      }),
+      headers: {
+          'Content-Type': 'application/json',
+      },
+  });
+
+  if (!createStopResponse.ok) {
+      console.error('Failed to create trip:', createStopResponse.statusText);
+      return;
+  }
+
+  const createdStop = await createStopResponse.json();
+
+  setStops([...stops, { markerId: createdStop._id, location: createdStop.location, locationName: createdStop.locationName }])
   }
 
   const handleAddFormChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -142,6 +165,10 @@ const SidePanel = ({ stops, setStops, setZoomLocation, coord }: SPPropsType) => 
       setAddingLocation(false);
     }
   }
+
+  const handleInputBlur = () => {
+    setAddingLocation(false);
+  };
 
   return (
     <div className={`SidePanel ${scrolled ? 'SideWindow' : ''}`}>
@@ -187,6 +214,7 @@ const SidePanel = ({ stops, setStops, setZoomLocation, coord }: SPPropsType) => 
             value={reqLocation}
             onChange={handleAddFormChange}
             onKeyDown={handleInputKeyDown}
+            onBlur={handleInputBlur}
             ref={inputRef}
             placeholder='Enter Location Name'
           />

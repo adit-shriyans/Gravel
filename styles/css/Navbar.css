@@ -1,60 +1,30 @@
 .Nav {
   display: flex;
-  justify-content: space-between;
-  width: 100%;
-  margin-bottom: 16px;
-  padding-top: 3px;
+  flex-direction: column;
+  align-items: center;
+  width: 3vw;
+  background-color: #fff;
 }
-.Nav__session {
+.Nav a {
+  text-align: center;
+  font-size: 1.25rem;
+  color: #000;
+  text-decoration: none;
+  cursor: pointer;
+  font-family: sans-serif;
+}
+.Nav__signOut {
   display: flex;
+  flex-direction: column;
+  align-items: center;
 }
-@media (max-width: 640px) {
-  .Nav__session {
-    display: none;
-  }
+.Nav__signOut-btn {
+  background-color: transparent;
+  border: 2px solid rgb(255, 157, 0);
+  border-radius: 5px;
+  margin: 0 0.4rem;
 }
-.Nav__session__signOut {
-  display: flex;
-  gap: 3px;
-}
-@media (min-width: 768px) {
-  .Nav__session__signOut {
-    gap: 5px;
-  }
-}
-.Nav__session__signOut__signOut-btn {
-  border-radius: 100px;
-  background-color: black;
-  color: white;
-}
-.Nav__session__signOut__profilePic {
+.Nav__profilePic {
   border-radius: 50%;
-}
-.Nav__session__signIn-btn {
-  border-radius: 100px;
-  background-color: black;
-  color: white;
-}
-.Nav__hamburger {
-  display: flex;
-  position: relative;
-}
-@media (min-width: 640px) {
-  .Nav__hamburger {
-    display: none;
-  }
-}
-.Nav__hamburger__profile {
-  display: flex;
-}
-.Nav__hamburger__profile__profilePic {
-  border-radius: 50%;
-}
-.Nav__hamburger__dropdown {
-  align-self: center;
-}
-.Nav__hamburger__dropdown__signOut-btn {
-  border-radius: 100px;
-  background-color: black;
-  color: white;
+  border: 3px solid rgb(255, 157, 0);
 }

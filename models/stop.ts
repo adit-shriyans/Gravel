@@ -1,22 +1,9 @@
 import { Schema, model, models } from "mongoose";
 
-const LatLngSchema = new Schema({
-    type: {
-        type: String,
-        enum: ['Point'],
-        required: true,
-    },
-    coordinates: {
-        type: [Number],
-        required: true,
-    },
-});
-
 const StopSchema = new Schema({
     trip: {
         type: Schema.Types.ObjectId,
         ref: "Trip",
-        required: true,
     },
     id: {
         type: String,
@@ -24,17 +11,17 @@ const StopSchema = new Schema({
         required: [true, 'Stop Id is required'],
     },
     location: {
-        type: LatLngSchema,
+        type: [Number],
         required: [true, 'Location coordinates are required']
     },
     locationName: {
         type: String,
     },
     startDate: {
-        type: Date,
+        type: String,
     },
     endDate: {
-        type: Date,
+        type: String,
     },
     notes: {
         type: String,

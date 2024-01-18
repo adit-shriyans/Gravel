@@ -35,8 +35,8 @@ const PlaceInfo = ({ stop, stops, setStops, setZoomLocation }: PIPropsType) => {
     locationName: stop.locationName,
     locationDist: 10,
     homeDist: 20,
-    inDate: getTodaysDate(),
-    outDate: getTodaysDate(),
+    inDate: stop.startDate || getTodaysDate(),
+    outDate: stop.endDate || getTodaysDate(),
     notesMsg: '',
   });
 
@@ -52,6 +52,28 @@ const PlaceInfo = ({ stop, stops, setStops, setZoomLocation }: PIPropsType) => {
   const IDInputRef = useRef<HTMLInputElement | null>(null);
   const ODInputRef = useRef<HTMLInputElement | null>(null);
   const NotesInputRef = useRef<HTMLInputElement | null>(null);
+
+  const updateStop = async () => {
+    try {
+      const { locationName, inDate, outDate, notesMsg } = inputValues;
+  
+      const response = await fetch(`/api/stop/${stop.markerId}`, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          location: stop.location,
+          locationName,
+          startDate: inDate,
+          endDate: outDate,
+          notes: notesMsg,
+        }),
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   const handleClick = (id: number) => {
     if (!editMode[id]) {
@@ -225,6 +247,7 @@ const PlaceInfo = ({ stop, stops, setStops, setZoomLocation }: PIPropsType) => {
   }, [inputValues.locationName])
 
   useEffect(() => {
+    updateStop();
     const locationNameArr = stop.locationName.split(',');
     let newName = locationNameArr[0];
     if (locationNameArr.length > 1) {
@@ -238,6 +261,7 @@ const PlaceInfo = ({ stop, stops, setStops, setZoomLocation }: PIPropsType) => {
   }, [stop.location])
 
   useEffect(() => {
+    updateStop();
     const newStops = stops.map((place) => {
       if(stop.markerId === place.markerId) {
         return {...place, startDate: inputValues.inDate, endDate: inputValues.outDate, notes: inputValues.notesMsg}
@@ -248,7 +272,7 @@ const PlaceInfo = ({ stop, stops, setStops, setZoomLocation }: PIPropsType) => {
   }, [inputValues.inDate, inputValues.outDate, inputValues.notesMsg]);
 
   useEffect(() => {
-    setDists();
+    setDists();        
   }, []);
 
   return (

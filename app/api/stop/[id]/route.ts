@@ -1,44 +1,62 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import { connectToDB } from '@utils/database';
 import Stop from '@models/stop';
+// import { StopResponseType } from '@assets/types/types';
+
+interface StopRequestType {
+    location: L.LatLngTuple; 
+    locationName: String;
+    startDate: String; 
+    endDate: String; 
+    notes: String;
+}
 
 // GET
 export const GET = async (request: NextApiRequest, { params }: { params: { id: string } }) => {
-    try {
+    try{
         await connectToDB();
 
-        const prompt = await Stop.findById(params.id).populate('creator');
-        if (!prompt) return new Response("Prompt not found", { status: 404 });
-        return new Response(JSON.stringify(prompt), {
+        const stops = await Stop.find({
+            trip: params.id
+        }).populate('trip');
+
+        return new Response(JSON.stringify(stops), {
             status: 200
-        });
-    } catch (error) {
-        return new Response("Failed to fetch all prompts", { status: 500 });
+        })
+    } catch(error) {
+        console.error(error)
+        return new Response("Failed to fetch all prompts", {status: 500})
     }
 }
 
 // PATCH
-export const PATCH = async (request: NextApiRequest, { params }: { params: { id: string } }) => {
+export const PATCH = async (request: { json: () => PromiseLike<StopRequestType> | StopRequestType; }, { params }: { params: { id: string } }) => {
+    const { location, locationName, startDate, endDate, notes } = await request.json();
+
     try {
         await connectToDB();
+        let existingStop = await Stop.findById(params.id);
         
-        const existingPrompt = await Stop.findById(params.id);
+        if (!existingStop) {
+            return new Response("Stop not found", { status: 404 });
+        }
 
-        if (!existingPrompt) return new Response("Prompt not found", { status: 404 });
+        // Update the existingStop properties
+        existingStop.location = location;
+        existingStop.locationName = locationName;
+        existingStop.startDate = startDate;
+        existingStop.endDate = endDate;
+        existingStop.notes = notes;
 
-        const requestBody = JSON.parse(request.body);
-        const { prompt, tag } = requestBody;
+        // Save the changes
+        await existingStop.save();
 
-        existingPrompt.prompt = prompt;
-        existingPrompt.tag = tag;
-
-        await existingPrompt.save();
-
-        return new Response(JSON.stringify(existingPrompt), { status: 200 });
+        return new Response(JSON.stringify(existingStop), { status: 200 });
     } catch (error) {
-        return new Response("Failed to update prompt", { status: 500 });
+        console.error(error);
+        return new Response("Failed to update stop", { status: 500 });
     }
-}
+};
 
 // DELETE
 export const DELETE = async (request: NextApiRequest, { params }: { params: { id: string } }) => {
@@ -46,8 +64,9 @@ export const DELETE = async (request: NextApiRequest, { params }: { params: { id
         await connectToDB();
         await Stop.findByIdAndDelete(params.id);
 
-        return new Response("Prompt deleted successfully", { status: 200 });
+        return new Response("Stop deleted successfully", { status: 200 });
     } catch (error) {
-        return new Response("Failed to delete prompt", { status: 500 });
+        console.error(error)
+        return new Response("Failed to delete stop", { status: 500 });
     }
 }

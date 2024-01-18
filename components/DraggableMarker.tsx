@@ -2,6 +2,7 @@ import { useEffect, useState, useRef, useMemo, useCallback, FC } from 'react';
 import L, { LatLngExpression } from 'leaflet';
 import { MapContainer, TileLayer, Marker, Popup, useMap } from 'react-leaflet';
 import { MarkerLocation } from '@assets/types/types';
+import MarkerIcon from '../node_modules/leaflet/dist/images/marker-icon.png';
 import 'leaflet/dist/leaflet.css';
 import 'leaflet-defaulticon-compatibility/dist/leaflet-defaulticon-compatibility.webpack.css';
 import 'leaflet-defaulticon-compatibility';
@@ -55,7 +56,22 @@ export default function DraggableMarker({ stops, setStops, center, id, setZoomLo
   };
 
   return (
-    <Marker draggable={true} eventHandlers={eventHandlers} position={position} ref={markerRef} zIndexOffset={10000}>
+    <Marker 
+      draggable={true} 
+      eventHandlers={eventHandlers} 
+      position={position} 
+      ref={markerRef} 
+      zIndexOffset={10000}
+      icon={
+        new L.Icon({
+            iconUrl: MarkerIcon.src,
+            iconRetinaUrl: MarkerIcon.src,
+            iconSize: [25, 41],
+            iconAnchor: [12.5, 41],
+            popupAnchor: [0, -41],
+        })
+    }
+    >
       <Popup minWidth={90}>
         <span>
           Draggable

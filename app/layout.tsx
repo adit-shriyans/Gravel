@@ -3,6 +3,7 @@ import type { Metadata } from 'next'
 import { Inter } from 'next/font/google';
 import Provider from '@components/Provider'
 import { Session } from 'next-auth';
+import '@styles/css/index.css';
 
 export const metadata: Metadata = {
   title: 'Create Next App',
@@ -16,7 +17,9 @@ export default function RootLayout({ children, }: { children: React.ReactNode })
       <body className='Root' style={{ margin: 0 }}>
         <Provider session={session}>
           <Navbar />
-          {children}
+          <main className='App'>
+            {children}
+          </main>
         </Provider>
       </body>
     </html>
