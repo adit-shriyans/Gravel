@@ -1,8 +1,8 @@
 'use client'
 
 import React, { useState, ChangeEvent, useEffect, useRef } from 'react';
-import PlaceIcon from '@mui/icons-material/Place';
-import distanceImg from '../assets/distance.png';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faMapLocationDot, faRoute } from '@fortawesome/free-solid-svg-icons'
 import HomeIcon from '@mui/icons-material/Home';
 import TodayIcon from '@mui/icons-material/Today';
 import EventIcon from '@mui/icons-material/Event';
@@ -56,7 +56,7 @@ const PlaceInfo = ({ stop, stops, setStops, setZoomLocation }: PIPropsType) => {
   const updateStop = async () => {
     try {
       const { locationName, inDate, outDate, notesMsg } = inputValues;
-  
+
       const response = await fetch(`/api/stop/${stop.markerId}`, {
         method: "PATCH",
         headers: {
@@ -86,7 +86,7 @@ const PlaceInfo = ({ stop, stops, setStops, setZoomLocation }: PIPropsType) => {
   const handleAddNotes = () => {
     setShowNotes(true);
     const newEditMode = editMode;
-    newEditMode[5]=true;
+    newEditMode[5] = true;
     setEditMode(newEditMode);
     if (NotesInputRef.current) {
       NotesInputRef.current.focus();
@@ -110,7 +110,7 @@ const PlaceInfo = ({ stop, stops, setStops, setZoomLocation }: PIPropsType) => {
 
 
   const handleInputBlur = () => {
-    const {locationName, locationDist, homeDist, inDate, outDate, notesMsg} = inputValues
+    const { locationName, locationDist, homeDist, inDate, outDate, notesMsg } = inputValues
 
     if (locationName && locationDist && homeDist && inDate && outDate) {
       if (isValidDate(inDate) && isValidDate(outDate) && locationDist > 0 && homeDist > 0) {
@@ -134,7 +134,7 @@ const PlaceInfo = ({ stop, stops, setStops, setZoomLocation }: PIPropsType) => {
   };
 
   const handleInputKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    const {locationName, locationDist, homeDist, inDate, outDate, notesMsg} = inputValues
+    const { locationName, locationDist, homeDist, inDate, outDate, notesMsg } = inputValues
     if (e.key === 'Enter') {
       if (locationName && locationDist && homeDist && inDate && outDate) {
         if (isValidDate(inDate) && isValidDate(outDate) && locationDist > 0 && homeDist > 0) {
@@ -195,7 +195,7 @@ const PlaceInfo = ({ stop, stops, setStops, setZoomLocation }: PIPropsType) => {
           homeDist: dist
         }))
         const index = stops.indexOf(stop);
-        if (index === 0) 
+        if (index === 0)
           setInputValues((prev) => ({
             ...prev,
             locationDist: dist
@@ -263,8 +263,8 @@ const PlaceInfo = ({ stop, stops, setStops, setZoomLocation }: PIPropsType) => {
   useEffect(() => {
     updateStop();
     const newStops = stops.map((place) => {
-      if(stop.markerId === place.markerId) {
-        return {...place, startDate: inputValues.inDate, endDate: inputValues.outDate, notes: inputValues.notesMsg}
+      if (stop.markerId === place.markerId) {
+        return { ...place, startDate: inputValues.inDate, endDate: inputValues.outDate, notes: inputValues.notesMsg }
       }
       return place;
     })
@@ -272,7 +272,7 @@ const PlaceInfo = ({ stop, stops, setStops, setZoomLocation }: PIPropsType) => {
   }, [inputValues.inDate, inputValues.outDate, inputValues.notesMsg]);
 
   useEffect(() => {
-    setDists();        
+    setDists();
   }, []);
 
   return (
@@ -303,7 +303,10 @@ const PlaceInfo = ({ stop, stops, setStops, setZoomLocation }: PIPropsType) => {
       </div>
       <div className='PlaceInfo__info'>
         <div className='PlaceInfo__img-container'>
-          <PlaceIcon className='PlaceInfo__img' />
+          {/* <PlaceIcon className='PlaceInfo__img' /> */}
+          <FontAwesomeIcon className='PlaceInfo__img' icon={faMapLocationDot} />
+          {/* <FontAwesomeIcon icon="fa-regular fa-map-location-dot" /> */}
+          {/* <FontAwesomeIcon icon={icon({name: 'user-secret'})} /> */}
         </div>
         <div className={`ErrorPopUp ${showErr[0] && errMsg ? '' : 'hidden'}`}>
           {errMsg}
@@ -396,11 +399,12 @@ const PlaceInfo = ({ stop, stops, setStops, setZoomLocation }: PIPropsType) => {
       <div className='PlaceInfo__DistInfo'>
         <div className='PlaceInfo__info'>
           <div className='PlaceInfo__img-container'>
-            <Image
+            {/* <Image
               src={distanceImg}
               alt='distance image'
               className='PlaceInfo__img PlaceInfo__img-distance'
-            />
+            /> */}
+            <FontAwesomeIcon className='PlaceInfo__img' icon={faRoute} />
           </div>
           <div className={`ErrorPopUp ${showErr[1] && errMsg ? '' : 'hidden'}`}>
             {errMsg}

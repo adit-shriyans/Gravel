@@ -1,6 +1,6 @@
 "use client";
 import '@styles/css/index.css'
-import { StatusType, TripType } from '@assets/types/types';
+import { StatusType, TripType, VoidFunctionType } from '@assets/types/types';
 import { useEffect, useState } from 'react';
 import { usePathname, useRouter } from 'next/navigation';
 import { v4 as uuid } from 'uuid';
@@ -8,6 +8,9 @@ import { useSession } from 'next-auth/react';
 import type { DefaultSession } from 'next-auth';
 import demoImg from '../assets/sitedemo.png';
 import Image from 'next/image';
+import TelegramIcon from '@mui/icons-material/Telegram';
+import TripCard from '@components/TripCard';
+import StatusSelector from '@components/StatusSelector';
 
 declare module 'next-auth' {
   interface Session {
@@ -19,10 +22,20 @@ declare module 'next-auth' {
 
 const MyPage = () => {
   const [trips, setTrips] = useState<TripType[]>([]);
+  const [tripStatus, setTripStatus] = useState<String>('')
   const { data: session } = useSession();
+  const [showedTrips, setShowedTrips] = useState<TripType[]>(trips);
 
-  const pathName = usePathname();
+  // const filteredTrips = tripStatus === "upcoming" ? eventsArray.filter(event => event.Team === "Solo") : eventsArray.filter(event => event.Team !== "Solo");
+  // const events = eventType ? filteredEvents : eventsArray;
+
   const router = useRouter();
+
+  const filterTrips = (status: String) => {
+    setTripStatus(status);
+    if (status !== '') setShowedTrips(trips.filter((trip) => (trip.status === status as StatusType | '')));
+    else setShowedTrips(trips);
+  }
 
   const fetchTrips = async () => {
     const response = await fetch('/api/trip');
@@ -30,16 +43,17 @@ const MyPage = () => {
     const allTrips: TripType[] = data.map((trip: any) => {
       return { _id: trip._id, stops: [], status: trip.status }
     });
+    
     setTrips(allTrips);
   }
 
   useEffect(() => {
-    // const savedTrips = localStorage.getItem('trips');
     fetchTrips();
-    // if (savedTrips) {
-    //   setTrips(JSON.parse(savedTrips));
-    // }
   }, []);
+
+  useEffect(() => {
+    filterTrips(tripStatus);
+  }, [trips]);
 
   const handleCreateClick = async () => {
     try {
@@ -63,28 +77,64 @@ const MyPage = () => {
 
       const createdTrip = await createTripResponse.json();
 
-      // setTrips((prevTrips) => [...prevTrips, { _id: createdTrip._id, stops: [], status: "upcoming" as unknown as StatusType }]);
-      // localStorage.setItem('trips', JSON.stringify([...trips, { _id: createdTrip._id, stops: [], status: "upcoming" as unknown as StatusType }]));
       router.push(`/trip/${createdTrip._id}`);
     } catch (error) {
       console.error('Error creating trip:', error);
     }
   };
 
-
+  const handleToggleClick = (slug: String) => {
+    if (slug === "one") filterTrips('');
+    else if (slug === "two") filterTrips('upcoming');
+    else if (slug === "three") filterTrips('ongoing');
+    else if (slug === "four") filterTrips('completed');
+    // filterTrips();
+  }
 
   return (
     <div className="Page">
       <div className='Page__demoImg'>
-        <Image 
+        <Image
           src={demoImg}
           alt='Demo'
         />
       </div>
-      <button onClick={handleCreateClick}>Create</button>
-      {trips.map((trip, id) => (
-        <button key={id} onClick={() => { router.push(`/trip/${trip._id}`); }}>Click</button>
-      ))}
+      <button className='Page__plan' onClick={handleCreateClick}>
+        <TelegramIcon />
+        Plan a Trip!
+      </button>
+      <div className='Page__userTrips'>
+        <div className='Page__heading'>
+          <fieldset>
+            <legend>
+              Your Trips
+            </legend>
+          </fieldset>
+        </div>
+        <div className='Page__statusToggle'>
+          <StatusSelector
+            onSelectedItem={(item: { slug: "one" | "two" | "three" | "four"; }) => {
+              handleToggleClick(item.slug);
+            }}
+          />
+        </div>
+        <div className='Page__trips'>
+          {showedTrips.length !== 0 ? (
+            showedTrips.map((trip) => (
+              <TripCard key={trip._id} trip={trip} trips={trips} setTrips={setTrips} />
+            ))) :
+            (
+              <div className='Page__NA'>
+                {trips.length ? (
+                  `No ${tripStatus} trips`
+                ) : (
+                  'No trips planned'
+                )}
+              </div>
+            )
+          }
+        </div>
+      </div>
     </div>
   );
 };
