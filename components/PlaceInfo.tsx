@@ -37,7 +37,7 @@ const PlaceInfo = ({ stop, stops, setStops, setZoomLocation }: PIPropsType) => {
     homeDist: 20,
     inDate: stop.startDate || getTodaysDate(),
     outDate: stop.endDate || getTodaysDate(),
-    notesMsg: '',
+    notesMsg: stop.notes || '',
   });
 
   const [editMode, setEditMode] = useState(Array(arraySize).fill(false));
@@ -64,7 +64,7 @@ const PlaceInfo = ({ stop, stops, setStops, setZoomLocation }: PIPropsType) => {
         },
         body: JSON.stringify({
           location: stop.location,
-          locationName,
+          locationName: locationName,
           startDate: inDate,
           endDate: outDate,
           notes: notesMsg,
@@ -237,6 +237,7 @@ const PlaceInfo = ({ stop, stops, setStops, setZoomLocation }: PIPropsType) => {
   }, [editMode]);
 
   useEffect(() => {
+    updateStop();
     const newStops = stops.map((place) => {
       if (place.markerId === stop.markerId) {
         place.locationName = inputValues.locationName;
@@ -247,7 +248,6 @@ const PlaceInfo = ({ stop, stops, setStops, setZoomLocation }: PIPropsType) => {
   }, [inputValues.locationName])
 
   useEffect(() => {
-    updateStop();
     const locationNameArr = stop.locationName.split(',');
     let newName = locationNameArr[0];
     if (locationNameArr.length > 1) {
@@ -463,7 +463,7 @@ const PlaceInfo = ({ stop, stops, setStops, setZoomLocation }: PIPropsType) => {
           </div>
         </div>
       </div>
-      <div className={`PlaceInfo__info ${showNotes ? '' : 'hidden'}`}>
+      <div className={`PlaceInfo__info ${showNotes || inputValues.notesMsg!=='' ? '' : 'hidden'}`}>
         <div className='PlaceInfo__img-container'>
           <EditNoteIcon />
         </div>

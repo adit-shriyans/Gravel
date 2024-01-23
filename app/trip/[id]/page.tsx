@@ -34,7 +34,7 @@ const MyPage = () => {
           const data = await response.json();
 
           setStops(data.map((stop: StopResponseType) => {
-            return {markerId: stop._id, location: stop.location, locationName: stop.locationName}
+            return {markerId: stop._id, location: stop.location, locationName: stop.locationName, startDate: stop.startDate, endDate: stop.endDate, notes: stop.notes}
           }))
         };
     
