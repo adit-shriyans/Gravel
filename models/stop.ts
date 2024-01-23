@@ -6,8 +6,7 @@ const StopSchema = new Schema({
         ref: "Trip",
     },
     id: {
-        type: String,
-        unique: [true, 'Stop Id should be unique'],
+        type: Number,
         required: [true, 'Stop Id is required'],
     },
     location: {

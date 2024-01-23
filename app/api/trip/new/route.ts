@@ -4,18 +4,16 @@ import { StatusType } from '@assets/types/types';
 
 interface TripRequestType {
     userId: String;
-    tripId: String;
     status: StatusType;
 }
 
 export const POST = async (req: { json: () => PromiseLike<TripRequestType> | TripRequestType; }) => {
-    const { userId, tripId, status } = await req.json();
+    const { userId, status } = await req.json();
     
     try {
         await connectToDB();
         const newTrip = new Trip({
             user: userId,
-            id: tripId, 
             status
         })
 

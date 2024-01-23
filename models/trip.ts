@@ -5,11 +5,6 @@ const TripSchema = new Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User',
     },
-    id:{
-        type: String,
-        unique: [true, 'Trip id already exists'],
-        required: [true, 'Trip id is required'],
-    },
     status: {
         type: String,
         required: [true, 'Status is required'],

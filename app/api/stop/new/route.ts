@@ -4,7 +4,7 @@ import { MarkerLocation, StatusType } from '@assets/types/types';
 
 interface StopRequestType extends MarkerLocation {
     tripId: String;
-    stopId: String;
+    stopId: Number;
 }
 
 export const POST = async (req: { json: () => PromiseLike<StopRequestType> | StopRequestType; }) => {

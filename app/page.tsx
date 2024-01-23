@@ -3,7 +3,6 @@ import '@styles/css/index.css'
 import { StatusType, TripType, VoidFunctionType } from '@assets/types/types';
 import { useEffect, useState } from 'react';
 import { usePathname, useRouter } from 'next/navigation';
-import { v4 as uuid } from 'uuid';
 import { useSession } from 'next-auth/react';
 import type { DefaultSession } from 'next-auth';
 import demoImg from '../assets/sitedemo.png';
@@ -57,11 +56,9 @@ const MyPage = () => {
 
   const handleCreateClick = async () => {
     try {
-      const tripId = uuid();
       const createTripResponse = await fetch("/api/trip/new", {
         method: "POST",
         body: JSON.stringify({
-          tripId: tripId,
           userId: session?.user?.id,
           status: "upcoming",
         }),

@@ -10,7 +10,6 @@ import "leaflet-defaulticon-compatibility/dist/leaflet-defaulticon-compatibility
 import "leaflet-defaulticon-compatibility";
 import '@styles/css/MapComponent.css'
 import DraggableMarker from './DraggableMarker';
-import { v4 as uuid } from 'uuid';
 import { z, ZodError } from 'zod';
 import { useParams } from 'next/navigation';
 
@@ -65,7 +64,7 @@ function LocationMarker({ stops, setStops, tripId, setZoomLocation }: LMPropsTyp
                 const createStopResponse = await fetch("/api/stop/new", {
                     method: "POST",
                     body: JSON.stringify({
-                        stopId: uuid(),
+                        stopId: stops.length,
                         tripId: tripId,
                         location: [e.latlng.lat, e.latlng.lng],
                         locationName,

@@ -8,7 +8,6 @@ import DateRangeIcon from '@mui/icons-material/DateRange';
 import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
 import EventNoteIcon from '@mui/icons-material/EventNote';
 import totalDistImg from '../assets/totalDistance.png';
-import { v4 as uuid } from 'uuid';
 import Image from 'next/image';
 import { MarkerLocation } from '@assets/types/types';
 import { z, ZodError } from 'zod';
@@ -126,7 +125,7 @@ const SidePanel = ({ stops, setStops, setZoomLocation, coord }: SPPropsType) => 
     const createStopResponse = await fetch("/api/stop/new", {
       method: "POST",
       body: JSON.stringify({
-          stopId: uuid(),
+          stopId: stops.length,
           tripId: params.id,
           location: [latitude, longitude],
           locationName: reqLocation,
