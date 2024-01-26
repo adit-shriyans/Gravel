@@ -1,7 +1,7 @@
 'use client'
 
-import { useEffect, FC } from 'react';
-import L from 'leaflet';
+import React, { useEffect, FC, useRef, useState, MouseEvent } from 'react';
+import L, { Map } from 'leaflet';
 import CurrentLocationIcon from "../assets/currentlocation.png";
 import { MapContainer, TileLayer, Marker, Popup, useMap, useMapEvents } from 'react-leaflet';
 import { MarkerLocation } from '@assets/types/types';
@@ -12,10 +12,13 @@ import '@styles/css/MapComponent.css'
 import DraggableMarker from './DraggableMarker';
 import { z, ZodError } from 'zod';
 import { useParams } from 'next/navigation';
+import DirectionsCarIcon from '@mui/icons-material/DirectionsCar';
+import Routes from './Routes';
 
 interface MCPropsType {
     stops: MarkerLocation[];
     setStops: React.Dispatch<React.SetStateAction<MarkerLocation[]>>;
+    setDistances: React.Dispatch<React.SetStateAction<Number[]>>;
     zoomLocation: L.LatLngTuple;
     setZoomLocation: React.Dispatch<React.SetStateAction<L.LatLngTuple>>;
     coord: L.LatLngTuple;
@@ -44,10 +47,6 @@ const geocodingResponseSchema = z.object({
     display_name: z.string(),
     address: z.record(z.unknown()),
     boundingbox: z.array(z.string()),
-});
-
-const responseSchema = z.object({
-    data: geocodingResponseSchema,
 });
 
 function LocationMarker({ stops, setStops, tripId, setZoomLocation }: LMPropsType) {
@@ -99,7 +98,9 @@ function LocationMarker({ stops, setStops, tripId, setZoomLocation }: LMPropsTyp
     return null
 }
 
-export default function MapComponent({ stops, setStops, zoomLocation, setZoomLocation, coord }: MCPropsType) {
+export default function MapComponent({ stops, setStops, setDistances, zoomLocation, setZoomLocation, coord }: MCPropsType) {
+    const [showRoutes, setShowRoutes] = useState(false);
+
     const params = useParams();
 
     useEffect(() => {
@@ -126,13 +127,23 @@ export default function MapComponent({ stops, setStops, zoomLocation, setZoomLoc
         return null;
     };
 
+    function handleToggleRoutes(e: MouseEvent<SVGSVGElement>): void {
+        e.stopPropagation();
+        if (showRoutes) document.querySelector('.MapContainer__routes')?.classList.add('hidden');
+        else document.querySelector('.MapContainer__routes')?.classList.remove('hidden');
+        setShowRoutes((prev) => !prev);
+    }
+
     return (
         <div className="MapComponent">
+            <DirectionsCarIcon className='MapContainer__carIcon' onClick={handleToggleRoutes} />
+
             <MapContainer className='MapContainer' center={coord} zoom={13} scrollWheelZoom={true}>
                 <TileLayer
                     attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
                     url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
                 />
+                <Routes stops={stops} setDistances={setDistances} coord={coord} />
                 <Marker
                     icon={
                         new L.Icon({

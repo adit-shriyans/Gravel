@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useState, ChangeEvent, useRef } from 'react';
+import React, { useEffect, useState, ChangeEvent, useRef, useMemo } from 'react';
 import '@styles/css/SidePanel.css'
 import PlaceInfo from './PlaceInfo';
 import AddLocationAltIcon from '@mui/icons-material/AddLocationAlt';
@@ -15,6 +15,7 @@ import { calculateDistance, compareDates, getNumberOfDays, getTodaysDate, isVali
 import { useParams } from 'next/navigation';
 
 interface SPPropsType {
+  distances: Number[];
   stops: MarkerLocation[];
   setStops: React.Dispatch<React.SetStateAction<MarkerLocation[]>>;
   setZoomLocation: React.Dispatch<React.SetStateAction<L.LatLngTuple>>;
@@ -40,7 +41,7 @@ const geocodingResponseSchema = z.array(
   })
 );
 
-const SidePanel = ({ stops, setStops, setZoomLocation, coord }: SPPropsType) => {
+const SidePanel = ({ distances, stops, setStops, setZoomLocation, coord }: SPPropsType) => {
   const [scrolled, setScrolled] = useState(false);
   const [addingLocation, setAddingLocation] = useState(false);
   const [addCoords, setAddCoords] = useState<L.LatLngTuple | []>([]);
@@ -53,7 +54,7 @@ const SidePanel = ({ stops, setStops, setZoomLocation, coord }: SPPropsType) => 
 
   const params = useParams();
 
-  useEffect(() => {    
+  useEffect(() => {
     let dist = 0;
     let sDate = stops[0]?.startDate || getTodaysDate();
     let eDate = stops[stops.length - 1]?.endDate || getTodaysDate();
@@ -64,12 +65,16 @@ const SidePanel = ({ stops, setStops, setZoomLocation, coord }: SPPropsType) => 
       if (i === 0) dist += parseFloat(calculateDistance(stops[i].location, coord).toFixed(2))
       else dist += parseFloat(calculateDistance(stops[i].location, stops[i - 1].location).toFixed(2))
     }
-    setTotalDistance(parseFloat(dist.toFixed(2)));
+    let tripDist = 0;
+    distances.forEach((dist) => tripDist += Number(dist));
+    const setDist = tripDist === 0 ? parseFloat(dist.toFixed(2)) : tripDist;
+    // setTotalDistance(setDist);
+    setTotalDistance(dist);
   }, [stops])
 
   useEffect(() => {
-    if(isValidDate(tripDates[0]) && isValidDate(tripDates[1]))
-      setNoOfDays(getNumberOfDays(tripDates[0], tripDates[1]));  
+    if (isValidDate(tripDates[0]) && isValidDate(tripDates[1]))
+      setNoOfDays(getNumberOfDays(tripDates[0], tripDates[1]));
   }, [tripDates[0], tripDates[1]]);
 
   useEffect(() => {
@@ -125,27 +130,27 @@ const SidePanel = ({ stops, setStops, setZoomLocation, coord }: SPPropsType) => 
     const createStopResponse = await fetch("/api/stop/new", {
       method: "POST",
       body: JSON.stringify({
-          stopId: stops.length,
-          tripId: params.id,
-          location: [latitude, longitude],
-          locationName: reqLocation,
-          startDate: '',
-          endDate: '',
-          notes: ''
+        stopId: stops.length,
+        tripId: params.id,
+        location: [latitude, longitude],
+        locationName: reqLocation,
+        startDate: '',
+        endDate: '',
+        notes: ''
       }),
       headers: {
-          'Content-Type': 'application/json',
+        'Content-Type': 'application/json',
       },
-  });
+    });
 
-  if (!createStopResponse.ok) {
+    if (!createStopResponse.ok) {
       console.error('Failed to create trip:', createStopResponse.statusText);
       return;
-  }
+    }
 
-  const createdStop = await createStopResponse.json();
+    const createdStop = await createStopResponse.json();
 
-  setStops([...stops, { markerId: createdStop._id, location: createdStop.location, locationName: createdStop.locationName }])
+    setStops([...stops, { markerId: createdStop._id, location: createdStop.location, locationName: createdStop.locationName }])
   }
 
   const handleAddFormChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -178,7 +183,7 @@ const SidePanel = ({ stops, setStops, setZoomLocation, coord }: SPPropsType) => 
             <Image src={totalDistImg} alt='total distance' />
           </div>
           <div className='TripInfo__dist-text'>
-            {totalDistance}km
+            {totalDistance?totalDistance:0}km
           </div>
         </div>
 
@@ -223,7 +228,7 @@ const SidePanel = ({ stops, setStops, setZoomLocation, coord }: SPPropsType) => 
         <div className='StopInfo__container'>
           {stops.map((stop) => (
             <div key={stop.markerId} className='StopInfo'>
-              <PlaceInfo key={stop.markerId} stop={stop} stops={stops} setStops={setStops} setZoomLocation={setZoomLocation} />
+              <PlaceInfo key={stop.markerId} distances={distances} stop={stop} stops={stops} setStops={setStops} setTotalDistance={setTotalDistance} setZoomLocation={setZoomLocation} />
             </div>
           ))}
         </div>

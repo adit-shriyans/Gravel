@@ -12,6 +12,7 @@ const MyPage = () => {
     const [stops, setStops] = useState<MarkerLocation[]>([]);
     const [coord, setCoord] = useState<L.LatLngTuple>([51.505, -0.09]);
     const [zoomLocation, setZoomLocation] = useState<L.LatLngTuple>([51.505, -0.09]);
+    const [distances, setDistances] = useState<Number[]>([])
 
     const params = useParams();
 
@@ -43,8 +44,8 @@ const MyPage = () => {
 
     return (
         <div className="TripPage">
-            <SidePanel stops={stops} setStops={setStops} setZoomLocation={setZoomLocation} coord={coord} />
-            <DynamicMapComponent stops={stops} setStops={setStops} zoomLocation={zoomLocation} setZoomLocation={setZoomLocation} coord={coord} />
+            <SidePanel distances={distances} stops={stops} setStops={setStops} setZoomLocation={setZoomLocation} coord={coord} />
+            <DynamicMapComponent stops={stops} setStops={setStops} setDistances={setDistances} zoomLocation={zoomLocation} setZoomLocation={setZoomLocation} coord={coord} />
         </div>
     );
 };

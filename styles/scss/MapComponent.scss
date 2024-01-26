@@ -5,5 +5,37 @@
     .MapContainer {
         height: 100%;
         width: 100%;
+
+        &__routes {
+            top: 4rem;
+            overflow-y: scroll;
+
+            &.hidden {
+                display: none;
+            }
+        }
+
+        &__route {
+            box-sizing: border-box;
+            height: fit-content;
+        }
+
+        &__carIcon {
+            z-index: 2000;
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background-color: #fff;
+            color: #ff5a01;
+            border-radius: 50%;
+            padding: 0.5rem;
+            border: 2px solid rgba(0, 0, 0);
+            cursor: pointer;
+        }
+    }
+
+    .leaflet-marker-icon {
+        width: 25px !important;
+        height: 41px !important;
     }
 }

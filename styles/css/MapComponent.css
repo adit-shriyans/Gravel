@@ -6,3 +6,30 @@
   height: 100%;
   width: 100%;
 }
+.MapComponent .MapContainer__routes {
+  top: 4rem;
+  overflow-y: scroll;
+}
+.MapComponent .MapContainer__routes.hidden {
+  display: none;
+}
+.MapComponent .MapContainer__route {
+  box-sizing: border-box;
+  height: fit-content;
+}
+.MapComponent .MapContainer__carIcon {
+  z-index: 2000;
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  background-color: #fff;
+  color: #ff5a01;
+  border-radius: 50%;
+  padding: 0.5rem;
+  border: 2px solid rgb(0, 0, 0);
+  cursor: pointer;
+}
+.MapComponent .leaflet-marker-icon {
+  width: 25px !important;
+  height: 41px !important;
+}

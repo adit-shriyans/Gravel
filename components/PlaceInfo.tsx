@@ -15,15 +15,17 @@ import { MarkerLocation } from '@assets/types/types';
 import { calculateDistance, getTodaysDate, isValidDate } from '@assets/CalcFunctions';
 
 interface PIPropsType {
+  distances: Number[];
   stop: MarkerLocation;
   stops: MarkerLocation[];
   setStops: React.Dispatch<React.SetStateAction<MarkerLocation[]>>;
+  setTotalDistance: React.Dispatch<React.SetStateAction<number>>;
   setZoomLocation: React.Dispatch<React.SetStateAction<L.LatLngTuple>>;
 }
 
 const arraySize = 6;
 
-const PlaceInfo = ({ stop, stops, setStops, setZoomLocation }: PIPropsType) => {
+const PlaceInfo = ({ distances, stop, stops, setStops, setTotalDistance, setZoomLocation }: PIPropsType) => {
   const locationNameArr = stop.locationName.split(',');
   let name = locationNameArr[0];
   if (locationNameArr.length > 1) {
@@ -52,6 +54,19 @@ const PlaceInfo = ({ stop, stops, setStops, setZoomLocation }: PIPropsType) => {
   const IDInputRef = useRef<HTMLInputElement | null>(null);
   const ODInputRef = useRef<HTMLInputElement | null>(null);
   const NotesInputRef = useRef<HTMLInputElement | null>(null);
+
+  const getLocationDist = () => {
+    return distances[stops.indexOf(stop)] || 0;
+  }
+
+  const getHomeDist = () => {
+    const stopId = stops.indexOf(stop);
+    let homeDist = 0;
+    for (let i = 0; i <= stopId; i++) {
+      homeDist += Number(distances[i]);
+    }
+    return homeDist;
+  }
 
   const updateStop = async () => {
     try {
@@ -190,16 +205,23 @@ const PlaceInfo = ({ stop, stops, setStops, setZoomLocation }: PIPropsType) => {
       navigator.geolocation.getCurrentPosition(function (location) {
         const { latitude, longitude } = location.coords;
         dist = calculateDistance(stop.location, [latitude, longitude]);
+        const setDist = getHomeDist() === 0 ? dist : Number(getHomeDist());
         setInputValues((prev) => ({
           ...prev,
+          // homeDist: setDist
           homeDist: dist
         }))
         const index = stops.indexOf(stop);
-        if (index === 0)
+        if (index === 0) {
+          const setDist = getLocationDist() === 0 ? dist : Number(getLocationDist());
           setInputValues((prev) => ({
             ...prev,
+            // locationDist: setDist
             locationDist: dist
           }));
+        }
+      if(index === stops.length-1)
+        setTotalDistance(Number(getHomeDist()));
       }, function () {
         console.log('Could not get position');
       });
@@ -208,8 +230,10 @@ const PlaceInfo = ({ stop, stops, setStops, setZoomLocation }: PIPropsType) => {
     const index = stops.indexOf(stop);
     if (index > 0) {
       const dist2 = calculateDistance(stop.location, stops[index - 1].location);
+      const setDist2 = getLocationDist() === 0 ? dist2 : Number(getLocationDist());
       setInputValues((prev) => ({
         ...prev,
+        // locationDist: setDist2
         locationDist: dist2
       }));
     }
@@ -258,7 +282,7 @@ const PlaceInfo = ({ stop, stops, setStops, setZoomLocation }: PIPropsType) => {
       locationName: newName
     }));
     setDists();
-  }, [stop.location])
+  }, [stop.location, distances])
 
   useEffect(() => {
     updateStop();
@@ -463,7 +487,7 @@ const PlaceInfo = ({ stop, stops, setStops, setZoomLocation }: PIPropsType) => {
           </div>
         </div>
       </div>
-      <div className={`PlaceInfo__info ${showNotes || inputValues.notesMsg!=='' ? '' : 'hidden'}`}>
+      <div className={`PlaceInfo__info ${showNotes || inputValues.notesMsg !== '' ? '' : 'hidden'}`}>
         <div className='PlaceInfo__img-container'>
           <EditNoteIcon />
         </div>
