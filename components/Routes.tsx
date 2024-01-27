@@ -110,6 +110,7 @@ const Routes = ({ stops, setDistances, coord }: RPropsType) => {
         };
     
         routeControls.forEach((control, id) => {
+            setDistances([])
             control.on('routesfound', function (e) {
                 const routes = e.routes;
                 if (routes.length > 0) {

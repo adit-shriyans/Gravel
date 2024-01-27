@@ -35,12 +35,17 @@ const PlaceInfo = ({ distances, stop, stops, setStops, setTotalDistance, setZoom
 
   const [inputValues, setInputValues] = useState({
     locationName: stop.locationName,
-    locationDist: 10,
-    homeDist: 20,
+    // locationDist: 10,
+    // homeDist: 20,
     inDate: stop.startDate || getTodaysDate(),
     outDate: stop.endDate || getTodaysDate(),
     notesMsg: stop.notes || '',
   });
+
+  const [distValues, setDistValues] = useState({
+    locationDist: 10,
+    homeDist: 20,
+  })
 
   const [editMode, setEditMode] = useState(Array(arraySize).fill(false));
   const [showErr, setShowErr] = useState(Array(arraySize).fill(false));
@@ -125,20 +130,16 @@ const PlaceInfo = ({ distances, stop, stops, setStops, setTotalDistance, setZoom
 
 
   const handleInputBlur = () => {
-    const { locationName, locationDist, homeDist, inDate, outDate, notesMsg } = inputValues
+    const { locationName, inDate, outDate, notesMsg } = inputValues
 
-    if (locationName && locationDist && homeDist && inDate && outDate) {
-      if (isValidDate(inDate) && isValidDate(outDate) && locationDist > 0 && homeDist > 0) {
+    if (locationName && inDate && outDate) {
+      if (isValidDate(inDate) && isValidDate(outDate)) {
         if (notesMsg === '')
           setShowNotes(false);
         setEditMode(Array(arraySize).fill(false));
       }
       else if (!isValidDate(inDate) || !isValidDate(outDate)) {
         setErrMsg("Date not in format DD/MM/YY");
-        focusOnEmptyField();
-      }
-      else if (locationDist <= 0 || homeDist <= 0) {
-        setErrMsg("Distance can't be negative or zero");
         focusOnEmptyField();
       }
     }
@@ -149,10 +150,10 @@ const PlaceInfo = ({ distances, stop, stops, setStops, setTotalDistance, setZoom
   };
 
   const handleInputKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    const { locationName, locationDist, homeDist, inDate, outDate, notesMsg } = inputValues
+    const { locationName, inDate, outDate, notesMsg } = inputValues
     if (e.key === 'Enter') {
-      if (locationName && locationDist && homeDist && inDate && outDate) {
-        if (isValidDate(inDate) && isValidDate(outDate) && locationDist > 0 && homeDist > 0) {
+      if (locationName && inDate && outDate) {
+        if (isValidDate(inDate) && isValidDate(outDate)) {
           if (notesMsg === '')
             setShowNotes(false);
           setEditMode(Array(arraySize).fill(false));
@@ -160,11 +161,6 @@ const PlaceInfo = ({ distances, stop, stops, setStops, setTotalDistance, setZoom
         else if (!isValidDate(inDate) || !isValidDate(outDate)) {
           e.preventDefault();
           setErrMsg("Date not in format DD/MM/YY");
-          focusOnEmptyField();
-        }
-        else if (locationDist <= 0 || homeDist <= 0) {
-          e.preventDefault();
-          setErrMsg("Distance can't be negative or zero");
           focusOnEmptyField();
         }
       }
@@ -200,42 +196,41 @@ const PlaceInfo = ({ distances, stop, stops, setStops, setTotalDistance, setZoom
   };
 
   const setDists = () => {
-    let dist = 0;
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(function (location) {
-        const { latitude, longitude } = location.coords;
-        dist = calculateDistance(stop.location, [latitude, longitude]);
-        const setDist = getHomeDist() === 0 ? dist : Number(getHomeDist());
-        setInputValues((prev) => ({
-          ...prev,
-          // homeDist: setDist
-          homeDist: dist
-        }))
-        const index = stops.indexOf(stop);
-        if (index === 0) {
-          const setDist = getLocationDist() === 0 ? dist : Number(getLocationDist());
-          setInputValues((prev) => ({
+    if (distances.length >= stops.length) {
+      let dist = 0;
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(function (location) {
+          const { latitude, longitude } = location.coords;
+          dist = calculateDistance(stop.location, [latitude, longitude]);
+          const setDist = getHomeDist() === 0 ? dist : Number(getHomeDist());
+          setDistValues((prev) => ({
             ...prev,
-            // locationDist: setDist
-            locationDist: dist
-          }));
-        }
-      if(index === stops.length-1)
-        setTotalDistance(Number(getHomeDist()));
-      }, function () {
-        console.log('Could not get position');
-      });
-    }
+            homeDist: parseFloat(setDist.toFixed(2))
+          }))
+          const index = stops.indexOf(stop);
+          if (index === 0) {
+            const setDist = getLocationDist() === 0 ? dist : Number(getLocationDist());
+            setDistValues((prev) => ({
+              ...prev,
+              locationDist: parseFloat(setDist.toFixed(2))
+            }))
+          }
+          if (index === stops.length - 1)
+            setTotalDistance(Number(getHomeDist()));
+        }, function () {
+          console.log('Could not get position');
+        });
+      }
 
-    const index = stops.indexOf(stop);
-    if (index > 0) {
-      const dist2 = calculateDistance(stop.location, stops[index - 1].location);
-      const setDist2 = getLocationDist() === 0 ? dist2 : Number(getLocationDist());
-      setInputValues((prev) => ({
-        ...prev,
-        // locationDist: setDist2
-        locationDist: dist2
-      }));
+      const index = stops.indexOf(stop);
+      if (index > 0) {
+        const dist2 = calculateDistance(stop.location, stops[index - 1].location);
+        const setDist2 = getLocationDist() === 0 ? dist2 : Number(getLocationDist());
+        setDistValues((prev) => ({
+          ...prev,
+          locationDist: parseFloat(setDist2.toFixed(2))
+        }));
+      }
     }
   }
 
@@ -281,8 +276,11 @@ const PlaceInfo = ({ distances, stop, stops, setStops, setTotalDistance, setZoom
       ...prev,
       locationName: newName
     }));
+  }, [stop.location])
+
+  useEffect(() => {
     setDists();
-  }, [stop.location, distances])
+  }, [distances])
 
   useEffect(() => {
     updateStop();
@@ -294,10 +292,6 @@ const PlaceInfo = ({ distances, stop, stops, setStops, setTotalDistance, setZoom
     })
     setStops(newStops)
   }, [inputValues.inDate, inputValues.outDate, inputValues.notesMsg]);
-
-  useEffect(() => {
-    setDists();
-  }, []);
 
   return (
     <div className='PlaceInfo' onClick={() => { setZoomLocation(stop.location) }}>
@@ -327,10 +321,7 @@ const PlaceInfo = ({ distances, stop, stops, setStops, setTotalDistance, setZoom
       </div>
       <div className='PlaceInfo__info'>
         <div className='PlaceInfo__img-container'>
-          {/* <PlaceIcon className='PlaceInfo__img' /> */}
           <FontAwesomeIcon className='PlaceInfo__img' icon={faMapLocationDot} />
-          {/* <FontAwesomeIcon icon="fa-regular fa-map-location-dot" /> */}
-          {/* <FontAwesomeIcon icon={icon({name: 'user-secret'})} /> */}
         </div>
         <div className={`ErrorPopUp ${showErr[0] && errMsg ? '' : 'hidden'}`}>
           {errMsg}
@@ -423,67 +414,22 @@ const PlaceInfo = ({ distances, stop, stops, setStops, setTotalDistance, setZoom
       <div className='PlaceInfo__DistInfo'>
         <div className='PlaceInfo__info'>
           <div className='PlaceInfo__img-container'>
-            {/* <Image
-              src={distanceImg}
-              alt='distance image'
-              className='PlaceInfo__img PlaceInfo__img-distance'
-            /> */}
             <FontAwesomeIcon className='PlaceInfo__img' icon={faRoute} />
-          </div>
-          <div className={`ErrorPopUp ${showErr[1] && errMsg ? '' : 'hidden'}`}>
-            {errMsg}
           </div>
           <div
             className='PlaceInfo__prevdist PlaceInfo__dist PlaceInfo__content'
-            onClick={() => handleClick(1)}
           >
-            {editMode[1] ? (
-              <form className='PlaceInfo__form'>
-                <input
-                  className='PlaceInfo__input PlaceInfo__input-dist'
-                  type='text'
-                  value={inputValues.locationDist}
-                  placeholder='Distance (in km)'
-                  onChange={handleInputChange}
-                  onBlur={handleInputBlur}
-                  onKeyDown={handleInputKeyDown}
-                  ref={LDInputRef}
-                  name="locationDist"
-                />
-              </form>
-            ) : (
-              `${inputValues.locationDist}km`
-            )}
+              {distValues.locationDist}km
           </div>
         </div>
         <div className='PlaceInfo__info'>
           <div className='PlaceInfo__img-container'>
             <HomeIcon className='PlaceInfo__img PlaceInfo__img-distance' />
           </div>
-          <div className={`ErrorPopUp ${showErr[2] && errMsg ? '' : 'hidden'}`}>
-            {errMsg}
-          </div>
           <div
             className='PlaceInfo__prevdist PlaceInfo__dist PlaceInfo__content'
-            onClick={() => handleClick(2)}
           >
-            {editMode[2] ? (
-              <form className='PlaceInfo__form'>
-                <input
-                  className='PlaceInfo__input PlaceInfo__input-dist'
-                  type='text'
-                  value={inputValues.homeDist}
-                  placeholder='Distance to Home (in km)'
-                  onChange={handleInputChange}
-                  onBlur={handleInputBlur}
-                  onKeyDown={handleInputKeyDown}
-                  ref={HDInputRef}
-                  name="homeDist"
-                />
-              </form>
-            ) : (
-              `${inputValues.homeDist}km`
-            )}
+              {distValues.homeDist}km
           </div>
         </div>
       </div>

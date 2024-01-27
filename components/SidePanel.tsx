@@ -13,6 +13,8 @@ import { MarkerLocation } from '@assets/types/types';
 import { z, ZodError } from 'zod';
 import { calculateDistance, compareDates, getNumberOfDays, getTodaysDate, isValidDate } from '@assets/CalcFunctions';
 import { useParams } from 'next/navigation';
+import { OpenStreetMapProvider } from 'leaflet-geosearch';
+import '@node_modules/leaflet-geosearch/dist/geosearch.css';
 
 interface SPPropsType {
   distances: Number[];
@@ -153,9 +155,12 @@ const SidePanel = ({ distances, stops, setStops, setZoomLocation, coord }: SPPro
     setStops([...stops, { markerId: createdStop._id, location: createdStop.location, locationName: createdStop.locationName }])
   }
 
-  const handleAddFormChange = (e: ChangeEvent<HTMLInputElement>) => {
+  const handleAddFormChange = async (e: ChangeEvent<HTMLInputElement>) => {
     e.stopPropagation();
     setReqLocation(e.target.value);
+    const provider = new OpenStreetMapProvider();
+    const results = await provider.search({ query: e.target.value });
+    // console.log(results);
   }
 
   const handleInputKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
@@ -183,7 +188,7 @@ const SidePanel = ({ distances, stops, setStops, setZoomLocation, coord }: SPPro
             <Image src={totalDistImg} alt='total distance' />
           </div>
           <div className='TripInfo__dist-text'>
-            {totalDistance?totalDistance:0}km
+            {totalDistance ? totalDistance.toFixed(2) : 0}km
           </div>
         </div>
 
