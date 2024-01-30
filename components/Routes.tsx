@@ -23,7 +23,7 @@ const Routes = ({ stops, setDistances, coord }: RPropsType) => {
                 if (routeControls[i].getWaypoints()) routeControls[i].spliceWaypoints(0, 2);
             };
             routeControls.forEach((control) => {
-                control.remove();
+                control?.remove();
             });
 
             setRouteControls([]);
@@ -93,6 +93,37 @@ const Routes = ({ stops, setDistances, coord }: RPropsType) => {
                 }
             }
             document.querySelector('.MapContainer__routes')?.classList.add('hidden');
+        }
+        if (stops.length > 0 && !routeControls[stops.length]?.getWaypoints()[stops.length]?.latLng) {
+            const waypoints = [
+                L.latLng(stops[stops.length - 1].location[0], stops[stops.length - 1].location[1]),
+                L.latLng(coord[0], coord[1]),
+            ];
+            const routeControl = L.Routing.control({
+                waypoints,
+                plan: new L.Routing.Plan(waypoints, {
+                    createMarker: function (i, waypoints) {
+                        return false;
+                    }
+                }),
+                waypointMode: 'snap',
+                routeLine: (route, options) => L.Routing.line(route, {
+                    styles: [
+                        { color: 'black', opacity: 0, weight: 0 },
+                        { color: 'white', opacity: 0, weight: 0 },
+                        { color: 'blue', opacity: 0.35, weight: 6 }
+                    ],
+                    ...options
+                }),
+                addWaypoints: false,
+                routeWhileDragging: false,
+                showAlternatives: false,
+                fitSelectedRoutes: false,
+                containerClassName: 'MapContainer__route'
+            });
+
+            routeControl.addTo(map);
+            setRouteControls((prev) => [...prev, routeControl]);
         }
         setFirstRender(false);
     }, [stops, map, firstRender, coord]);

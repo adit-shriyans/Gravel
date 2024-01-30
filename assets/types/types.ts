@@ -1,5 +1,6 @@
 export type TripType = {
     _id: string;
+    name: String;
     stops: MarkerLocation[];
     status: StatusType; 
 }

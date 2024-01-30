@@ -25,9 +25,6 @@ const MyPage = () => {
   const { data: session } = useSession();
   const [showedTrips, setShowedTrips] = useState<TripType[]>(trips);
 
-  // const filteredTrips = tripStatus === "upcoming" ? eventsArray.filter(event => event.Team === "Solo") : eventsArray.filter(event => event.Team !== "Solo");
-  // const events = eventType ? filteredEvents : eventsArray;
-
   const router = useRouter();
 
   const filterTrips = (status: String) => {
@@ -40,7 +37,7 @@ const MyPage = () => {
     const response = await fetch('/api/trip');
     const data = await response.json();
     const allTrips: TripType[] = data.map((trip: any) => {
-      return { _id: trip._id, stops: [], status: trip.status }
+      return { _id: trip._id, name: trip.name || 'Your Trip', stops: [], status: trip.status }
     });
     
     setTrips(allTrips);
@@ -60,6 +57,7 @@ const MyPage = () => {
         method: "POST",
         body: JSON.stringify({
           userId: session?.user?.id,
+          name: 'Trip Nameee',
           status: "upcoming",
         }),
         headers: {

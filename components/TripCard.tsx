@@ -5,7 +5,6 @@ import { useRouter } from 'next/navigation';
 import demoImg from '../assets/sitedemo.png';
 import React, { useState } from 'react';
 import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
-import BeachAccessIcon from '@mui/icons-material/BeachAccess';
 import UpcomingIcon from '@mui/icons-material/Upcoming';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -40,7 +39,8 @@ const TripCard = ({ trip, trips, setTrips }: TripCardPropsType) => {
                     "Content-Type": "application/json",
                 },
                 body: JSON.stringify({
-                    status: statusOptions[(statusId+1)%3].toLowerCase()
+                    status: statusOptions[(statusId+1)%3].toLowerCase(),
+                    name: newTrips.find((t) => {t._id === trip._id})?.name || 'Trip Name',
                 }),
             });
         } catch (error) {
@@ -77,7 +77,7 @@ const TripCard = ({ trip, trips, setTrips }: TripCardPropsType) => {
                 />
             </div>
             <div className='TripCard__name'>
-                Name
+                {trip.name}
             </div>
             <div className='TripCard__btns'>
                 <div

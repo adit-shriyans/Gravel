@@ -5,6 +5,10 @@ const TripSchema = new Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User',
     },
+    name: {
+        type: String,
+        required: [true, 'Trip Name is required'],
+    },
     status: {
         type: String,
         required: [true, 'Status is required'],

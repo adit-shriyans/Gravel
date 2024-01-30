@@ -6,6 +6,7 @@ import { deleteStopsMiddleWare } from '@app/middlewares/deleteStops';
 
 interface TripRequestType {
     status: StatusType;
+    name: String;
 }
 
 // GET
@@ -13,9 +14,9 @@ export const GET = async (request: NextApiRequest, { params }: { params: { id: s
     try {
         await connectToDB();
 
-        const trip = await Trip.findById(params.id).populate('Trip');
+        const trip = await Trip.find({_id: params.id}).populate('user');
         if (!trip) return new Response("Trip not found", { status: 404 });
-        return new Response(JSON.stringify(trip), {
+        return new Response(JSON.stringify(trip[0]), {
             status: 200
         });
     } catch (error) {
@@ -24,7 +25,7 @@ export const GET = async (request: NextApiRequest, { params }: { params: { id: s
 }
 
 export const PATCH = async (request: { json: () => PromiseLike<TripRequestType> | TripRequestType; }, { params }: { params: { id: string } }) => {
-    const { status } = await request.json();
+    const { status, name } = await request.json();
 
     try {
         await connectToDB();
@@ -35,7 +36,8 @@ export const PATCH = async (request: { json: () => PromiseLike<TripRequestType> 
         }
 
         existingTrip.status = status;
-        console.log(existingTrip, params.id, status);
+        existingTrip.name = name;
+        console.log(existingTrip, name, status);
         
         await existingTrip.save();
 
