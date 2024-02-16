@@ -26,7 +26,6 @@ const UtilityDropDown = ({ stops, setStops, stop, setZoomLocation, setShowDropDo
                 const { latitude, longitude } = location.coords;
                 const currLocation: L.LatLngTuple = [latitude, longitude];
                 setZoomLocation(currLocation);
-
             }, function () {
                 console.log('Could not get position');
             });

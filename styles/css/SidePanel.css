@@ -29,6 +29,19 @@
   font-size: 1.5rem;
   text-align: center;
 }
+.SidePanel__Home {
+  display: flex;
+  color: #fff;
+  align-items: center;
+  margin: 0.5rem 1rem;
+  padding: 0.5rem;
+  border-radius: 5px;
+  background-color: #1e2270;
+  cursor: pointer;
+}
+.SidePanel__Home-img {
+  margin-right: 0.2rem;
+}
 .SidePanel .StopInfo {
   margin: 1rem 0;
   background-color: #3b3b4c;
@@ -151,6 +164,42 @@
   border-radius: 5px;
   padding: 0.25rem;
   margin-top: 0.5rem;
+}
+.addStop__searchResult {
+  position: absolute;
+  width: calc(20vw - 3.5rem);
+  left: 4.5rem;
+  top: 13.25rem;
+  max-height: 200px;
+  overflow-y: auto;
+  background-color: #fff;
+  border: 1px solid #ccc;
+  border-top: none;
+  border-radius: 5px;
+  z-index: 1000;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+.addStop__searchResult .addStop__result {
+  padding: 10px;
+  cursor: pointer;
+}
+.addStop__searchResult .addStop__result:hover {
+  background-color: #f5f5f5;
+}
+.addStop__searchResult .addStop__result:not(:last-child) {
+  border-bottom: 1px solid #ccc;
+}
+.addStop__searchResult::-webkit-scrollbar {
+  width: 5px;
+}
+.addStop__searchResult::-webkit-scrollbar-track {
+  -webkit-border-radius: 10px;
+  border-radius: 10px;
+}
+.addStop__searchResult::-webkit-scrollbar-thumb {
+  -webkit-border-radius: 10px;
+  border-radius: 10px;
+  background: transparent;
 }
 
 .PlaceInfo {

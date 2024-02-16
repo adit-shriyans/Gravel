@@ -3,6 +3,8 @@
 import React, { useEffect, FC, useRef, useState, MouseEvent } from 'react';
 import L, { Map } from 'leaflet';
 import CurrentLocationIcon from "../assets/currentlocation.png";
+// import CurrentLocationIcon2 from "../assets/currentlocation2.png";
+// import PersonPinCircleIcon from '@mui/icons-material/PersonPinCircle';
 import { MapContainer, TileLayer, Marker, Popup, useMap, useMapEvents } from 'react-leaflet';
 import { MarkerLocation } from '@assets/types/types';
 import "leaflet/dist/leaflet.css";
@@ -160,9 +162,10 @@ export default function MapComponent({ stops, setStops, setDistances, zoomLocati
                         new L.Icon({
                             iconUrl: CurrentLocationIcon.src,
                             iconRetinaUrl: CurrentLocationIcon.src,
-                            iconSize: [30, 41],
+                            iconSize: [41, 41],
                             iconAnchor: [12.5, 41],
                             popupAnchor: [0, -41],
+                            className: 'CurrentLocation'
                         })
                     }
                     position={coord}

@@ -4,17 +4,18 @@ import React, { useEffect, useState, ChangeEvent, useRef, useMemo } from 'react'
 import '@styles/css/SidePanel.css'
 import PlaceInfo from './PlaceInfo';
 import AddLocationAltIcon from '@mui/icons-material/AddLocationAlt';
-import DateRangeIcon from '@mui/icons-material/DateRange';
-import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
+import MyLocationIcon from '@mui/icons-material/MyLocation';
 import EventNoteIcon from '@mui/icons-material/EventNote';
 import totalDistImg from '../assets/totalDistance.png';
 import Image from 'next/image';
-import { MarkerLocation } from '@assets/types/types';
+import { MarkerLocation, searchResultType } from '@assets/types/types';
 import { z, ZodError } from 'zod';
 import { calculateDistance, compareDates, getNumberOfDays, getTodaysDate, isValidDate } from '@assets/CalcFunctions';
 import { useParams } from 'next/navigation';
 import { OpenStreetMapProvider } from 'leaflet-geosearch';
 import '@node_modules/leaflet-geosearch/dist/geosearch.css';
+import { SearchResult } from 'leaflet-geosearch/dist/providers/provider.js';
+import { RawResult } from 'leaflet-geosearch/dist/providers/openStreetMapProvider.js';
 
 interface SPPropsType {
   distances: Number[];
@@ -45,6 +46,7 @@ const geocodingResponseSchema = z.array(
 
 const SidePanel = ({ distances, stops, setStops, setZoomLocation, coord }: SPPropsType) => {
   const [scrolled, setScrolled] = useState(false);
+  const [searchResults, setSearchResults] = useState<SearchResult<RawResult>[]>([]);
   const [addingLocation, setAddingLocation] = useState(false);
   const [addCoords, setAddCoords] = useState<L.LatLngTuple | []>([]);
   const [reqLocation, setReqLocation] = useState('');
@@ -53,6 +55,7 @@ const SidePanel = ({ distances, stops, setStops, setZoomLocation, coord }: SPPro
   const [noOfDays, setNoOfDays] = useState<number>(0);
 
   const inputRef = useRef<HTMLInputElement | null>(null);
+  const addStopRef = useRef<HTMLDivElement>(null);
 
   const params = useParams();
 
@@ -70,7 +73,6 @@ const SidePanel = ({ distances, stops, setStops, setZoomLocation, coord }: SPPro
     let tripDist = 0;
     distances.forEach((dist) => tripDist += Number(dist));
     const setDist = tripDist === 0 ? parseFloat(dist.toFixed(2)) : tripDist;
-    // setTotalDistance(setDist);
     setTotalDistance(dist);
   }, [stops])
 
@@ -102,6 +104,20 @@ const SidePanel = ({ distances, stops, setStops, setZoomLocation, coord }: SPPro
   }, []);
 
   useEffect(() => {
+    const handleClickOutside = (e: MouseEvent) => {
+      if (addStopRef.current && !addStopRef.current?.contains(e.target as Node)) {
+        setAddingLocation(false);
+      }
+    };
+
+    document.addEventListener('click', handleClickOutside);
+
+    return () => {
+      document.removeEventListener('click', handleClickOutside);
+    };
+  }, []);
+
+  const addManualLocation = () => {
     if (reqLocation) {
       const apiUrl = `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(reqLocation)}`;
 
@@ -126,16 +142,16 @@ const SidePanel = ({ distances, stops, setStops, setZoomLocation, coord }: SPPro
         })
         .catch(error => console.error('Error fetching geocoding data', error));
     }
-  }, [reqLocation]);
+  };
 
-  const markNewLocation = async ([latitude, longitude]: L.LatLngTuple) => {
+  const markNewLocation = async ([latitude, longitude]: L.LatLngTuple, locationName: string) => {
     const createStopResponse = await fetch("/api/stop/new", {
       method: "POST",
       body: JSON.stringify({
         stopId: stops.length,
         tripId: params.id,
         location: [latitude, longitude],
-        locationName: reqLocation,
+        locationName: locationName,
         startDate: '',
         endDate: '',
         notes: ''
@@ -158,27 +174,39 @@ const SidePanel = ({ distances, stops, setStops, setZoomLocation, coord }: SPPro
   const handleAddFormChange = async (e: ChangeEvent<HTMLInputElement>) => {
     e.stopPropagation();
     setReqLocation(e.target.value);
-    const provider = new OpenStreetMapProvider();
-    const results = await provider.search({ query: e.target.value });
-    // console.log(results);
+    if (e.target.value) {
+      try {
+        const provider = new OpenStreetMapProvider();
+        const results = await provider.search({ query: e.target.value });
+        if (e.target.value) setSearchResults(results);
+      } catch (err) {
+        console.error("Error loading search results", err);
+      }
+    }
+    else setSearchResults([]);
+  }
+
+  const handleSearchResultsClick = (res: SearchResult<RawResult>, e: MouseEvent) => {
+    e.preventDefault();
+    setAddCoords([res.y, res.x]);
+    markNewLocation([res.y, res.x], res.label);
+    setZoomLocation([res.y, res.x]);
+    setReqLocation('');
+    setAddingLocation(false);
   }
 
   const handleInputKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter') {
       e.preventDefault();
+      addManualLocation();
       if (addCoords.length !== 0) {
-        markNewLocation(addCoords);
+        markNewLocation(addCoords, reqLocation);
         setZoomLocation(addCoords);
       }
       setReqLocation('');
       setAddingLocation(false);
     }
   }
-
-  const handleInputBlur = () => {
-    setAddingLocation(false);
-  };
-
   return (
     <div className={`SidePanel ${scrolled ? 'SideWindow' : ''}`}>
       <h1 className='SidePanel__heading'>Travel List!</h1>
@@ -201,10 +229,14 @@ const SidePanel = ({ distances, stops, setStops, setZoomLocation, coord }: SPPro
           </div>
         </div>
       </div>
-      <div className='addStop'>
+      <div
+        className='addStop'
+        ref={addStopRef}
+      >
         <div
           className='addStop__content'
-          onClick={() => setAddingLocation(!addingLocation)}
+          tabIndex={0}
+          onClick={() => setAddingLocation((prev) => !prev)}
         >
           <div
             className='addStop__img'
@@ -223,11 +255,32 @@ const SidePanel = ({ distances, stops, setStops, setZoomLocation, coord }: SPPro
             value={reqLocation}
             onChange={handleAddFormChange}
             onKeyDown={handleInputKeyDown}
-            onBlur={handleInputBlur}
             ref={inputRef}
             placeholder='Enter Location Name'
           />
         </form>
+      </div>
+      {searchResults.length > 0 && addingLocation ? (<div className='addStop__searchResult'>
+        {searchResults.map((res, index) => {
+          return (
+            <div className='addStop__result' key={index} onClick={(e) => handleSearchResultsClick(res, e as unknown as MouseEvent)}>
+              {res.label}
+            </div>
+          )
+        })}
+      </div>) : ''}
+      <div
+        className='SidePanel__Home'
+        onClick={() => { setZoomLocation(coord) }}
+      >
+        <div className='SidePanel__Home-img'>
+          <MyLocationIcon />
+        </div>
+        <div
+          className='SidePanel__Home-text'
+        >
+          Your Location
+        </div>
       </div>
       {stops.length > 0 ? (
         <div className='StopInfo__container'>

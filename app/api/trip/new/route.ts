@@ -13,6 +13,7 @@ export const POST = async (req: { json: () => PromiseLike<TripRequestType> | Tri
     try {
         await connectToDB();
         const newTrip = new Trip({
+            name: 'My Trip',
             user: userId,
             status
         })

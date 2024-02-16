@@ -14,6 +14,18 @@ export type MarkerLocation = {
     notes?: string
 }
 
+export type searchResultType = {
+  x: number;
+  y: number;
+  label: string;
+  bounds: [
+      [number, number],
+      [number, number],
+  ];
+  raw: Record<string, any>;
+};
+
+
 export type StatusType = {
     status: "completed" | "ongoing" | "upcoming"; 
 }
