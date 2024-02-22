@@ -39,6 +39,7 @@ const TripModal = ({ stops, setShowModal, tripId }: ModalPropsType) => {
                 });
 
                 const saveStops = async (stop: MarkerLocation, index: number) => {
+                    console.log(stop);
                     const {location, locationName, startDate, endDate, notes} = stop
                     const res = await fetch(`/api/stop/${stop.id}`, {
                         method: "PATCH",

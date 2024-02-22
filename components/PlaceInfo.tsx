@@ -217,12 +217,6 @@ const PlaceInfo = ({ distances, stop, stops, dndEnable, setStops, setTotalDistan
     if (editMode[0] && LNInputRef.current) {
       LNInputRef.current.focus();
     }
-    else if (editMode[1] && LDInputRef.current) {
-      LDInputRef.current.focus();
-    }
-    else if (editMode[2] && HDInputRef.current) {
-      HDInputRef.current.focus();
-    }
     else if (editMode[3] && IDInputRef.current) {
       IDInputRef.current.focus();
     }
@@ -245,7 +239,8 @@ const PlaceInfo = ({ distances, stop, stops, dndEnable, setStops, setTotalDistan
       });
       setStops(newStops);
     }
-  }, [inputValues.locationName])
+    else LNInputRef?.current?.focus();
+  }, [inputValues.locationName, editMode[0]])
 
   useEffect(() => {
     const locationNameArr = stop.locationName.split(',');
@@ -274,7 +269,10 @@ const PlaceInfo = ({ distances, stop, stops, dndEnable, setStops, setTotalDistan
       })
       setStops(newStops)
     }
-  }, [inputValues.inDate, inputValues.outDate, inputValues.notesMsg]);
+    else if(editMode[3]) IDInputRef.current?.focus();
+    else if(editMode[4]) ODInputRef.current?.focus();
+    else if(editMode[5]) NotesInputRef.current?.focus();
+  }, [inputValues.inDate, inputValues.outDate, inputValues.notesMsg, editMode[3], editMode[4], editMode[5]]);
 
   const DndStyles = {
     transition,
