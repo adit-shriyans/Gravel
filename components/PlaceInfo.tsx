@@ -239,7 +239,7 @@ const PlaceInfo = ({ distances, stop, stops, dndEnable, setStops, setTotalDistan
       });
       setStops(newStops);
     }
-    else LNInputRef?.current?.focus();
+    // else LNInputRef?.current?.focus();
   }, [inputValues.locationName, editMode[0]])
 
   useEffect(() => {

@@ -17,12 +17,9 @@ const MyPage = () => {
   const [zoomLocation, setZoomLocation] = useState<L.LatLngTuple>([51.505, -0.09]);
   const [distances, setDistances] = useState<Number[]>([]);
   const [showModal, setShowModal] = useState(false);
+  const [dndEnable, setDndEnable] = useState(false);
 
   const params = useParams();
-
-  // const getStopPosition = (id) => {
-  //   stops.findIndex(stop => stop.id === id);
-  // }
 
   const handleDragEnd = (event: DragEndEvent) => {
     const {active, over} = event;
@@ -75,9 +72,13 @@ const MyPage = () => {
       <div className={`MapComponent__Modal ${showModal ? '' : 'hidden'}`}>
         <TripModal stops={stops} setShowModal={setShowModal} tripId={String(params.id)} />
       </div>
-      <DndContext collisionDetection={closestCorners} onDragEnd={handleDragEnd} sensors={sensors}>
-        <SidePanel distances={distances} stops={stops} setStops={setStops} setZoomLocation={setZoomLocation} coord={coord} />
-      </DndContext>
+      {dndEnable?(
+        <DndContext collisionDetection={closestCorners} onDragEnd={handleDragEnd} sensors={sensors}>
+          <SidePanel distances={distances} stops={stops} setStops={setStops} setZoomLocation={setZoomLocation} coord={coord} dndEnable={dndEnable} setDndEnable={setDndEnable} />
+        </DndContext>
+      ):(
+        <SidePanel distances={distances} stops={stops} setStops={setStops} setZoomLocation={setZoomLocation} coord={coord} dndEnable={dndEnable} setDndEnable={setDndEnable} />
+      )}
       <DynamicMapComponent stops={stops} setStops={setStops} setDistances={setDistances} zoomLocation={zoomLocation} setZoomLocation={setZoomLocation} coord={coord} setShowModal={setShowModal} />
     </div>
   );
