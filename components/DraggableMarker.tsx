@@ -41,7 +41,7 @@ export default function DraggableMarker({ stops, setStops, center, id, setZoomLo
   
     setStops((prevStops) => {
       return prevStops.map((place) => {
-        if (place.markerId === id) {
+        if (place.id === id) {
           setZoomLocation(location);
           return { ...place, location: location, locationName: newName };
         }

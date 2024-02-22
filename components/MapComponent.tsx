@@ -86,7 +86,7 @@ function LocationMarker({ stops, setStops, tripId, setZoomLocation }: LMPropsTyp
 
                 const createdStop = await createStopResponse.json();
 
-                setStops([...stops, { markerId: createdStop._id, location: createdStop.location, locationName }])
+                setStops([...stops, { id: createdStop._id, location: createdStop.location, locationName }])
                 setZoomLocation(createdStop.location);
             } catch (error) {
                 if (error instanceof ZodError) {
@@ -175,7 +175,7 @@ export default function MapComponent({ stops, setStops, setDistances, zoomLocati
                     </Popup>
                 </Marker>
                 {stops.map((place) => (
-                    <DraggableMarker stops={stops} setStops={setStops} key={place.markerId} id={place.markerId} setZoomLocation={setZoomLocation} center={place.location} />
+                    <DraggableMarker stops={stops} setStops={setStops} key={place.id} id={place.id} setZoomLocation={setZoomLocation} center={place.location} />
                 ))}
                 <ZoomHandler />
                 <LocationMarker stops={stops} setStops={setStops} tripId={params.id} setZoomLocation={setZoomLocation} />

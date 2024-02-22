@@ -6,7 +6,7 @@ export type TripType = {
 }
 
 export type MarkerLocation = {
-    markerId: string,
+    id: string,
     location: L.LatLngTuple,
     locationName: string,
     startDate?: string,

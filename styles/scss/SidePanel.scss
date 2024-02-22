@@ -233,6 +233,19 @@
       
 }
 
+.DragNDrop {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-end;
+    padding-right: 1rem;
+    &__text {
+        width: fit-content;
+        color: #fff;
+        font-size: 0.8rem;
+    }
+}
+
 .PlaceInfo {
     padding: 0.2rem 0;
     display: flex;

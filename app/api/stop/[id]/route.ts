@@ -4,6 +4,7 @@ import Stop from '@models/stop';
 // import { StopResponseType } from '@assets/types/types';
 
 interface StopRequestType {
+    index: number;
     location: L.LatLngTuple; 
     locationName: String;
     startDate: String; 
@@ -31,7 +32,7 @@ export const GET = async (request: NextApiRequest, { params }: { params: { id: s
 
 // PATCH
 export const PATCH = async (request: { json: () => PromiseLike<StopRequestType> | StopRequestType; }, { params }: { params: { id: string } }) => {
-    const { location, locationName, startDate, endDate, notes } = await request.json();
+    const { index, location, locationName, startDate, endDate, notes } = await request.json();
 
     try {
         await connectToDB();
@@ -41,14 +42,13 @@ export const PATCH = async (request: { json: () => PromiseLike<StopRequestType> 
             return new Response("Stop not found", { status: 404 });
         }
 
-        // Update the existingStop properties
+        existingStop.id = index;
         existingStop.location = location;
         existingStop.locationName = locationName;
         existingStop.startDate = startDate;
         existingStop.endDate = endDate;
         existingStop.notes = notes;
-
-        // Save the changes
+        
         await existingStop.save();
 
         return new Response(JSON.stringify(existingStop), { status: 200 });

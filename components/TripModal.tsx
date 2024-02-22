@@ -2,8 +2,10 @@ import React, { useState, MouseEvent, ChangeEvent, useEffect, useRef } from 'rea
 import CheckIcon from '@mui/icons-material/Check';
 import CloseIcon from '@mui/icons-material/Close';
 import '@styles/css/TripModal.css';
+import { MarkerLocation } from '@assets/types/types';
 
 interface ModalPropsType {
+    stops: MarkerLocation[];
     setShowModal: React.Dispatch<React.SetStateAction<boolean>>;
     tripId: string;
 }
@@ -13,7 +15,7 @@ type TripResponseType = {
     name: string
 }
 
-const TripModal = ({ setShowModal, tripId }: ModalPropsType) => {
+const TripModal = ({ stops, setShowModal, tripId }: ModalPropsType) => {
     const [tripName, setTripName] = useState("");
     const [tripStatus, setTripStatus] = useState<String>('');
     const modalRef = useRef<HTMLDivElement>(null);
@@ -35,6 +37,26 @@ const TripModal = ({ setShowModal, tripId }: ModalPropsType) => {
                         status: tripStatus,
                     }),
                 });
+
+                const saveStops = async (stop: MarkerLocation, index: number) => {
+                    const {location, locationName, startDate, endDate, notes} = stop
+                    const res = await fetch(`/api/stop/${stop.id}`, {
+                        method: "PATCH",
+                        headers: {
+                            "Content-Type": "application/json",
+                        },
+                        body: JSON.stringify({
+                            index,
+                            location, 
+                            locationName, 
+                            startDate, 
+                            endDate, 
+                            notes
+                        })
+                    })
+                }
+                
+                stops.forEach((stop, index) => saveStops(stop, index));
             } catch (error) {
                 console.log(error);
             }

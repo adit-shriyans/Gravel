@@ -9,15 +9,17 @@ import EventIcon from '@mui/icons-material/Event';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import ExpandLessIcon from '@mui/icons-material/ExpandLess';
 import EditNoteIcon from '@mui/icons-material/EditNote';
-import Image from 'next/image';
 import UtilityDropDown from './UtilityDropDown';
 import { MarkerLocation } from '@assets/types/types';
 import { calculateDistance, getTodaysDate, isValidDate } from '@assets/CalcFunctions';
+import { useSortable } from '@dnd-kit/sortable';
+import { CSS } from '@dnd-kit/utilities';
 
 interface PIPropsType {
   distances: Number[];
   stop: MarkerLocation;
   stops: MarkerLocation[];
+  dndEnable: boolean;
   setStops: React.Dispatch<React.SetStateAction<MarkerLocation[]>>;
   setTotalDistance: React.Dispatch<React.SetStateAction<number>>;
   setZoomLocation: React.Dispatch<React.SetStateAction<L.LatLngTuple>>;
@@ -25,22 +27,21 @@ interface PIPropsType {
 
 const arraySize = 6;
 
-const PlaceInfo = ({ distances, stop, stops, setStops, setTotalDistance, setZoomLocation }: PIPropsType) => {
+const PlaceInfo = ({ distances, stop, stops, dndEnable, setStops, setTotalDistance, setZoomLocation }: PIPropsType) => {
   const locationNameArr = stop.locationName.split(',');
   let name = locationNameArr[0];
   if (locationNameArr.length > 1) {
     name = name + `, ${locationNameArr[1]}`
   }
-  const todaysDate = getTodaysDate();
 
   const [inputValues, setInputValues] = useState({
     locationName: stop.locationName,
-    // locationDist: 10,
-    // homeDist: 20,
     inDate: stop.startDate || getTodaysDate(),
     outDate: stop.endDate || getTodaysDate(),
     notesMsg: stop.notes || '',
   });
+
+  const { attributes, listeners, setNodeRef, transform, transition } = useSortable({ id: stop.id });
 
   const [distValues, setDistValues] = useState({
     locationDist: 10,
@@ -72,28 +73,6 @@ const PlaceInfo = ({ distances, stop, stops, setStops, setTotalDistance, setZoom
     }
     return homeDist;
   }
-
-  const updateStop = async () => {
-    try {
-      const { locationName, inDate, outDate, notesMsg } = inputValues;
-
-      const response = await fetch(`/api/stop/${stop.markerId}`, {
-        method: "PATCH",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          location: stop.location,
-          locationName: locationName,
-          startDate: inDate,
-          endDate: outDate,
-          notes: notesMsg,
-        }),
-      });
-    } catch (error) {
-      console.log(error);
-    }
-  };
 
   const handleClick = (id: number) => {
     if (!editMode[id]) {
@@ -256,14 +235,16 @@ const PlaceInfo = ({ distances, stop, stops, setStops, setTotalDistance, setZoom
   }, [editMode]);
 
   useEffect(() => {
-    updateStop();
-    const newStops = stops.map((place) => {
-      if (place.markerId === stop.markerId) {
-        place.locationName = inputValues.locationName;
-      }
-      return place;
-    });
-    setStops(newStops);
+    // updateStop();
+    if(!editMode[0]){
+      const newStops = stops.map((place) => {
+        if (place.id === stop.id) {
+          place.locationName = inputValues.locationName;
+        }
+        return place;
+      });
+      setStops(newStops);
+    }
   }, [inputValues.locationName])
 
   useEffect(() => {
@@ -283,185 +264,216 @@ const PlaceInfo = ({ distances, stop, stops, setStops, setTotalDistance, setZoom
   }, [distances])
 
   useEffect(() => {
-    updateStop();
-    const newStops = stops.map((place) => {
-      if (stop.markerId === place.markerId) {
-        return { ...place, startDate: inputValues.inDate, endDate: inputValues.outDate, notes: inputValues.notesMsg }
-      }
-      return place;
-    })
-    setStops(newStops)
+    // updateStop();
+    if(!editMode[3] && !editMode[4] && !editMode[5]) {
+      const newStops = stops.map((place) => {
+        if (stop.id === place.id) {
+          return { ...place, startDate: inputValues.inDate, endDate: inputValues.outDate, notes: inputValues.notesMsg }
+        }
+        return place;
+      })
+      setStops(newStops)
+    }
   }, [inputValues.inDate, inputValues.outDate, inputValues.notesMsg]);
 
-  return (
-    <div className='PlaceInfo' onClick={() => { setZoomLocation(stop.location) }}>
-      <div
-        className='PlaceInfo__dropdownbtn-container'
-        tabIndex={0}
-        onFocusCapture={() => setShowDropDown(true)}
-        onBlurCapture={() => setShowDropDown(false)}
-      >
-        {showDropDown ?
-          (
-            <div className='PlaceInfo__dropdown-container'>
-              <ExpandLessIcon
-                className='PlaceInfo__dropdownbtn'
+  const DndStyles = {
+    transition,
+    transform: CSS.Transform.toString(transform),
+  }
+
+  const PlaceInfoContent = () => {
+    return (
+      <>
+        <div
+          className='PlaceInfo__dropdownbtn-container'
+          tabIndex={0}
+          onFocusCapture={() => setShowDropDown(true)}
+          onBlurCapture={() => setShowDropDown(false)}
+        >
+          {showDropDown ?
+            (
+              <div className='PlaceInfo__dropdown-container'>
+                <ExpandLessIcon
+                  className='PlaceInfo__dropdownbtn'
+                  onClick={(e) => (handleDropdownClick(e))}
+                />
+                <UtilityDropDown setStops={setStops} setZoomLocation={setZoomLocation} stop={stop} stops={stops} setShowDropDown={setShowDropDown} handleAddNotes={handleAddNotes} />
+              </div>
+            ) :
+            (
+              <ExpandMoreIcon
+                className='PlaceInfo__dropdownbtn PlaceInfo__dropdownbtnop'
                 onClick={(e) => (handleDropdownClick(e))}
               />
-              <UtilityDropDown setStops={setStops} setZoomLocation={setZoomLocation} stop={stop} stops={stops} setShowDropDown={setShowDropDown} handleAddNotes={handleAddNotes} />
+            )
+          }
+        </div>
+        <div className='PlaceInfo__info'>
+          <div className='PlaceInfo__img-container'>
+            <FontAwesomeIcon className='PlaceInfo__img' icon={faMapLocationDot} />
+          </div>
+          <div className={`ErrorPopUp ${showErr[0] && errMsg ? '' : 'hidden'}`}>
+            {errMsg}
+          </div>
+          <div
+            className='PlaceInfo__name PlaceInfo__content'
+            onClick={() => handleClick(0)}
+          >
+            {editMode[0] ? (
+              <form className='PlaceInfo__form'>
+                <input
+                  className='PlaceInfo__input'
+                  type='text'
+                  value={inputValues.locationName}
+                  placeholder='Location Name'
+                  onChange={handleInputChange}
+                  onBlur={handleInputBlur}
+                  onKeyDown={handleInputKeyDown}
+                  ref={LNInputRef}
+                  name='locationName'
+                />
+              </form>
+            ) : (
+              `${inputValues.locationName}`
+            )}
+          </div>
+        </div>
+        <div className='PlaceInfo__DateInfo'>
+          <div className='PlaceInfo__info'>
+            <div className='PlaceInfo__img-container'>
+              <TodayIcon className='PlaceInfo__img' />
             </div>
-          ) :
-          (
-            <ExpandMoreIcon
-              className='PlaceInfo__dropdownbtn PlaceInfo__dropdownbtnop'
-              onClick={(e) => (handleDropdownClick(e))}
-            />
-          )
-        }
-      </div>
-      <div className='PlaceInfo__info'>
-        <div className='PlaceInfo__img-container'>
-          <FontAwesomeIcon className='PlaceInfo__img' icon={faMapLocationDot} />
-        </div>
-        <div className={`ErrorPopUp ${showErr[0] && errMsg ? '' : 'hidden'}`}>
-          {errMsg}
-        </div>
-        <div
-          className='PlaceInfo__name PlaceInfo__content'
-          onClick={() => handleClick(0)}
-        >
-          {editMode[0] ? (
-            <form className='PlaceInfo__form'>
-              <input
-                className='PlaceInfo__input'
-                type='text'
-                value={inputValues.locationName}
-                placeholder='Location Name'
-                onChange={handleInputChange}
-                onBlur={handleInputBlur}
-                onKeyDown={handleInputKeyDown}
-                ref={LNInputRef}
-                name='locationName'
-              />
-            </form>
-          ) : (
-            `${inputValues.locationName}`
-          )}
-        </div>
-      </div>
-      <div className='PlaceInfo__DateInfo'>
-        <div className='PlaceInfo__info'>
-          <div className='PlaceInfo__img-container'>
-            <TodayIcon className='PlaceInfo__img' />
+            <div className={`ErrorPopUp ${showErr[3] && errMsg ? '' : 'hidden'}`}>
+              {errMsg}
+            </div>
+            <div
+              className='PlaceInfo__indate PlaceInfo__date PlaceInfo__content'
+              onClick={() => handleClick(3)}
+            >
+              {editMode[3] ? (
+                <form className='PlaceInfo__form'>
+                  <input
+                    className='PlaceInfo__input PlaceInfo__input-date'
+                    type='text'
+                    value={inputValues.inDate}
+                    placeholder='Check-In Date'
+                    onChange={handleInputChange}
+                    onBlur={handleInputBlur}
+                    onKeyDown={handleInputKeyDown}
+                    ref={IDInputRef}
+                    name="inDate"
+                  />
+                </form>
+              ) : (
+                `${inputValues.inDate}`
+              )}
+            </div>
           </div>
-          <div className={`ErrorPopUp ${showErr[3] && errMsg ? '' : 'hidden'}`}>
-            {errMsg}
-          </div>
-          <div
-            className='PlaceInfo__indate PlaceInfo__date PlaceInfo__content'
-            onClick={() => handleClick(3)}
-          >
-            {editMode[3] ? (
-              <form className='PlaceInfo__form'>
-                <input
-                  className='PlaceInfo__input PlaceInfo__input-date'
-                  type='text'
-                  value={inputValues.inDate}
-                  placeholder='Check-In Date'
-                  onChange={handleInputChange}
-                  onBlur={handleInputBlur}
-                  onKeyDown={handleInputKeyDown}
-                  ref={IDInputRef}
-                  name="inDate"
-                />
-              </form>
-            ) : (
-              `${inputValues.inDate}`
-            )}
+          <div className='PlaceInfo__info'>
+            <div className='PlaceInfo__img-container'>
+              <EventIcon className='PlaceInfo__img' />
+            </div>
+            <div className={`ErrorPopUp ${showErr[4] && errMsg ? '' : 'hidden'}`}>
+              {errMsg}
+            </div>
+            <div
+              className='PlaceInfo__outdate PlaceInfo__date PlaceInfo__content'
+              onClick={() => handleClick(4)}
+            >
+              {editMode[4] ? (
+                <form className='PlaceInfo__form'>
+                  <input
+                    className='PlaceInfo__input PlaceInfo__input-date'
+                    type='text'
+                    value={inputValues.outDate}
+                    placeholder='Check-Out Date'
+                    onChange={handleInputChange}
+                    onBlur={handleInputBlur}
+                    onKeyDown={handleInputKeyDown}
+                    ref={ODInputRef}
+                    name="outDate"
+                  />
+                </form>
+              ) : (
+                `${inputValues.outDate}`
+              )}
+            </div>
           </div>
         </div>
-        <div className='PlaceInfo__info'>
-          <div className='PlaceInfo__img-container'>
-            <EventIcon className='PlaceInfo__img' />
-          </div>
-          <div className={`ErrorPopUp ${showErr[4] && errMsg ? '' : 'hidden'}`}>
-            {errMsg}
-          </div>
-          <div
-            className='PlaceInfo__outdate PlaceInfo__date PlaceInfo__content'
-            onClick={() => handleClick(4)}
-          >
-            {editMode[4] ? (
-              <form className='PlaceInfo__form'>
-                <input
-                  className='PlaceInfo__input PlaceInfo__input-date'
-                  type='text'
-                  value={inputValues.outDate}
-                  placeholder='Check-Out Date'
-                  onChange={handleInputChange}
-                  onBlur={handleInputBlur}
-                  onKeyDown={handleInputKeyDown}
-                  ref={ODInputRef}
-                  name="outDate"
-                />
-              </form>
-            ) : (
-              `${inputValues.outDate}`
-            )}
-          </div>
-        </div>
-      </div>
-      <div className='PlaceInfo__DistInfo'>
-        <div className='PlaceInfo__info'>
-          <div className='PlaceInfo__img-container'>
-            <FontAwesomeIcon className='PlaceInfo__img' icon={faRoute} />
-          </div>
-          <div
-            className='PlaceInfo__prevdist PlaceInfo__dist PlaceInfo__content'
-          >
+        <div className='PlaceInfo__DistInfo'>
+          <div className='PlaceInfo__info'>
+            <div className='PlaceInfo__img-container'>
+              <FontAwesomeIcon className='PlaceInfo__img' icon={faRoute} />
+            </div>
+            <div
+              className='PlaceInfo__prevdist PlaceInfo__dist PlaceInfo__content'
+            >
               {distValues.locationDist}km
+            </div>
+          </div>
+          <div className='PlaceInfo__info'>
+            <div className='PlaceInfo__img-container'>
+              <HomeIcon className='PlaceInfo__img PlaceInfo__img-distance' />
+            </div>
+            <div
+              className='PlaceInfo__prevdist PlaceInfo__dist PlaceInfo__content'
+            >
+              {distValues.homeDist}km
+            </div>
           </div>
         </div>
-        <div className='PlaceInfo__info'>
+        <div className={`PlaceInfo__info ${showNotes || inputValues.notesMsg !== '' ? '' : 'hidden'}`}>
           <div className='PlaceInfo__img-container'>
-            <HomeIcon className='PlaceInfo__img PlaceInfo__img-distance' />
+            <EditNoteIcon />
           </div>
           <div
-            className='PlaceInfo__prevdist PlaceInfo__dist PlaceInfo__content'
+            className='PlaceInfo__notes PlaceInfo__content'
+            onClick={() => handleClick(5)}
           >
-              {distValues.homeDist}km
+            {editMode[5] ? (
+              <form className='PlaceInfo__form'>
+                <input
+                  className='PlaceInfo__input'
+                  type='text'
+                  value={inputValues.notesMsg}
+                  placeholder='Add notes'
+                  onChange={handleInputChange}
+                  onBlur={handleInputBlur}
+                  onKeyDown={handleInputKeyDown}
+                  ref={NotesInputRef}
+                  name="notesMsg"
+                />
+              </form>
+            ) : (
+              `${inputValues.notesMsg}`
+            )}
           </div>
         </div>
+      </>
+    )
+  }
+
+  return (
+    dndEnable ? ( 
+      <div
+        className='PlaceInfo'
+        onClick={() => { setZoomLocation(stop.location) }}
+        ref={setNodeRef}
+        {...attributes}
+        {...listeners}
+        style={DndStyles}
+      >
+        <PlaceInfoContent />
       </div>
-      <div className={`PlaceInfo__info ${showNotes || inputValues.notesMsg !== '' ? '' : 'hidden'}`}>
-        <div className='PlaceInfo__img-container'>
-          <EditNoteIcon />
-        </div>
-        <div
-          className='PlaceInfo__notes PlaceInfo__content'
-          onClick={() => handleClick(5)}
-        >
-          {editMode[5] ? (
-            <form className='PlaceInfo__form'>
-              <input
-                className='PlaceInfo__input'
-                type='text'
-                value={inputValues.notesMsg}
-                placeholder='Add notes'
-                onChange={handleInputChange}
-                onBlur={handleInputBlur}
-                onKeyDown={handleInputKeyDown}
-                ref={NotesInputRef}
-                name="notesMsg"
-              />
-            </form>
-          ) : (
-            `${inputValues.notesMsg}`
-          )}
-        </div>
+    ) : (
+      <div
+        className='PlaceInfo'
+        onClick={() => { setZoomLocation(stop.location) }}
+      >
+        <PlaceInfoContent />
       </div>
-    </div>
-  );
+    )
+  );  
 };
 
 export default PlaceInfo;

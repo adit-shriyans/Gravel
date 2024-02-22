@@ -6,8 +6,8 @@ import 'leaflet-routing-machine/dist/leaflet-routing-machine.css';
 import 'leaflet-routing-machine';
 
 interface RPropsType {
-    stops: MarkerLocation[]; 
-    setDistances: React.Dispatch<React.SetStateAction<Number[]>>; 
+    stops: MarkerLocation[];
+    setDistances: React.Dispatch<React.SetStateAction<Number[]>>;
     coord: L.LatLngTuple
 }
 
@@ -45,7 +45,7 @@ const Routes = ({ stops, setDistances, coord }: RPropsType) => {
                         styles: [
                             { color: 'black', opacity: 0, weight: 0 },
                             { color: 'white', opacity: 0, weight: 0 },
-                            { color: 'blue', opacity: 0.35, weight: 6 }
+                            { color: 'blue', opacity: 0.85, weight: 5.5 }
                         ],
                         ...options
                     }),
@@ -75,9 +75,9 @@ const Routes = ({ stops, setDistances, coord }: RPropsType) => {
                         waypointMode: 'snap',
                         routeLine: (route, options) => L.Routing.line(route, {
                             styles: [
-                                { color: 'black', opacity: 0.15, weight: 0 },
-                                { color: 'white', opacity: 0.8, weight: 0 },
-                                { color: 'blue', opacity: 0.35, weight: 6 }
+                                { color: 'black', opacity: 0, weight: 0 },
+                                { color: 'white', opacity: 0, weight: 0 },
+                                { color: 'blue', opacity: 0.85, weight: 5.5 }
                             ],
                             ...options
                         }),
@@ -106,9 +106,9 @@ const Routes = ({ stops, setDistances, coord }: RPropsType) => {
                     totalDistance += prevCoordinate.distanceTo(coordinate);
                 }
             });
-            return parseFloat((totalDistance/1000).toFixed(2));
+            return parseFloat((totalDistance / 1000).toFixed(2));
         };
-    
+
         routeControls.forEach((control, id) => {
             setDistances([])
             control.on('routesfound', function (e) {

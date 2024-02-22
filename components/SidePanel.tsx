@@ -6,6 +6,7 @@ import PlaceInfo from './PlaceInfo';
 import AddLocationAltIcon from '@mui/icons-material/AddLocationAlt';
 import MyLocationIcon from '@mui/icons-material/MyLocation';
 import EventNoteIcon from '@mui/icons-material/EventNote';
+import TocIcon from '@mui/icons-material/Toc';
 import totalDistImg from '../assets/totalDistance.png';
 import Image from 'next/image';
 import { MarkerLocation, searchResultType } from '@assets/types/types';
@@ -16,6 +17,7 @@ import { OpenStreetMapProvider } from 'leaflet-geosearch';
 import '@node_modules/leaflet-geosearch/dist/geosearch.css';
 import { SearchResult } from 'leaflet-geosearch/dist/providers/provider.js';
 import { RawResult } from 'leaflet-geosearch/dist/providers/openStreetMapProvider.js';
+import { SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable';
 
 interface SPPropsType {
   distances: Number[];
@@ -53,6 +55,7 @@ const SidePanel = ({ distances, stops, setStops, setZoomLocation, coord }: SPPro
   const [totalDistance, setTotalDistance] = useState(0);
   const [tripDates, setTripDates] = useState<string[]>([getTodaysDate(), getTodaysDate()]);
   const [noOfDays, setNoOfDays] = useState<number>(0);
+  const [dndEnable, setDndEnable] = useState(false);
 
   const inputRef = useRef<HTMLInputElement | null>(null);
   const addStopRef = useRef<HTMLDivElement>(null);
@@ -168,7 +171,7 @@ const SidePanel = ({ distances, stops, setStops, setZoomLocation, coord }: SPPro
 
     const createdStop = await createStopResponse.json();
 
-    setStops([...stops, { markerId: createdStop._id, location: createdStop.location, locationName: createdStop.locationName }])
+    setStops([...stops, { id: createdStop._id, location: createdStop.location, locationName: createdStop.locationName }])
   }
 
   const handleAddFormChange = async (e: ChangeEvent<HTMLInputElement>) => {
@@ -207,6 +210,11 @@ const SidePanel = ({ distances, stops, setStops, setZoomLocation, coord }: SPPro
       setAddingLocation(false);
     }
   }
+
+  useEffect(() => {
+    console.log(dndEnable);
+  }, [dndEnable])
+
   return (
     <div className={`SidePanel ${scrolled ? 'SideWindow' : ''}`}>
       <h1 className='SidePanel__heading'>Travel List!</h1>
@@ -282,13 +290,22 @@ const SidePanel = ({ distances, stops, setStops, setZoomLocation, coord }: SPPro
           Your Location
         </div>
       </div>
+      <div className='DragNDrop'>
+        <input className='DragNDrop__box' onClick={() => setDndEnable(prev => !prev)} type="checkbox" />
+        <div className='DragNDrop__text'>Reorder</div>
+      </div>
       {stops.length > 0 ? (
         <div className='StopInfo__container'>
-          {stops.map((stop) => (
-            <div key={stop.markerId} className='StopInfo'>
-              <PlaceInfo key={stop.markerId} distances={distances} stop={stop} stops={stops} setStops={setStops} setTotalDistance={setTotalDistance} setZoomLocation={setZoomLocation} />
-            </div>
-          ))}
+          <SortableContext 
+            items={stops}
+            strategy={verticalListSortingStrategy}
+          >
+            {stops.map((stop) => (
+              <div key={stop.id} className='StopInfo'>
+                <PlaceInfo key={stop.id} distances={distances} stop={stop} stops={stops} setStops={setStops} setTotalDistance={setTotalDistance} setZoomLocation={setZoomLocation} dndEnable={dndEnable} />
+              </div>
+            ))}
+          </SortableContext>
         </div>
       ) :
         (
