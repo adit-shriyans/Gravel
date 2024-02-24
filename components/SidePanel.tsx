@@ -22,8 +22,6 @@ import { SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable'
 interface SPPropsType {
   distances: Number[];
   stops: MarkerLocation[];
-  dndEnable: boolean;
-  setDndEnable: React.Dispatch<React.SetStateAction<boolean>>;
   setStops: React.Dispatch<React.SetStateAction<MarkerLocation[]>>;
   setZoomLocation: React.Dispatch<React.SetStateAction<L.LatLngTuple>>;
   coord: L.LatLngTuple;
@@ -48,7 +46,7 @@ const geocodingResponseSchema = z.array(
   })
 );
 
-const SidePanel = ({ distances, stops, setStops, setZoomLocation, coord, dndEnable, setDndEnable }: SPPropsType) => {
+const SidePanel = ({ distances, stops, setStops, setZoomLocation, coord }: SPPropsType) => {
   const [scrolled, setScrolled] = useState(false);
   const [searchResults, setSearchResults] = useState<SearchResult<RawResult>[]>([]);
   const [addingLocation, setAddingLocation] = useState(false);
@@ -57,7 +55,7 @@ const SidePanel = ({ distances, stops, setStops, setZoomLocation, coord, dndEnab
   const [totalDistance, setTotalDistance] = useState(0);
   const [tripDates, setTripDates] = useState<string[]>([getTodaysDate(), getTodaysDate()]);
   const [noOfDays, setNoOfDays] = useState<number>(0);
-  // const [dndEnable, setDndEnable] = useState(false);
+  const [dndEnable, setDndEnable] = useState(false);
 
   const inputRef = useRef<HTMLInputElement | null>(null);
   const addStopRef = useRef<HTMLDivElement>(null);
@@ -299,24 +297,16 @@ const SidePanel = ({ distances, stops, setStops, setZoomLocation, coord, dndEnab
       </div>
       {stops.length > 0 ? (
         <div className='StopInfo__container'>
-          {dndEnable?(
-            <SortableContext 
-              items={stops}
-              strategy={verticalListSortingStrategy}
-            >
-              {stops.map((stop) => (
-                <div key={stop.id} className='StopInfo'>
-                  <PlaceInfo key={stop.id} distances={distances} stop={stop} stops={stops} setStops={setStops} setTotalDistance={setTotalDistance} setZoomLocation={setZoomLocation} dndEnable={dndEnable} />
-                </div>
-              ))}
-          </SortableContext>
-          ):(
-            stops.map((stop) => (
+          <SortableContext 
+            items={stops}
+            strategy={verticalListSortingStrategy}
+          >
+            {stops.map((stop) => (
               <div key={stop.id} className='StopInfo'>
                 <PlaceInfo key={stop.id} distances={distances} stop={stop} stops={stops} setStops={setStops} setTotalDistance={setTotalDistance} setZoomLocation={setZoomLocation} dndEnable={dndEnable} />
               </div>
-            ))
-          )}
+            ))}
+          </SortableContext>
         </div>
       ) :
         (

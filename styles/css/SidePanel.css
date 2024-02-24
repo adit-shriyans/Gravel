@@ -43,12 +43,6 @@
   margin-right: 0.2rem;
 }
 .SidePanel .StopInfo {
-  margin: 1rem 0;
-  background-color: #3b3b4c;
-  padding: 0.75rem 0.5rem;
-  padding-left: 0;
-  border-radius: 5px;
-  border-left: 5px solid #08c76e;
   color: #fff;
 }
 .SidePanel .StopInfo__container {
@@ -220,6 +214,12 @@
   display: flex;
   flex-direction: column;
   cursor: pointer;
+  background-color: #3b3b4c;
+  border-left: 5px solid #08c76e;
+  border-radius: 5px;
+  margin: 1rem 0;
+  padding: 0.75rem 0.5rem;
+  padding-left: 0;
 }
 .PlaceInfo:hover .PlaceInfo__dropdownbtnop {
   opacity: 0.4;

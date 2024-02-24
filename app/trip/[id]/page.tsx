@@ -4,10 +4,11 @@ import { MarkerLocation, StopResponseType, TripType } from '@assets/types/types'
 import SidePanel from "@components/SidePanel";
 import dynamic from "next/dynamic";
 import { useEffect, useState } from 'react';
-import { useParams, usePathname } from 'next/navigation';
+import { useParams } from 'next/navigation';
 import TripModal from '@components/TripModal';
 import { DndContext, DragEndEvent, KeyboardSensor, PointerSensor, TouchSensor, closestCorners, useSensor, useSensors } from '@dnd-kit/core';
 import { arrayMove, sortableKeyboardCoordinates } from '@dnd-kit/sortable';
+import { restrictToVerticalAxis } from '@dnd-kit/modifiers'
 
 const DynamicMapComponent = dynamic(() => import("@components/MapComponent"), { ssr: false });
 
@@ -17,7 +18,6 @@ const MyPage = () => {
   const [zoomLocation, setZoomLocation] = useState<L.LatLngTuple>([51.505, -0.09]);
   const [distances, setDistances] = useState<Number[]>([]);
   const [showModal, setShowModal] = useState(false);
-  const [dndEnable, setDndEnable] = useState(false);
 
   const params = useParams();
 
@@ -72,13 +72,9 @@ const MyPage = () => {
       <div className={`MapComponent__Modal ${showModal ? '' : 'hidden'}`}>
         <TripModal stops={stops} setShowModal={setShowModal} tripId={String(params.id)} />
       </div>
-      {dndEnable?(
-        <DndContext collisionDetection={closestCorners} onDragEnd={handleDragEnd} sensors={sensors}>
-          <SidePanel distances={distances} stops={stops} setStops={setStops} setZoomLocation={setZoomLocation} coord={coord} dndEnable={dndEnable} setDndEnable={setDndEnable} />
-        </DndContext>
-      ):(
-        <SidePanel distances={distances} stops={stops} setStops={setStops} setZoomLocation={setZoomLocation} coord={coord} dndEnable={dndEnable} setDndEnable={setDndEnable} />
-      )}
+      <DndContext collisionDetection={closestCorners} onDragEnd={handleDragEnd} sensors={sensors} modifiers={[restrictToVerticalAxis]} >
+        <SidePanel distances={distances} stops={stops} setStops={setStops} setZoomLocation={setZoomLocation} coord={coord} />
+      </DndContext>
       <DynamicMapComponent stops={stops} setStops={setStops} setDistances={setDistances} zoomLocation={zoomLocation} setZoomLocation={setZoomLocation} coord={coord} setShowModal={setShowModal} />
     </div>
   );

@@ -27,7 +27,7 @@ interface PIPropsType {
 
 const arraySize = 6;
 
-const PlaceInfo = ({ distances, stop, stops, dndEnable, setStops, setTotalDistance, setZoomLocation }: PIPropsType) => {
+const PlaceInfoContent = ({ distances, stop, stops, dndEnable, setStops, setTotalDistance, setZoomLocation }: PIPropsType) => {
   const locationNameArr = stop.locationName.split(',');
   let name = locationNameArr[0];
   if (locationNameArr.length > 1) {
@@ -40,8 +40,6 @@ const PlaceInfo = ({ distances, stop, stops, dndEnable, setStops, setTotalDistan
     outDate: stop.endDate || getTodaysDate(),
     notesMsg: stop.notes || '',
   });
-
-  const { attributes, listeners, setNodeRef, transform, transition } = useSortable({ id: stop.id });
 
   const [distValues, setDistValues] = useState({
     locationDist: 10,
@@ -273,15 +271,12 @@ const PlaceInfo = ({ distances, stop, stops, dndEnable, setStops, setTotalDistan
     else if(editMode[4]) ODInputRef.current?.focus();
     else if(editMode[5]) NotesInputRef.current?.focus();
   }, [inputValues.inDate, inputValues.outDate, inputValues.notesMsg, editMode[3], editMode[4], editMode[5]]);
-  const DndStyles = {
-    transition,
-    transform: CSS.Transform.toString(transform),
-  }
-
-  const PlaceInfoContent = () => {
-    return (
-      <>
-        <div
+  return (
+    <div
+      className='PlaceInfo'
+      onClick={() => { setZoomLocation(stop.location) }}
+    >
+      <div
           className='PlaceInfo__dropdownbtn-container'
           tabIndex={0}
           onFocusCapture={() => setShowDropDown(true)}
@@ -446,28 +441,30 @@ const PlaceInfo = ({ distances, stop, stops, dndEnable, setStops, setTotalDistan
             )}
           </div>
         </div>
-      </>
-    )
+    </div>
+  )
+}
+
+const PlaceInfo = ({ distances, stop, stops, dndEnable, setStops, setTotalDistance, setZoomLocation }: PIPropsType) => {
+  const { attributes, listeners, setNodeRef, transform, transition } = useSortable({ id: stop.id });
+  const DndStyles = {
+    transition,
+    transform: CSS.Transform.toString(transform),
   }
 
   return (
     dndEnable ? ( 
       <div
-        className='PlaceInfo'
-        onClick={() => { setZoomLocation(stop.location) }}
         ref={setNodeRef}
         {...attributes}
         {...listeners}
         style={DndStyles}
       >
-        <PlaceInfoContent />
+        <PlaceInfoContent distances={distances} stop={stop} stops={stops} dndEnable={dndEnable} setStops={setStops} setTotalDistance={setTotalDistance} setZoomLocation={setZoomLocation} />
       </div>
     ) : (
-      <div
-        className='PlaceInfo'
-        onClick={() => { setZoomLocation(stop.location) }}
-      >
-        <PlaceInfoContent />
+      <div>
+        <PlaceInfoContent distances={distances} stop={stop} stops={stops} dndEnable={dndEnable} setStops={setStops} setTotalDistance={setTotalDistance} setZoomLocation={setZoomLocation} />
       </div>
     )
   );  
