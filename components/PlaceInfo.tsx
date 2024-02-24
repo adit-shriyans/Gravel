@@ -273,7 +273,6 @@ const PlaceInfo = ({ distances, stop, stops, dndEnable, setStops, setTotalDistan
     else if(editMode[4]) ODInputRef.current?.focus();
     else if(editMode[5]) NotesInputRef.current?.focus();
   }, [inputValues.inDate, inputValues.outDate, inputValues.notesMsg, editMode[3], editMode[4], editMode[5]]);
-
   const DndStyles = {
     transition,
     transform: CSS.Transform.toString(transform),

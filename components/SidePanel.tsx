@@ -289,7 +289,12 @@ const SidePanel = ({ distances, stops, setStops, setZoomLocation, coord, dndEnab
         </div>
       </div>
       <div className='DragNDrop'>
-        <input className='DragNDrop__box' onClick={() => setDndEnable(prev => !prev)} type="checkbox" />
+        <input 
+          className='DragNDrop__box' 
+          onChange={() => setDndEnable(prev => !prev)} 
+          type="checkbox" 
+          checked={dndEnable}
+        />
         <div className='DragNDrop__text'>Reorder</div>
       </div>
       {stops.length > 0 ? (
