@@ -34,13 +34,19 @@ const MyPage = () => {
   }
 
   const fetchTrips = async () => {
-    const response = await fetch('/api/trip');
-    const data = await response.json();
-    const allTrips: TripType[] = data.map((trip: any) => {
-      return { _id: trip._id, name: trip.name || 'Your Trip', stops: [], status: trip.status }
-    });
-    
-    setTrips(allTrips);
+    if(session && session.user && session.user.id) {
+      try {
+        const response = await fetch(`/api/trip/user/${session.user.id}`);
+        const data = await response.json();
+        const allTrips: TripType[] = data.map((trip: any) => {
+            return { _id: trip._id, name: trip.name || 'Your Trip', stops: [], status: trip.status }
+        });
+
+        setTrips(allTrips);
+      } catch (error) {
+          console.error('Error fetching trips:', error);
+      }
+    }
   }
 
   useEffect(() => {
@@ -52,7 +58,7 @@ const MyPage = () => {
   }, [trips]);
 
   const handleCreateClick = async () => {
-    if(session) {
+    if(session && session.user && session.user.id) {
       try {
         const createTripResponse = await fetch("/api/trip/new", {
           method: "POST",
@@ -125,10 +131,13 @@ const MyPage = () => {
             ))) :
             (
               <div className='Page__NA'>
-                {trips.length ? (
+                {session?.user.id ? trips.length ? (
                   `No ${tripStatus} trips`
                 ) : (
                   'No trips planned'
+                ) :
+                (
+                  'Login to view your trips'
                 )}
               </div>
             )
