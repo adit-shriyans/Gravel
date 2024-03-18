@@ -52,29 +52,34 @@ const MyPage = () => {
   }, [trips]);
 
   const handleCreateClick = async () => {
-    try {
-      const createTripResponse = await fetch("/api/trip/new", {
-        method: "POST",
-        body: JSON.stringify({
-          userId: session?.user?.id,
-          name: 'Trip Nameee',
-          status: "upcoming",
-        }),
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      });
+    if(session) {
+      try {
+        const createTripResponse = await fetch("/api/trip/new", {
+          method: "POST",
+          body: JSON.stringify({
+            userId: session?.user?.id,
+            name: 'Trip Nameee',
+            status: "upcoming",
+          }),
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        });
 
-      if (!createTripResponse.ok) {
-        console.error('Failed to create trip:', createTripResponse.statusText);
-        return;
+        if (!createTripResponse.ok) {
+          console.error('Failed to create trip:', createTripResponse.statusText);
+          return;
+        }
+
+        const createdTrip = await createTripResponse.json();
+
+        router.push(`/trip/${createdTrip._id}`);
+      } catch (error) {
+        console.error('Error creating trip:', error);
       }
-
-      const createdTrip = await createTripResponse.json();
-
-      router.push(`/trip/${createdTrip._id}`);
-    } catch (error) {
-      console.error('Error creating trip:', error);
+    }
+    else {
+      alert("login first");
     }
   };
 
