@@ -11,6 +11,7 @@ import { arrayMove, sortableKeyboardCoordinates } from '@dnd-kit/sortable';
 import { restrictToVerticalAxis } from '@dnd-kit/modifiers'
 
 const DynamicMapComponent = dynamic(() => import("@components/MapComponent"), { ssr: false });
+const DynamicSidePanelComponent = dynamic(() => import("@components/SidePanel"), { ssr: false });
 
 const MyPage = () => {
   const [stops, setStops] = useState<MarkerLocation[]>([]);
@@ -57,7 +58,7 @@ const MyPage = () => {
         method: 'GET'
       });
       const data = await response.json();
-      data.sort((a: { id: number; }, b: { id: number; }) => a.id-b.id);
+      // data.sort((a: { id: number; }, b: { id: number; }) => a.id-b.id);
 
       setStops(data.map((stop: StopResponseType) => {
         return { id: stop._id, location: stop.location, locationName: stop.locationName, startDate: stop.startDate, endDate: stop.endDate, notes: stop.notes }
@@ -73,7 +74,7 @@ const MyPage = () => {
         <TripModal stops={stops} setShowModal={setShowModal} tripId={String(params.id)} />
       </div>
       <DndContext collisionDetection={closestCorners} onDragEnd={handleDragEnd} sensors={sensors} modifiers={[restrictToVerticalAxis]} >
-        <SidePanel distances={distances} stops={stops} setStops={setStops} setZoomLocation={setZoomLocation} coord={coord} />
+        <DynamicSidePanelComponent distances={distances} stops={stops} setStops={setStops} setZoomLocation={setZoomLocation} coord={coord} />
       </DndContext>
       <DynamicMapComponent stops={stops} setStops={setStops} setDistances={setDistances} zoomLocation={zoomLocation} setZoomLocation={setZoomLocation} coord={coord} setShowModal={setShowModal} />
     </div>

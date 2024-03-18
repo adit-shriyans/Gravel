@@ -1,8 +1,9 @@
 import Stop from "@models/stop";
 import { NextApiRequest, NextApiResponse } from "next";
 import { NextFunction } from 'express';
+import { NextRequest } from "next/server";
 
-export const deleteStopsMiddleWare = async (req: NextApiRequest, id: String, next: NextFunction) => {
+export const deleteStopsMiddleWare = async (req: Request | NextRequest, id: String, next: NextFunction) => {
     try {
         const stopsToDelete = await Stop.find({ trip: id });
 

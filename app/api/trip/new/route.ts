@@ -1,13 +1,14 @@
 import { connectToDB } from '@utils/database';
 import Trip from '@models/trip';
 import { StatusType } from '@assets/types/types';
+import { NextRequest } from 'next/server';
 
 interface TripRequestType {
     userId: String;
     status: StatusType;
 }
 
-export const POST = async (req: { json: () => PromiseLike<TripRequestType> | TripRequestType; }) => {
+export const POST = async (req: Request | NextRequest) => {
     const { userId, status } = await req.json();
     
     try {

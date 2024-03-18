@@ -88,7 +88,7 @@ const SidePanel = ({ distances, stops, setStops, setZoomLocation, coord }: SPPro
     if (addingLocation) {
       inputRef.current?.focus();
     }
-  }, [addingLocation])
+  }, [addingLocation]);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -196,6 +196,7 @@ const SidePanel = ({ distances, stops, setStops, setZoomLocation, coord }: SPPro
     setZoomLocation([res.y, res.x]);
     setReqLocation('');
     setAddingLocation(false);
+    setSearchResults([]);
   }
 
   const handleInputKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
@@ -208,6 +209,7 @@ const SidePanel = ({ distances, stops, setStops, setZoomLocation, coord }: SPPro
       }
       setReqLocation('');
       setAddingLocation(false);
+      setSearchResults([]);
     }
   }
 

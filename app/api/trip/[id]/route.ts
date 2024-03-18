@@ -3,6 +3,7 @@ import { connectToDB } from '@utils/database';
 import Trip from '@models/trip';
 import { StatusType } from '@assets/types/types';
 import { deleteStopsMiddleWare } from '@app/middlewares/deleteStops';
+import { NextRequest } from 'next/server';
 
 interface TripRequestType {
     status: StatusType;
@@ -10,21 +11,19 @@ interface TripRequestType {
 }
 
 // GET
-export const GET = async (request: NextApiRequest, { params }: { params: { id: string } }) => {
+export const GET = async (request: Request | NextRequest, { params }: { params: { id: string } }) => {
     try {
         await connectToDB();
-
+        
         const trip = await Trip.find({_id: params.id}).populate('user');
         if (!trip) return new Response("Trip not found", { status: 404 });
-        return new Response(JSON.stringify(trip[0]), {
-            status: 200
-        });
+        return new Response(JSON.stringify(trip[0]), { status: 200 });        
     } catch (error) {
         return new Response("Failed to fetch trip", { status: 500 });
     }
 }
 
-export const PATCH = async (request: { json: () => PromiseLike<TripRequestType> | TripRequestType; }, { params }: { params: { id: string } }) => {
+export const PATCH = async (request: Request | NextRequest, { params }: { params: { id: string } }) => {
     const { status, name } = await request.json();
 
     try {
@@ -49,7 +48,7 @@ export const PATCH = async (request: { json: () => PromiseLike<TripRequestType> 
 };
 
 // DELETE
-export const DELETE = async (request: NextApiRequest, { params }: { params: { id: string } }) => {
+export const DELETE = async (request: Request | NextRequest, { params }: { params: { id: string } }) => {
     const {id} = params;
     try {
         await connectToDB();

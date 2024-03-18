@@ -45,7 +45,7 @@ const Routes = ({ stops, setDistances, coord }: RPropsType) => {
                         styles: [
                             { color: 'black', opacity: 0, weight: 0 },
                             { color: 'white', opacity: 0, weight: 0 },
-                            { color: 'blue', opacity: 0.85, weight: 5.5 }
+                            { color: 'blue', opacity: 0.4, weight: 6 }
                         ],
                         ...options
                     }),
@@ -77,7 +77,7 @@ const Routes = ({ stops, setDistances, coord }: RPropsType) => {
                             styles: [
                                 { color: 'black', opacity: 0, weight: 0 },
                                 { color: 'white', opacity: 0, weight: 0 },
-                                { color: 'blue', opacity: 0.85, weight: 5.5 }
+                                { color: 'blue', opacity: 0.4, weight: 6 }
                             ],
                             ...options
                         }),
