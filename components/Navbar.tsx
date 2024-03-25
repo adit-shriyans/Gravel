@@ -4,23 +4,26 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { useState, useEffect } from 'react';
 import { signIn, signOut, useSession, getProviders, LiteralUnion, ClientSafeProvider } from 'next-auth/react';
+import { useRouter } from 'next/router';
 import { BuiltInProviderType } from 'next-auth/providers/index';
 import '../styles/css/Navbar.css';
 
 const Navbar = () => {
     const { data: session } = useSession();
+    const router = useRouter();
 
     const [providers, setProviders] = useState<Record<LiteralUnion<BuiltInProviderType, string>, ClientSafeProvider> | null>(null);
 
     useEffect(() => {
         const setUpProviders = async () => {
-            const response = await getProviders();
-
-            setProviders(response);
-        };
+            if (router.isReady) { // Wait for routing to be complete
+              const response = await getProviders();
+              setProviders(response);
+            }
+          };
 
         setUpProviders();
-    }, []);
+    }, [router.isReady]);
 
     return (
         <nav className='Nav'>
