@@ -11,13 +11,10 @@ export const metadata: Metadata = {
 }
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
-  const session: Session | null = null;
-
   return (
     <html lang="en">
       <body className='Root' style={{ margin: 0 }}>
         <Provider session={undefined}>
-        {/* <Provider session={session}> */}
           <Navbar />
           <main className='App'>
             {children}

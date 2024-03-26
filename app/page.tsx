@@ -38,6 +38,8 @@ const MyPage = () => {
       try {
         const response = await fetch(`/api/trip/user/${session.user.id}`);
         const data = await response.json();
+        console.log(data);
+        
         const allTrips: TripType[] = data.map((trip: any) => {
             return { _id: trip._id, name: trip.name || 'Your Trip', stops: [], status: trip.status }
         });
@@ -51,7 +53,7 @@ const MyPage = () => {
 
   useEffect(() => {
     fetchTrips();
-  }, []);
+  }, [session]);
 
   useEffect(() => {
     filterTrips(tripStatus);

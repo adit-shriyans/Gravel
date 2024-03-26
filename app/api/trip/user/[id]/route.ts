@@ -8,7 +8,7 @@ export const GET = async (request: Request | NextRequest, { params }: { params: 
         
         const trip = await Trip.find({user: params.id}).populate('user');
         if (!trip) return new Response("Trip not found", { status: 404 });
-        return new Response(JSON.stringify(trip[0]), { status: 200 });        
+        return new Response(JSON.stringify(trip), { status: 200 });        
     } catch (error) {
         return new Response("Failed to fetch trip", { status: 500 });
     }
