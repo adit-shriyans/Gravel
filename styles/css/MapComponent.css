@@ -9,9 +9,26 @@
 .MapComponent .MapContainer__routes {
   top: 4rem;
   overflow-y: scroll;
+  display: flex;
+  flex-direction: column;
+  height: calc(100vh - 5rem);
+  overflow-y: auto;
 }
 .MapComponent .MapContainer__routes.hidden {
   display: none;
+}
+.MapComponent .MapContainer__routes::-webkit-scrollbar {
+  width: 7px;
+}
+.MapComponent .MapContainer__routes::-webkit-scrollbar-track {
+  -webkit-border-radius: 10px;
+  background: rgba(125, 125, 125, 0.2431372549);
+  border-radius: 10px;
+}
+.MapComponent .MapContainer__routes::-webkit-scrollbar-thumb {
+  -webkit-border-radius: 10px;
+  border-radius: 10px;
+  background: #797979;
 }
 .MapComponent .MapContainer__route {
   box-sizing: border-box;

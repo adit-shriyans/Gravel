@@ -9,9 +9,29 @@
         &__routes {
             top: 4rem;
             overflow-y: scroll;
+            display: flex;
+            flex-direction: column;
+            height: calc(100vh - 5rem);
+            overflow-y: auto;
 
             &.hidden {
                 display: none;
+            }
+
+            &::-webkit-scrollbar {
+                width: 7px;
+            }
+        
+            &::-webkit-scrollbar-track {
+                -webkit-border-radius: 10px;
+                background: #7d7d7d3e;
+                border-radius: 10px;
+            }
+        
+            &::-webkit-scrollbar-thumb {
+                -webkit-border-radius: 10px;
+                border-radius: 10px;
+                background: #797979;
             }
         }
 
