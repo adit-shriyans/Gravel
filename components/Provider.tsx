@@ -1,6 +1,6 @@
 'use client';
 
-import { ReactNode } from 'react';
+import { ReactNode, useEffect } from 'react';
 import { SessionProvider } from 'next-auth/react';
 import { Session } from 'next-auth';
 
@@ -10,6 +10,9 @@ interface ProviderPropsType {
 }
 
 const Provider = ({ children, session }: ProviderPropsType) => {
+  useEffect(() => {
+    console.log("Provider", session); 
+  }, [session]);
   return (
     <SessionProvider session={session}>
         {children}
