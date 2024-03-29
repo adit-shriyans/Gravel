@@ -19,6 +19,7 @@ const MyPage = () => {
   const [zoomLocation, setZoomLocation] = useState<L.LatLngTuple>([51.505, -0.09]);
   const [distances, setDistances] = useState<Number[]>([]);
   const [showModal, setShowModal] = useState(false);
+  const [userId, setUserId] = useState('');
 
   const params = useParams();
 
@@ -65,7 +66,19 @@ const MyPage = () => {
       }))
     };
 
-    if (params?.id) fetchStops();
+    const getUserId = async () => {
+      const response = await fetch(`/api/trip/${params?.id}`, {
+        method: 'GET'
+      });
+      const data = await response.json();
+      
+      setUserId(data.user._id);
+    }
+
+    if (params?.id) {
+      fetchStops();
+      getUserId();
+    }
   }, [params.id]);
 
   return (
@@ -74,7 +87,7 @@ const MyPage = () => {
         <TripModal stops={stops} setShowModal={setShowModal} tripId={String(params.id)} />
       </div>
       <DndContext collisionDetection={closestCorners} onDragEnd={handleDragEnd} sensors={sensors} modifiers={[restrictToVerticalAxis]} >
-        <DynamicSidePanelComponent distances={distances} stops={stops} setStops={setStops} setZoomLocation={setZoomLocation} coord={coord} />
+        <DynamicSidePanelComponent distances={distances} stops={stops} setStops={setStops} setZoomLocation={setZoomLocation} coord={coord} userId={userId}/>
       </DndContext>
       <DynamicMapComponent stops={stops} setStops={setStops} setDistances={setDistances} zoomLocation={zoomLocation} setZoomLocation={setZoomLocation} coord={coord} setShowModal={setShowModal} />
     </div>

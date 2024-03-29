@@ -1,22 +1,22 @@
 .TripCard {
   cursor: pointer;
-  margin: 2rem;
+  margin: 2vw;
   width: fit-content;
   background-color: #C6A969;
-  padding: 1rem;
-  padding-bottom: 0.5rem;
+  padding: 1vw;
+  padding-bottom: 0.5vw;
   border-radius: 10px;
   color: #fff;
   box-sizing: border-box;
 }
 .TripCard__img img {
-  width: 20rem;
+  width: 20vw;
   height: auto;
   border-radius: 10px;
 }
 .TripCard__name {
-  margin: 0.5rem;
-  font-size: 1.25rem;
+  margin: 0.5vw;
+  font-size: 1.25vw;
   font-family: sans-serif;
 }
 .TripCard__btns {

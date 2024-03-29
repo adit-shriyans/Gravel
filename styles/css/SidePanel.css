@@ -3,7 +3,7 @@
 }
 
 .SideWindow .PlaceInfo__dropdownbtn-container {
-  transform: translate(0.3rem, calc(-0.7rem - var(--scroll-distance)));
+  transform: translate(0.3vw, calc(-0.7vw - var(--scroll-distance)));
 }
 
 .SidePanel {
@@ -15,38 +15,39 @@
   flex-direction: column;
   overflow-y: scroll;
   font-family: sans-serif;
+  font-size: 1vw;
 }
 .SidePanel__filler {
   display: flex;
   flex-direction: column;
   align-items: center;
   margin: 0 auto;
-  padding: 1rem;
+  padding: 1vw;
   color: #fff;
 }
 .SidePanel__heading {
   color: white;
-  font-size: 1.5rem;
+  font-size: 1.5vw;
   text-align: center;
 }
 .SidePanel__Home {
   display: flex;
   color: #fff;
   align-items: center;
-  margin: 0.5rem 1rem;
-  padding: 0.5rem;
+  margin: 0.5vw 1vw;
+  padding: 0.5vw;
   border-radius: 5px;
   background-color: #1e2270;
   cursor: pointer;
 }
 .SidePanel__Home-img {
-  margin-right: 0.2rem;
+  margin-right: 0.2vw;
 }
 .SidePanel .StopInfo {
   color: #fff;
 }
 .SidePanel .StopInfo__container {
-  margin: 0 1rem;
+  margin: 0 1vw;
 }
 .SidePanel::-webkit-scrollbar {
   width: 7px;
@@ -64,13 +65,13 @@
 .TripInfo {
   display: flex;
   justify-content: space-between;
-  padding: 1rem;
+  padding: 1vw;
 }
 .TripInfo__dist {
   display: flex;
   justify-content: center;
-  padding: 0.3rem;
-  border-radius: 100rem;
+  padding: 0.3vw;
+  border-radius: 100vw;
   background-color: #008bf6;
   color: #fff;
   align-items: center;
@@ -78,28 +79,28 @@
 .TripInfo__dist-img {
   border-radius: 50%;
   background-color: #99cdf6;
-  padding: 0.2rem;
-  margin-right: 0.3rem;
-  width: 1rem;
-  height: 1rem;
+  padding: 0.2vw;
+  margin-right: 0.3vw;
+  width: 1vw;
+  height: 1vw;
   display: flex;
   align-items: center;
   justify-content: center;
 }
 .TripInfo__dist-img img {
-  height: 0.9rem;
-  width: 0.9rem;
+  height: 0.9vw;
+  width: 0.9vw;
 }
 .TripInfo__dist-text {
   height: fit-content;
   text-align: center;
-  margin-right: 0.3rem;
+  margin-right: 0.3vw;
 }
 .TripInfo__days {
   display: flex;
   justify-content: center;
-  padding: 0.3rem;
-  border-radius: 100rem;
+  padding: 0.3vw;
+  border-radius: 100vw;
   background-color: #fdcf00;
   color: #000000;
   align-items: center;
@@ -108,27 +109,27 @@
   color: #000000;
   border-radius: 50%;
   background-color: #f9f8a4;
-  padding: 0.2rem;
-  margin-right: 0.3rem;
-  width: 1rem;
-  height: 1rem;
+  padding: 0.2vw;
+  margin-right: 0.3vw;
+  width: 1vw;
+  height: 1vw;
   display: flex;
   align-items: center;
   justify-content: center;
 }
 .TripInfo__days-img svg {
-  height: 1rem;
-  width: 1rem;
+  height: 1vw;
+  width: 1vw;
 }
 .TripInfo__days-text {
   height: fit-content;
   text-align: center;
-  margin-right: 0.3rem;
+  margin-right: 0.3vw;
 }
 
 .addStop {
-  margin: 1rem;
-  padding: 0.5rem;
+  margin: 1vw;
+  padding: 0.5vw;
   background-color: #1a5c6b;
   border-radius: 5px;
   display: flex;
@@ -143,7 +144,7 @@
 }
 .addStop__form {
   opacity: 1;
-  max-height: 10rem;
+  max-height: 10vw;
   overflow: hidden;
   transition: opacity 1s ease-in-out, max-height 0.5s ease-in-out;
 }
@@ -152,18 +153,18 @@
   max-height: 0;
 }
 .addStop__input {
-  width: calc(100% - 0.5rem);
+  width: calc(100% - 0.5vw);
   outline: none;
   border-width: 0px;
   border-radius: 5px;
-  padding: 0.25rem;
-  margin-top: 0.5rem;
+  padding: 0.25vw;
+  margin-top: 0.5vw;
 }
 .addStop__searchResult {
   position: absolute;
-  width: calc(20vw - 3.5rem);
-  left: 4.5rem;
-  top: 13.25rem;
+  width: 16.5vw;
+  left: 4.5vw;
+  top: 13.25vw;
   max-height: 200px;
   overflow-y: auto;
   background-color: #fff;
@@ -201,31 +202,31 @@
   flex-direction: row;
   align-items: center;
   justify-content: flex-end;
-  padding-right: 1rem;
+  padding-right: 1vw;
 }
 .DragNDrop__text {
   width: fit-content;
   color: #fff;
-  font-size: 0.8rem;
+  font-size: 0.8vw;
 }
 
 .PlaceInfo {
-  padding: 0.2rem 0;
+  padding: 0.2vw 0;
   display: flex;
   flex-direction: column;
   cursor: pointer;
   background-color: #3b3b4c;
   border-left: 5px solid #08c76e;
   border-radius: 5px;
-  margin: 1rem 0;
-  padding: 0.75rem 0.5rem;
+  margin: 1vw 0;
+  padding: 0.75vw 0.5vw;
   padding-left: 0;
 }
 .PlaceInfo .addRouteBtn {
   width: fit-content;
   margin: 0 auto;
   background-color: blue;
-  padding: 0.2rem;
+  padding: 0.2vw;
   border: 2px solid black;
 }
 .PlaceInfo:hover .PlaceInfo__dropdownbtnop {
@@ -235,8 +236,8 @@
   position: fixed;
   align-self: flex-end;
   z-index: 1000;
-  transform: translate(0.5rem, -0.7rem);
-  transform: translate(0.5rem, calc(-0.7rem - var(--scroll-distance)));
+  transform: translate(0.5vw, -0.7vw);
+  transform: translate(0.5vw, calc(-0.7vw - var(--scroll-distance)));
   opacity: 0;
   cursor: pointer;
 }
@@ -252,32 +253,35 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  height: 1.2rem;
-  width: 1.2rem;
+  height: 1.1vw;
+  width: 1.1vw;
   z-index: 1000;
   border-radius: 50%;
-  transform: translate(0.3rem, -0.7rem);
+  transform: translate(0.3vw, -0.7vw);
   cursor: pointer;
+  margin-top: 0.1vw;
 }
 .PlaceInfo__dropdownbtnop {
   opacity: 0;
 }
 .PlaceInfo__dropdownbtn {
   border-radius: 50%;
+  width: 1.25vw;
+  height: 1.25vw;
 }
 .PlaceInfo__dropdownbtn:hover {
   background-color: rgba(255, 255, 255, 0.134);
   opacity: 1 !important;
 }
 .PlaceInfo__info {
-  margin: 0.5rem;
+  margin: 0.5vw;
   display: flex;
   justify-content: center;
 }
 .PlaceInfo__info.hidden {
   opacity: 0;
   max-height: 0;
-  margin: 0 0.5rem;
+  margin: 0 0.5vw;
 }
 .PlaceInfo__img-container {
   display: flex;
@@ -285,16 +289,16 @@
   align-content: center;
 }
 .PlaceInfo__img {
-  height: 1rem;
-  width: 1.5rem;
+  height: 1vw;
+  width: 1.5vw;
 }
 .PlaceInfo__img-distance {
-  height: 1.75rem;
+  height: 1.75vw;
 }
 .PlaceInfo__content {
   background-color: #797979;
   border-radius: 5px;
-  padding: 0.2rem 0.4rem;
+  padding: 0.2vw 0.4vw;
   width: 100%;
   display: flex;
   align-items: center;
@@ -306,7 +310,7 @@
   justify-content: space-between;
 }
 .PlaceInfo__date {
-  width: 3.9rem;
+  width: 3.9vw;
 }
 .PlaceInfo__DistInfo {
   display: flex;
@@ -314,14 +318,14 @@
   justify-content: space-between;
 }
 .PlaceInfo__dist {
-  padding: 0.1rem 0.2rem;
+  padding: 0.1vw 0.2vw;
   width: fit-content;
 }
 .PlaceInfo__notes {
   width: 100%;
 }
 .PlaceInfo__form {
-  min-width: 2rem;
+  min-width: 2vw;
 }
 .PlaceInfo__input {
   border: none;
@@ -329,49 +333,49 @@
   background-color: transparent;
   color: #fff;
   width: 100%;
-  font-size: 1.05rem;
+  font-size: 1.05vw;
   text-wrap: wrap;
 }
 .PlaceInfo__input-date {
-  width: 3.9rem;
-  font-size: 1rem;
+  width: 3.9vw;
+  font-size: 1vw;
 }
 .PlaceInfo__input-dist {
-  width: 2rem;
-  min-width: 2rem;
+  width: 2vw;
+  min-width: 2vw;
 }
 .PlaceInfo .ErrorPopUp {
   position: fixed;
   opacity: 1;
   background-color: #ff6b6b;
   color: #fff;
-  padding: 0.1rem 0.5rem;
+  padding: 0.1vw 0.5vw;
   border-radius: 5px;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
   z-index: 1000;
-  transform: translateY(-2rem) scale(0.8);
+  transform: translateY(-2vw) scale(0.8);
   transition: transform 0.3s ease-in-out, opacity 0.3s ease-in-out;
 }
 .PlaceInfo .hidden {
   opacity: 0;
-  transform: translateY(-1.4rem) scale(0.6);
+  transform: translateY(-1.4vw) scale(0.6);
 }
 .PlaceInfo__dropdown {
   position: fixed;
   height: fit-content;
-  transform: translate(1rem, -0.3rem);
+  transform: translate(1vw, -0.3vw);
   display: flex;
   flex-direction: column;
   background-color: rgba(63, 86, 101, 0.537254902);
   border: 1px solid #000;
-  font-size: 1rem;
+  font-size: 1vw;
   cursor: pointer;
 }
 .PlaceInfo__dropdown-imgContainer {
-  height: 1.5rem;
-  width: 1.5rem;
+  height: 1.5vw;
+  width: 1.5vw;
   border-radius: 50%;
-  margin-right: 0.25rem;
+  margin-right: 0.25vw;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -380,7 +384,7 @@
   background-color: #9abaff;
 }
 .PlaceInfo__dropdown-imgContainer-copy svg {
-  height: 1.1rem !important;
+  height: 1.1vw !important;
 }
 .PlaceInfo__dropdown-imgContainer-delete {
   background-color: #fea1a1;
@@ -389,7 +393,7 @@
   background-color: #b8ffb8;
 }
 .PlaceInfo__dropdown-imgContainer svg {
-  height: 1.5rem;
+  height: 1.5vw;
 }
 .PlaceInfo__dropdown-text {
   text-wrap: nowrap;
@@ -400,7 +404,7 @@
 .PlaceInfo__container {
   display: flex;
   justify-content: flex-start;
-  padding: 0.25rem 0.5rem;
+  padding: 0.25vw 0.5vw;
 }
 .PlaceInfo__container-copy:hover {
   background-color: rgba(41, 55, 97, 0.5843137255);

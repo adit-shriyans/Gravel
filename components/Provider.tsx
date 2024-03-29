@@ -10,9 +10,6 @@ interface ProviderPropsType {
 }
 
 const Provider = ({ children, session }: ProviderPropsType) => {
-  useEffect(() => {
-    console.log("Provider", session); 
-  }, [session]);
   return (
     <SessionProvider session={session}>
         {children}

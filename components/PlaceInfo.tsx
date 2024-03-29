@@ -14,6 +14,7 @@ import { MarkerLocation } from '@assets/types/types';
 import { calculateDistance, getTodaysDate, isValidDate } from '@assets/CalcFunctions';
 import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
+import { useSession } from 'next-auth/react';
 
 interface PIPropsType {
   distances: Number[];
@@ -23,11 +24,12 @@ interface PIPropsType {
   setStops: React.Dispatch<React.SetStateAction<MarkerLocation[]>>;
   setTotalDistance: React.Dispatch<React.SetStateAction<number>>;
   setZoomLocation: React.Dispatch<React.SetStateAction<L.LatLngTuple>>;
+  isEditable: boolean;
 }
 
 const arraySize = 6;
 
-const PlaceInfoContent = ({ distances, stop, stops, dndEnable, setStops, setTotalDistance, setZoomLocation }: PIPropsType) => {
+const PlaceInfoContent = ({ distances, stop, stops, dndEnable, setStops, setTotalDistance, setZoomLocation, isEditable }: PIPropsType) => {
   const locationNameArr = stop.locationName.split(',');
   let name = locationNameArr[0];
   if (locationNameArr.length > 1) {
@@ -59,6 +61,8 @@ const PlaceInfoContent = ({ distances, stop, stops, dndEnable, setStops, setTota
   const ODInputRef = useRef<HTMLInputElement | null>(null);
   const NotesInputRef = useRef<HTMLInputElement | null>(null);
 
+  const {data: session} = useSession();
+
   const getLocationDist = () => {
     return distances[stops.indexOf(stop)] || 0;
   }
@@ -73,7 +77,7 @@ const PlaceInfoContent = ({ distances, stop, stops, dndEnable, setStops, setTota
   }
 
   const handleClick = (id: number) => {
-    if (!editMode[id]) {
+    if (!editMode[id] && isEditable) {
       let newEditMode = Array(arraySize).fill(false);
       newEditMode[id] = !editMode[id];
       setEditMode(newEditMode);
@@ -445,7 +449,7 @@ const PlaceInfoContent = ({ distances, stop, stops, dndEnable, setStops, setTota
   )
 }
 
-const PlaceInfo = ({ distances, stop, stops, dndEnable, setStops, setTotalDistance, setZoomLocation }: PIPropsType) => {
+const PlaceInfo = ({ distances, stop, stops, dndEnable, setStops, setTotalDistance, setZoomLocation, isEditable }: PIPropsType) => {
   const { attributes, listeners, setNodeRef, transform, transition } = useSortable({ id: stop.id });
   const DndStyles = {
     transition,
@@ -460,11 +464,11 @@ const PlaceInfo = ({ distances, stop, stops, dndEnable, setStops, setTotalDistan
         {...listeners}
         style={DndStyles}
       >
-        <PlaceInfoContent distances={distances} stop={stop} stops={stops} dndEnable={dndEnable} setStops={setStops} setTotalDistance={setTotalDistance} setZoomLocation={setZoomLocation} />
+        <PlaceInfoContent distances={distances} stop={stop} stops={stops} dndEnable={dndEnable} setStops={setStops} setTotalDistance={setTotalDistance} setZoomLocation={setZoomLocation} isEditable={isEditable} />
       </div>
     ) : (
       <div>
-        <PlaceInfoContent distances={distances} stop={stop} stops={stops} dndEnable={dndEnable} setStops={setStops} setTotalDistance={setTotalDistance} setZoomLocation={setZoomLocation} />
+        <PlaceInfoContent distances={distances} stop={stop} stops={stops} dndEnable={dndEnable} setStops={setStops} setTotalDistance={setTotalDistance} setZoomLocation={setZoomLocation} isEditable={isEditable} />
       </div>
     )
   );  

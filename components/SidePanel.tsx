@@ -18,6 +18,7 @@ import '@node_modules/leaflet-geosearch/dist/geosearch.css';
 import { SearchResult } from 'leaflet-geosearch/dist/providers/provider.js';
 import { RawResult } from 'leaflet-geosearch/dist/providers/openStreetMapProvider.js';
 import { SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable';
+import { useSession } from 'next-auth/react';
 
 interface SPPropsType {
   distances: Number[];
@@ -25,6 +26,7 @@ interface SPPropsType {
   setStops: React.Dispatch<React.SetStateAction<MarkerLocation[]>>;
   setZoomLocation: React.Dispatch<React.SetStateAction<L.LatLngTuple>>;
   coord: L.LatLngTuple;
+  userId: string;
 }
 
 const geocodingResponseSchema = z.array(
@@ -46,7 +48,7 @@ const geocodingResponseSchema = z.array(
   })
 );
 
-const SidePanel = ({ distances, stops, setStops, setZoomLocation, coord }: SPPropsType) => {
+const SidePanel = ({ distances, stops, setStops, setZoomLocation, coord, userId }: SPPropsType) => {
   const [scrolled, setScrolled] = useState(false);
   const [searchResults, setSearchResults] = useState<SearchResult<RawResult>[]>([]);
   const [addingLocation, setAddingLocation] = useState(false);
@@ -56,11 +58,13 @@ const SidePanel = ({ distances, stops, setStops, setZoomLocation, coord }: SPPro
   const [tripDates, setTripDates] = useState<string[]>([getTodaysDate(), getTodaysDate()]);
   const [noOfDays, setNoOfDays] = useState<number>(0);
   const [dndEnable, setDndEnable] = useState(false);
+  const [isEditable, setIsEditable] = useState(false);
 
   const inputRef = useRef<HTMLInputElement | null>(null);
   const addStopRef = useRef<HTMLDivElement>(null);
 
   const params = useParams();
+  const {data: session} = useSession();
 
   useEffect(() => {
     let dist = 0;
@@ -100,6 +104,8 @@ const SidePanel = ({ distances, stops, setStops, setZoomLocation, coord }: SPPro
 
     const element = document.querySelector('.SidePanel');
     element?.addEventListener('scroll', handleScroll);
+
+    setIsEditable((session && session.user.id === userId) || false );
 
     return () => {
       element?.removeEventListener('scroll', handleScroll);
@@ -305,7 +311,7 @@ const SidePanel = ({ distances, stops, setStops, setZoomLocation, coord }: SPPro
           >
             {stops.map((stop) => (
               <div key={stop.id} className='StopInfo'>
-                <PlaceInfo key={stop.id} distances={distances} stop={stop} stops={stops} setStops={setStops} setTotalDistance={setTotalDistance} setZoomLocation={setZoomLocation} dndEnable={dndEnable} />
+                <PlaceInfo key={stop.id} distances={distances} stop={stop} stops={stops} setStops={setStops} setTotalDistance={setTotalDistance} setZoomLocation={setZoomLocation} dndEnable={dndEnable} isEditable={isEditable} />
               </div>
             ))}
           </SortableContext>
