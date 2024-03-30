@@ -32,6 +32,7 @@ const TripCard = ({ trip, trips, setTrips }: TripCardPropsType) => {
             return t;
         })
         setTrips(newTrips);
+        
         try {
             const response = await fetch(`/api/trip/${trip._id}`, {
                 method: "PATCH",
@@ -40,7 +41,7 @@ const TripCard = ({ trip, trips, setTrips }: TripCardPropsType) => {
                 },
                 body: JSON.stringify({
                     status: statusOptions[(statusId+1)%3].toLowerCase(),
-                    name: newTrips.find((t) => {t._id === trip._id})?.name || 'Trip Name',
+                    name: newTrips.find((t) => t._id === trip._id)?.name || 'Your Trip',
                 }),
             });
         } catch (error) {
