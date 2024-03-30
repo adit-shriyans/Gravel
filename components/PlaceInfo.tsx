@@ -78,6 +78,7 @@ const PlaceInfoContent = ({ distances, stop, stops, dndEnable, setStops, setTota
 
   const handleClick = (id: number) => {
     if (!editMode[id] && isEditable) {
+    // if (!editMode[id]) {
       let newEditMode = Array(arraySize).fill(false);
       newEditMode[id] = !editMode[id];
       setEditMode(newEditMode);

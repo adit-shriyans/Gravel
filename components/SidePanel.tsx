@@ -81,7 +81,11 @@ const SidePanel = ({ distances, stops, setStops, setZoomLocation, coord, userId 
     distances.forEach((dist) => tripDist += Number(dist));
     const setDist = tripDist === 0 ? parseFloat(dist.toFixed(2)) : tripDist;
     setTotalDistance(dist);
-  }, [stops])
+  }, [stops]);
+
+  useEffect(() => {
+    setIsEditable((session && session.user.id === userId) || false );
+  }, [session, userId]);
 
   useEffect(() => {
     if (isValidDate(tripDates[0]) && isValidDate(tripDates[1]))
@@ -104,8 +108,6 @@ const SidePanel = ({ distances, stops, setStops, setZoomLocation, coord, userId 
 
     const element = document.querySelector('.SidePanel');
     element?.addEventListener('scroll', handleScroll);
-
-    setIsEditable((session && session.user.id === userId) || false );
 
     return () => {
       element?.removeEventListener('scroll', handleScroll);
