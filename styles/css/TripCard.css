@@ -30,6 +30,7 @@
   font-family: sans-serif;
 }
 .TripCard__btns-status {
+  font-size: 1vw;
   border-right: 1.5px solid #ededed;
 }
 .TripCard__btns-delete svg {

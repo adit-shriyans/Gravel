@@ -28,7 +28,6 @@
 
         &>* {
             width: 50%;
-            // text-align: center;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -36,6 +35,7 @@
         }
 
         &-status {
+            font-size: 1vw;
             border-right: 1.5px solid #ededed;
         }
 
