@@ -1,3 +1,5 @@
+@import '_variables.scss';
+
 .App {
     width: 100%;
 }
@@ -23,8 +25,15 @@
         padding: 2vh 0;
 
         & img {
-            height: 60vh;
+            height: 25.5vw;
             width: auto;
+
+            @media screen and (max-width: $screen-md) {
+                height: 27.5vw;
+            }
+            @media screen and (max-width: $screen-sm) {
+                height: 30vw;
+            }
         }
     }
 
@@ -43,8 +52,16 @@
         border: 2px solid #e1bf8b;
         cursor: pointer;
 
+        @media screen and (max-width: $screen-md) {
+            font-size: 1.5vw;
+        }
+
         svg {
             margin-right: 0.5vw;
+
+            @media screen and (max-width: $screen-md) {
+                
+            }
         }
     }
 
@@ -53,6 +70,13 @@
         margin: 0 auto;
         flex-wrap: wrap;
         width: 78vw;
+
+        @media screen and (max-width: $screen-md) {
+            width: 84vw;
+        }
+        @media screen and (max-width: $screen-xs) {
+            width: 90vw;
+        }
     }
 
     fieldset {
@@ -63,15 +87,20 @@
         box-sizing: border-box;
         grid-area: 1 / 1;
         padding: 18px;
+        padding-bottom: 0.5vw;
         width: inherit;
     }
     
     legend {
         // font: 28pt/0 'sans-serif';
-        font-size: 1.75vw;
+        font-size: 2vw;
         font-family: 'sans-serif';
         margin: auto;
         padding: 0 12px;
+
+        @media screen and (max-width: $screen-md) {
+            font-size: 2.25vw;
+        }
     }
 }
 
@@ -81,4 +110,8 @@
 
 .Root {
     display: flex;
+
+    @media screen and (max-width: $screen-md) {
+        flex-direction: column;
+    }
 }

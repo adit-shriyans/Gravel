@@ -12,6 +12,23 @@
   top: 1px;
   padding: 0 0.2vw;
 }
+@media screen and (max-width: 1024px) {
+  .Nav__content {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    width: 99%;
+    margin: 0.5vw 0;
+  }
+}
+@media screen and (max-width: 1024px) {
+  .Nav__logo {
+    margin-left: 1.5vw;
+    font-size: 1rem;
+    margin-block-start: 0rem;
+    margin-block-end: 0rem;
+  }
+}
 .Nav a {
   text-align: center;
   font-size: 1.25vw;
@@ -19,11 +36,21 @@
   text-decoration: none;
   cursor: pointer;
   font-family: sans-serif;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 .Nav__signOut, .Nav__signIn {
   display: flex;
   flex-direction: column;
   align-items: center;
+}
+@media screen and (max-width: 1024px) {
+  .Nav__signOut, .Nav__signIn {
+    font-size: 0.9rem;
+    padding-right: 2vw;
+    flex-direction: row;
+  }
 }
 .Nav__signOut-btn, .Nav__signIn-btn {
   cursor: pointer;
@@ -34,9 +61,32 @@
   padding: 0;
   font-size: 1vw;
 }
+@media screen and (max-width: 1024px) {
+  .Nav__signOut-btn, .Nav__signIn-btn {
+    padding: 0.15rem 0.25rem;
+    font-size: 0.6rem;
+    margin-left: 0.2rem;
+  }
+}
+.Nav__session {
+  display: flex;
+  align-items: center;
+}
 .Nav__profilePic {
   border-radius: 50%;
   border: 0.2vw solid rgb(255, 157, 0);
   width: 2.25vw;
   height: 2.25vw;
+}
+@media screen and (max-width: 1024px) {
+  .Nav__profilePic {
+    height: 1.5rem;
+    width: 1.5rem;
+  }
+}
+@media screen and (max-width: 1024px) {
+  .Nav {
+    width: 100vw;
+    border-right: none;
+  }
 }

@@ -85,11 +85,13 @@ const TripCard = ({ trip, trips, setTrips }: TripCardPropsType) => {
                     className='TripCard__btns-status'
                     onClick={handleStatusChange}
                 >
-                    {statusIcons[statusId]}
+                    <div className='TripCard__btns-img'>
+                        {statusIcons[statusId]}
+                    </div>
                     {statusOptions[statusId].replace(/^./, (char) => char.toUpperCase())}
                 </div>
                 <div
-                    className='TtripCard__btns-delete'
+                    className='TripCard__btns-delete'
                     onClick={handleTripDelete}
                 >
                     <DeleteIcon />

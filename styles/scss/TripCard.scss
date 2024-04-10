@@ -1,3 +1,5 @@
+@import '_variables.scss';
+
 .TripCard {
     cursor: pointer;
     margin: 2vw;
@@ -9,11 +11,23 @@
     color: #fff;
     box-sizing: border-box;
 
+    @media screen and (max-width: $screen-xs) {
+        padding: 1.5vw;
+        margin: 2.5vw;
+    }
+
     &__img {
         img {
             width: 20vw;
             height: auto;
             border-radius: 10px;
+
+            @media screen and (max-width: $screen-md) {
+                width: 22vw;
+            }
+            @media screen and (max-width: $screen-xs) {
+                width: 36vw;
+            }
         }
     }
 
@@ -21,10 +35,18 @@
         margin: 0.5vw;
         font-size: 1.25vw;
         font-family: sans-serif;
+
+        @media screen and (max-width: $screen-md) {
+            font-size: 1.65vw;
+        }
+        @media screen and (max-width: $screen-xs) {
+            font-size: 2.7vw;
+        }
     }
 
     &__btns {
         display: flex;
+        font-size: 1vw;
 
         &>* {
             width: 50%;
@@ -37,11 +59,50 @@
         &-status {
             font-size: 1vw;
             border-right: 1.5px solid #ededed;
+
+            @media screen and (max-width: $screen-md) {
+                font-size: 1.5vw;
+            }
+            @media screen and (max-width: $screen-xs) {
+                font-size: 2.25vw;
+            }
+        }
+
+        &-img {
+            svg {
+                height: 1.25vw;
+                width: 1.25vw;
+
+                @media screen and (max-width: $screen-md) {
+                    height: 1.65vw;
+                    width: 1.65vw;
+                }
+                @media screen and (max-width: $screen-xs) {
+                    height: 2.65vw;
+                    width: 2.65vw;
+                }
+            }
         }
 
         &-delete {
+            @media screen and (max-width: $screen-md) {
+                font-size: 1.5vw;
+            }
+            @media screen and (max-width: $screen-xs) {
+                font-size: 2.5vw;
+            }
             svg {
-                color: red;
+                height: 1.4vw;
+                width: 1.4vw;
+
+                @media screen and (max-width: $screen-md) {
+                    height: 1.85vw;
+                    width: 1.85vw;
+                }
+                @media screen and (max-width: $screen-xs) {
+                    height: 2.85vw;
+                    width: 2.85vw;
+                }
             }
         }
     }

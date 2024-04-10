@@ -24,7 +24,7 @@
   font-family: "Lucida Sans", "Lucida Sans Regular", "Lucida Grande", "Lucida Sans Unicode", Geneva, Verdana, sans-serif;
 }
 .Page__statusToggle .TripTypeBtns-item {
-  font-size: 0.85vw;
+  font-size: 0.85rem;
   padding: 0 2vw;
   padding-bottom: 0.75vw;
   margin-right: 0.25em;
@@ -35,6 +35,11 @@
   cursor: pointer;
   color: #5f2929;
 }
+@media screen and (max-width: 1024px) {
+  .Page__statusToggle .TripTypeBtns-item {
+    font-size: 1.35vw;
+  }
+}
 .Page__statusToggle .TripTypeBtns-underline {
   height: 3px;
   width: 40px;
@@ -43,4 +48,9 @@
   position: absolute;
   bottom: 0;
   transition: transform 0.5s, width 0.1s ease-in;
+}
+@media screen and (max-width: 1024px) {
+  .Page__statusToggle .TripTypeBtns-underline {
+    height: 0.285vw;
+  }
 }

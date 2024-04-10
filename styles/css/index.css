@@ -22,8 +22,18 @@
   padding: 2vh 0;
 }
 .Page__demoImg img {
-  height: 60vh;
+  height: 25.5vw;
   width: auto;
+}
+@media screen and (max-width: 1024px) {
+  .Page__demoImg img {
+    height: 27.5vw;
+  }
+}
+@media screen and (max-width: 768px) {
+  .Page__demoImg img {
+    height: 30vw;
+  }
 }
 .Page__plan {
   color: #AD8B73;
@@ -40,6 +50,11 @@
   border: 2px solid #e1bf8b;
   cursor: pointer;
 }
+@media screen and (max-width: 1024px) {
+  .Page__plan {
+    font-size: 1.5vw;
+  }
+}
 .Page__plan svg {
   margin-right: 0.5vw;
 }
@@ -49,6 +64,16 @@
   flex-wrap: wrap;
   width: 78vw;
 }
+@media screen and (max-width: 1024px) {
+  .Page__trips {
+    width: 84vw;
+  }
+}
+@media screen and (max-width: 640px) {
+  .Page__trips {
+    width: 90vw;
+  }
+}
 .Page fieldset {
   margin-top: 2.5vw;
   border: 2px solid transparent;
@@ -57,13 +82,19 @@
   box-sizing: border-box;
   grid-area: 1/1;
   padding: 18px;
+  padding-bottom: 0.5vw;
   width: inherit;
 }
 .Page legend {
-  font-size: 1.75vw;
+  font-size: 2vw;
   font-family: "sans-serif";
   margin: auto;
   padding: 0 12px;
+}
+@media screen and (max-width: 1024px) {
+  .Page legend {
+    font-size: 2.25vw;
+  }
 }
 
 .hidden {
@@ -72,4 +103,9 @@
 
 .Root {
   display: flex;
+}
+@media screen and (max-width: 1024px) {
+  .Root {
+    flex-direction: column;
+  }
 }
