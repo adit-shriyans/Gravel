@@ -32,7 +32,17 @@
 }
 @media screen and (max-width: 768px) {
   .Page__demoImg img {
-    height: 30vw;
+    height: 28.5vw;
+  }
+}
+@media screen and (max-width: 640px) {
+  .Page__demoImg img {
+    height: 38vw;
+  }
+}
+@media screen and (max-width: 468px) {
+  .Page__demoImg img {
+    height: 42vw;
   }
 }
 .Page__plan {
@@ -55,6 +65,21 @@
     font-size: 1.5vw;
   }
 }
+@media screen and (max-width: 768px) {
+  .Page__plan {
+    font-size: 1.75vw;
+  }
+}
+@media screen and (max-width: 640px) {
+  .Page__plan {
+    font-size: 2.25vw;
+  }
+}
+@media screen and (max-width: 468px) {
+  .Page__plan {
+    font-size: 2.75vw;
+  }
+}
 .Page__plan svg {
   margin-right: 0.5vw;
 }
@@ -67,6 +92,11 @@
 @media screen and (max-width: 1024px) {
   .Page__trips {
     width: 84vw;
+  }
+}
+@media screen and (max-width: 768px) {
+  .Page__trips {
+    width: 93vw;
   }
 }
 @media screen and (max-width: 640px) {
@@ -94,6 +124,16 @@
 @media screen and (max-width: 1024px) {
   .Page legend {
     font-size: 2.25vw;
+  }
+}
+@media screen and (max-width: 768px) {
+  .Page legend {
+    font-size: 3vw;
+  }
+}
+@media screen and (max-width: 640px) {
+  .Page legend {
+    font-size: 4vw;
   }
 }
 

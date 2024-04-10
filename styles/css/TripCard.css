@@ -9,10 +9,28 @@
   color: #fff;
   box-sizing: border-box;
 }
+@media screen and (max-width: 768px) {
+  .TripCard {
+    padding: 1.25vw;
+    margin: 2.25vw;
+  }
+}
 @media screen and (max-width: 640px) {
   .TripCard {
     padding: 1.5vw;
     margin: 2.5vw;
+  }
+}
+@media screen and (max-width: 468px) {
+  .TripCard {
+    padding: 1.5vw;
+    margin: 2.5vw;
+  }
+}
+@media screen and (max-width: 468px) {
+  .TripCard {
+    padding: 1.75vw;
+    margin: 2.75vw;
   }
 }
 .TripCard__img img {
@@ -23,6 +41,11 @@
 @media screen and (max-width: 1024px) {
   .TripCard__img img {
     width: 22vw;
+  }
+}
+@media screen and (max-width: 768px) {
+  .TripCard__img img {
+    width: 24vw;
   }
 }
 @media screen and (max-width: 640px) {
@@ -40,9 +63,19 @@
     font-size: 1.65vw;
   }
 }
+@media screen and (max-width: 768px) {
+  .TripCard__name {
+    font-size: 1.95vw;
+  }
+}
 @media screen and (max-width: 640px) {
   .TripCard__name {
     font-size: 2.7vw;
+  }
+}
+@media screen and (max-width: 468px) {
+  .TripCard__name {
+    font-size: 2.8vw;
   }
 }
 .TripCard__btns {
@@ -65,9 +98,19 @@
     font-size: 1.5vw;
   }
 }
+@media screen and (max-width: 768px) {
+  .TripCard__btns-status {
+    font-size: 1.75vw;
+  }
+}
 @media screen and (max-width: 640px) {
   .TripCard__btns-status {
     font-size: 2.25vw;
+  }
+}
+@media screen and (max-width: 468px) {
+  .TripCard__btns-status {
+    font-size: 2.5vw;
   }
 }
 .TripCard__btns-img svg {
@@ -80,15 +123,37 @@
     width: 1.65vw;
   }
 }
+@media screen and (max-width: 768px) {
+  .TripCard__btns-img svg {
+    height: 2vw;
+    width: 2vw;
+  }
+}
 @media screen and (max-width: 640px) {
   .TripCard__btns-img svg {
     height: 2.65vw;
     width: 2.65vw;
   }
 }
+@media screen and (max-width: 468px) {
+  .TripCard__btns-img svg {
+    height: 2.75vw;
+    width: 2.75vw;
+  }
+}
 @media screen and (max-width: 1024px) {
   .TripCard__btns-delete {
     font-size: 1.5vw;
+  }
+}
+@media screen and (max-width: 768px) {
+  .TripCard__btns-delete {
+    font-size: 1.75vw;
+  }
+}
+@media screen and (max-width: 640px) {
+  .TripCard__btns-delete {
+    font-size: 2.25vw;
   }
 }
 @media screen and (max-width: 640px) {
@@ -106,9 +171,21 @@
     width: 1.85vw;
   }
 }
+@media screen and (max-width: 768px) {
+  .TripCard__btns-delete svg {
+    height: 2.15vw;
+    width: 2.15vw;
+  }
+}
 @media screen and (max-width: 640px) {
   .TripCard__btns-delete svg {
     height: 2.85vw;
     width: 2.85vw;
+  }
+}
+@media screen and (max-width: 468px) {
+  .TripCard__btns-delete svg {
+    height: 3vw;
+    width: 3vw;
   }
 }

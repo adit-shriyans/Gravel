@@ -40,6 +40,21 @@
     font-size: 1.35vw;
   }
 }
+@media screen and (max-width: 768px) {
+  .Page__statusToggle .TripTypeBtns-item {
+    font-size: 1.45vw;
+  }
+}
+@media screen and (max-width: 640px) {
+  .Page__statusToggle .TripTypeBtns-item {
+    font-size: 1.85vw;
+  }
+}
+@media screen and (max-width: 468px) {
+  .Page__statusToggle .TripTypeBtns-item {
+    font-size: 2.3vw;
+  }
+}
 .Page__statusToggle .TripTypeBtns-underline {
   height: 3px;
   width: 40px;
@@ -52,5 +67,20 @@
 @media screen and (max-width: 1024px) {
   .Page__statusToggle .TripTypeBtns-underline {
     height: 0.285vw;
+  }
+}
+@media screen and (max-width: 768px) {
+  .Page__statusToggle .TripTypeBtns-underline {
+    height: 0.3vw;
+  }
+}
+@media screen and (max-width: 640px) {
+  .Page__statusToggle .TripTypeBtns-underline {
+    height: 0.4vw;
+  }
+}
+@media screen and (max-width: 468px) {
+  .Page__statusToggle .TripTypeBtns-underline {
+    height: 0.45vw;
   }
 }
