@@ -11,9 +11,21 @@
     color: #fff;
     box-sizing: border-box;
 
+    @media screen and (max-width: $screen-sm) {
+        padding: 1.25vw;
+        margin: 2.25vw;
+    }
     @media screen and (max-width: $screen-xs) {
         padding: 1.5vw;
         margin: 2.5vw;
+    }
+    @media screen and (max-width: $screen-xxs) {
+        padding: 1.5vw;
+        margin: 2.5vw;
+    }
+    @media screen and (max-width: $screen-xxs) {
+        padding: 1.75vw;
+        margin: 2.75vw;
     }
 
     &__img {
@@ -24,6 +36,9 @@
 
             @media screen and (max-width: $screen-md) {
                 width: 22vw;
+            }
+            @media screen and (max-width: $screen-sm) {
+                width: 24vw;
             }
             @media screen and (max-width: $screen-xs) {
                 width: 36vw;
@@ -39,8 +54,14 @@
         @media screen and (max-width: $screen-md) {
             font-size: 1.65vw;
         }
+        @media screen and (max-width: $screen-sm) {
+            font-size: 1.95vw;
+        }
         @media screen and (max-width: $screen-xs) {
             font-size: 2.7vw;
+        }
+        @media screen and (max-width: $screen-xxs) {
+            font-size: 2.8vw;
         }
     }
 
@@ -63,8 +84,14 @@
             @media screen and (max-width: $screen-md) {
                 font-size: 1.5vw;
             }
+            @media screen and (max-width: $screen-sm) {
+                font-size: 1.75vw;
+            }
             @media screen and (max-width: $screen-xs) {
                 font-size: 2.25vw;
+            }
+            @media screen and (max-width: $screen-xxs) {
+                font-size: 2.5vw;
             }
         }
 
@@ -77,9 +104,17 @@
                     height: 1.65vw;
                     width: 1.65vw;
                 }
+                @media screen and (max-width: $screen-sm) {
+                    height: 2vw;
+                    width: 2vw;
+                }
                 @media screen and (max-width: $screen-xs) {
                     height: 2.65vw;
                     width: 2.65vw;
+                }
+                @media screen and (max-width: $screen-xxs) {
+                    height: 2.75vw;
+                    width: 2.75vw;
                 }
             }
         }
@@ -87,6 +122,12 @@
         &-delete {
             @media screen and (max-width: $screen-md) {
                 font-size: 1.5vw;
+            }
+            @media screen and (max-width: $screen-sm) {
+                font-size: 1.75vw;
+            }
+            @media screen and (max-width: $screen-xs) {
+                font-size: 2.25vw;
             }
             @media screen and (max-width: $screen-xs) {
                 font-size: 2.5vw;
@@ -99,9 +140,17 @@
                     height: 1.85vw;
                     width: 1.85vw;
                 }
+                @media screen and (max-width: $screen-sm) {
+                    height: 2.15vw;
+                    width: 2.15vw;
+                }
                 @media screen and (max-width: $screen-xs) {
                     height: 2.85vw;
                     width: 2.85vw;
+                }
+                @media screen and (max-width: $screen-xxs) {
+                    height: 3vw;
+                    width: 3vw;
                 }
             }
         }

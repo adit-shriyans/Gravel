@@ -32,7 +32,13 @@
                 height: 27.5vw;
             }
             @media screen and (max-width: $screen-sm) {
-                height: 30vw;
+                height: 28.5vw;
+            }
+            @media screen and (max-width: $screen-xs) {
+                height: 38vw;
+            }
+            @media screen and (max-width: $screen-xxs) {
+                height: 42vw;
             }
         }
     }
@@ -55,6 +61,15 @@
         @media screen and (max-width: $screen-md) {
             font-size: 1.5vw;
         }
+        @media screen and (max-width: $screen-sm) {
+            font-size: 1.75vw;
+        }
+        @media screen and (max-width: $screen-xs) {
+            font-size: 2.25vw;
+        }
+        @media screen and (max-width: $screen-xxs) {
+            font-size: 2.75vw;
+        }
 
         svg {
             margin-right: 0.5vw;
@@ -73,6 +88,9 @@
 
         @media screen and (max-width: $screen-md) {
             width: 84vw;
+        }
+        @media screen and (max-width: $screen-sm) {
+            width: 93vw;
         }
         @media screen and (max-width: $screen-xs) {
             width: 90vw;
@@ -100,6 +118,12 @@
 
         @media screen and (max-width: $screen-md) {
             font-size: 2.25vw;
+        }
+        @media screen and (max-width: $screen-sm) {
+            font-size: 3vw;
+        }
+        @media screen and (max-width: $screen-xs) {
+            font-size: 4vw;
         }
     }
 }
