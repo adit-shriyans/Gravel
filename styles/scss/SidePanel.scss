@@ -1,3 +1,5 @@
+@import '_variables.scss';
+
 :root {
     --scroll-distance: 0;
 }
@@ -19,6 +21,43 @@
     font-family: sans-serif;
     font-size: 1vw;
 
+    @media screen and (max-width: $screen-md) {
+        width: 25vw;
+        height: calc(100vh - 2rem);
+    }
+    @media screen and (max-width: $screen-sm) {
+        width: 28vw;
+    }
+    @media screen and (max-width: $screen-xs) {
+        width: 100vw;
+        display: flex;
+        flex-direction: row;
+        overflow-y: hidden;
+        // & section{
+        //     width: 49.5vw;
+        // }
+    }
+
+    &__section {
+        &-stops {
+            @media screen and (max-width: $screen-xs) {
+                overflow-y: scroll;
+                margin-top: 0.5vw;
+                flex: 1 1 100%;
+            }
+            @media screen and (max-width: $screen-xxs) {
+                flex: 1 1 125%;
+            }
+        }
+        &-info {
+            @media screen and (max-width: $screen-xs) {
+                overflow-y: scroll;
+                margin-top: 0.5vw;
+                flex: 1 1 90%;
+            }
+        }
+    }
+
     &__filler {
         display: flex;
         flex-direction: column;
@@ -32,6 +71,19 @@
         color: white;
         font-size: 1.5vw;
         text-align: center;
+
+        @media screen and (max-width: $screen-md) {
+            font-size: 2.25vw;
+        }
+        @media screen and (max-width: $screen-sm) {
+            font-size: 2.5vw;
+        }
+        @media screen and (max-width: $screen-xs) {
+            font-size: 3vw;
+        }
+        @media screen and (max-width: $screen-xxs) {
+            font-size: 3.5vw;
+        }
     }
 
     &__Home {
@@ -43,6 +95,21 @@
         border-radius: 5px;
         background-color: #1e2270;
         cursor: pointer;
+
+        @media screen and (max-width: $screen-md) {
+            font-size: 1.4vw;
+        }
+        @media screen and (max-width: $screen-sm) {
+            font-size: 1.75vw;
+        }
+        @media screen and (max-width: $screen-xs) {
+            font-size: 2.25vw;
+            margin: 3vw 1vw;
+        }
+        @media screen and (max-width: $screen-xxs) {
+            font-size: 2.75vw;
+            margin: 3vw 1vw;
+        }
 
         &-img {
             margin-right: 0.2vw;
@@ -78,6 +145,10 @@
     justify-content: space-between;
     padding: 1vw;
 
+    @media screen and (max-width: $screen-md) {
+        font-size: 1.25vw;
+    }
+
     &__dist {
         display: flex;
         justify-content: center;
@@ -86,6 +157,19 @@
         background-color: #008bf6;
         color: #fff;
         align-items: center;
+
+        @media screen and (max-width: $screen-sm) {
+            padding: 0.5vw;
+            font-size: 1.5vw;
+        }
+        @media screen and (max-width: $screen-xs) {
+            padding: 0.5vw;
+            font-size: 2.25vw;
+        }
+        @media screen and (max-width: $screen-xxs) {
+            padding: 0.75vw;
+            font-size: 2.6vw;
+        }
 
         &-img {
             border-radius: 50%;
@@ -98,9 +182,43 @@
             align-items: center;
             justify-content: center;
 
+            @media screen and (max-width: $screen-md) {
+                width: 1.6vw;
+                height: 1.6vw;
+            }
+            @media screen and (max-width: $screen-sm) {
+                width: 2vw;
+                height: 2vw;
+            }
+            @media screen and (max-width: $screen-xs) {
+                width: 3vw;
+                height: 3vw;
+            }
+            @media screen and (max-width: $screen-xxs) {
+                width: 4vw;
+                height: 4vw;
+            }
+
             & img {
                 height: 0.9vw;
                 width: 0.9vw;
+
+                @media screen and (max-width: $screen-md) {
+                    width: 1.4vw;
+                    height: 1.4vw;
+                }
+                @media screen and (max-width: $screen-sm) {
+                    width: 1.8vw;
+                    height: 1.8vw;
+                }    
+                @media screen and (max-width: $screen-xs) {
+                    width: 2.5vw;
+                    height: 2.5vw;
+                }    
+                @media screen and (max-width: $screen-xxs) {
+                    width: 3.25vw;
+                    height: 3.25vw;
+                }    
             }
         }
 
@@ -120,6 +238,18 @@
         color: #000000;
         align-items: center;
 
+        @media screen and (max-width: $screen-sm) {
+            padding: 0.5vw;
+            font-size: 1.5vw;
+        }
+        @media screen and (max-width: $screen-xs) {
+            font-size: 2vw;
+        }
+        @media screen and (max-width: $screen-xxs) {
+            padding: 0.75vw;
+            font-size: 2.6vw;
+        }
+
         &-img {
             color: #000000;
             border-radius: 50%;
@@ -132,9 +262,43 @@
             align-items: center;
             justify-content: center;
 
+            @media screen and (max-width: $screen-md) {
+                width: 1.6vw;
+                height: 1.6vw;
+            }
+            @media screen and (max-width: $screen-sm) {
+                width: 2vw;
+                height: 2vw;
+            }
+            @media screen and (max-width: $screen-xs) {
+                width: 3vw;
+                height: 3vw;
+            }
+            @media screen and (max-width: $screen-xxs) {
+                width: 4vw;
+                height: 4vw;
+            }
+
             & svg {
                 height: 1vw;
                 width: 1vw;
+
+                @media screen and (max-width: $screen-md) {
+                    width: 1.4vw;
+                    height: 1.4vw;
+                }
+                @media screen and (max-width: $screen-sm) {
+                    width: 1.8vw;
+                    height: 1.8vw;
+                }
+                @media screen and (max-width: $screen-xs) {
+                    width: 2.5vw;
+                    height: 2.5vw;
+                }
+                @media screen and (max-width: $screen-xxs) {
+                    width: 3.25vw;
+                    height: 3.25vw;
+                }
             }
         }
 
@@ -153,6 +317,20 @@
     border-radius: 5px;
     display: flex;
     flex-direction: column;
+
+    @media screen and (max-width: $screen-md) {
+        font-size: 1.4vw;
+    }
+    @media screen and (max-width: $screen-sm) {
+        font-size: 1.75vw;
+    }
+    @media screen and (max-width: $screen-xs) {
+        margin: 3vw 1vw;
+        font-size: 2.25vw;
+    }
+    @media screen and (max-width: $screen-xxs) {
+        font-size: 2.75vw;
+    }
 
     &__content {
         display: flex;
@@ -234,10 +412,28 @@
     align-items: center;
     justify-content: flex-end;
     padding-right: 1vw;
+
+    @media screen and (max-width: $screen-md) {
+        margin-top: 1.5vw;
+    }
+
     &__text {
         width: fit-content;
         color: #fff;
         font-size: 0.8vw;
+
+        @media screen and (max-width: $screen-md) {
+            font-size: 1vw;
+        }
+        @media screen and (max-width: $screen-sm) {
+            font-size: 1.25vw;
+        }
+        @media screen and (max-width: $screen-xs) {
+            font-size: 1.5vw;
+        }
+        @media screen and (max-width: $screen-xxs) {
+            font-size: 2vw;
+        }
     }
 }
 
@@ -252,6 +448,23 @@
     margin: 1vw 0;
     padding: 0.75vw 0.5vw;
     padding-left: 0;
+
+    @media screen and (max-width: $screen-md) {
+        margin: 1.5vw 0;
+        padding: 0.9vw 0.6vw;
+    }
+    @media screen and (max-width: $screen-sm) {
+        margin-bottom: 2.25vw;
+        padding: 1vw 0.7vw;
+    }
+    @media screen and (max-width: $screen-xs) {
+        margin-bottom: 3vw;
+        padding: 1vw 0.75vw;
+    }
+    @media screen and (max-width: $screen-xxs) {
+        margin-bottom: 3.5vw;
+        padding: 1.25vw 1vw;
+    }
 
     .addRouteBtn {
         width: fit-content;
@@ -284,21 +497,6 @@
         }
     }
 
-    &__dropdownbtn-container {
-        position: fixed;
-        align-self: flex-end;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        height: 1.1vw;
-        width: 1.1vw;
-        z-index: 1000;
-        border-radius: 50%;
-        transform: translate(0.3vw, -0.7vw);
-        cursor: pointer;
-        margin-top: 0.1vw;
-    }
-
     &__dropdownbtnop {
         opacity: 0;
     }
@@ -308,9 +506,41 @@
         width: 1.25vw;
         height: 1.25vw;
 
+        @media screen and (max-width: $screen-md) {
+            width: 1.75vw;
+            height: 1.75vw;
+        }
+        @media screen and (max-width: $screen-sm) {
+            width: 2vw;
+            height: 2vw;
+        }
+        @media screen and (max-width: $screen-xs) {
+            width: 2.5vw;
+            height: 2.5vw;
+        }
+        @media screen and (max-width: $screen-xxs) {
+            width: 3vw;
+            height: 3vw;
+        }
+
         &:hover {
             background-color: rgba(255, 255, 255, 0.134);
             opacity: 1 !important;
+        }
+
+        &-container {
+            position: fixed;
+            align-self: flex-end;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 1.1vw;
+            width: 1.1vw;
+            z-index: 1000;
+            border-radius: 50%;
+            transform: translate(0.3vw, -0.7vw);
+            cursor: pointer;
+            margin-top: 0.1vw;
         }
     }
 
@@ -319,6 +549,10 @@
         display: flex;
         justify-content: center;
 
+        @media screen and (max-width: $screen-md) {
+            margin: 0.6vw;
+        }
+
         &.hidden {
             opacity: 0;
             max-height: 0;
@@ -326,18 +560,42 @@
         }
     }
 
-    &__img-container {
-        display: flex;
-        flex-wrap: wrap;
-        align-content: center;
-    }
-
     &__img {
         height: 1vw;
         width: 1.5vw;
 
+        @media screen and (max-width: $screen-md) {
+            height: 1.25vw;
+            width: 1.75vw;
+        }
+
         &-distance {
             height: 1.75vw;
+        }
+
+        &-container {
+            display: flex;
+            flex-wrap: wrap;
+            align-content: center;
+
+            & svg {
+                @media screen and (max-width: $screen-md) {
+                    width: 1.75vw;
+                    height: 1.75vw;
+                }
+                @media screen and (max-width: $screen-sm) {
+                    width: 2.2vw;
+                    height: 2.2vw;
+                }
+                @media screen and (max-width: $screen-xs) {
+                    width: 2.75vw;
+                    height: 2.75vw;
+                }
+                @media screen and (max-width: $screen-xxs) {
+                    width: 3.5vw;
+                    height: 3.5vw;
+                }
+            }
         }
     }
 
@@ -349,6 +607,29 @@
         display: flex;
         align-items: center;
         cursor: text;
+
+        @media screen and (max-width: $screen-md) {
+            font-size: 1.4vw;
+            margin-left: 0.3vw;
+        }
+        @media screen and (max-width: $screen-sm) {
+            font-size: 1.65vw;
+            padding: 0.4vw 0.7vw;
+            margin-left: 0.4vw;
+        }
+        @media screen and (max-width: $screen-xs) {
+            font-size: 2.4vw;
+            padding: 0.4vw 0.7vw;
+            margin: 0.3vw;
+            margin-left: 0.4vw;
+            padding: 0.5vw 0.75vw;
+        }
+        @media screen and (max-width: $screen-xxs) {
+            font-size: 3vw;
+            padding: 0.5vw 0.75vw;
+            margin: 0.4vw;
+            padding: 0.5vw 0.75vw;
+        }
     }
 
     &__DateInfo {
@@ -358,7 +639,11 @@
     }
 
     &__date {
-        width: 3.9vw;
+        // width: 3.9vw;
+
+        @media screen and (max-width: $screen-sm) {
+            padding: 0.38vw;
+        }
     }
 
     &__DistInfo {
@@ -370,6 +655,10 @@
     &__dist {
         padding: 0.1vw 0.2vw;
         width: fit-content;
+
+        @media screen and (max-width: $screen-sm) {
+            padding: 0.2vw 0.35vw;
+        }
     }
 
     &__notes {
@@ -389,9 +678,42 @@
         font-size: 1.05vw;
         text-wrap: wrap;
 
+        @media screen and (max-width: $screen-md) {
+            font-size: 1.4vw;
+        }
+        @media screen and (max-width: $screen-sm) {
+            font-size: 1.6vw;
+        }
+        @media screen and (max-width: $screen-xs) {
+            font-size: 2.4vw;
+        }
+        @media screen and (max-width: $screen-xs) {
+            font-size: 2.4vw;
+        }
+        @media screen and (max-width: $screen-xxs) {
+            font-size: 3vw;
+        }
+
         &-date {
             width: 3.9vw;
             font-size: 1vw;
+
+            @media screen and (max-width: $screen-md) {
+                font-size: 1.4vw;
+                width: 5.25vw;
+            }
+            @media screen and (max-width: $screen-sm) {
+                font-size: 1.6vw;
+                width: 6.2vw;
+            }
+            @media screen and (max-width: $screen-sm) {
+                font-size: 2.4vw;
+                width: 9.5vw;
+            }
+            @media screen and (max-width: $screen-sm) {
+                font-size: 3vw;
+                width: 12vw;
+            }
         }
 
         &-dist {
@@ -429,6 +751,13 @@
         font-size: 1vw;
         cursor: pointer;
 
+        @media screen and (max-width: $screen-xs) {
+            transform: translate(-17.5vw, -0.3vw);
+        }
+        @media screen and (max-width: $screen-xxs) {
+            transform: translate(-19vw, -0.3vw);
+        }
+
         &-imgContainer {
             height: 1.5vw;
             width: 1.5vw;
@@ -438,11 +767,41 @@
             align-items: center;
             justify-content: center;
 
+            @media screen and (max-width: $screen-md) {
+                height: 2vw;
+                width: 2vw;
+            }
+            @media screen and (max-width: $screen-sm) {
+                height: 2.65vw;
+                width: 2.65vw;
+            }
+            @media screen and (max-width: $screen-xs) {
+                height: 3.75vw;
+                width: 3.75vw;
+            }
+            @media screen and (max-width: $screen-xxs) {
+                height: 4vw;
+                width: 4vw;
+            }
+
             &-copy {
                 background-color: #9abaff;
 
                 & svg {
                     height: 1.1vw !important;
+
+                    @media screen and (max-width: $screen-md) {
+                        height: 1.35vw !important;
+                    }
+                    @media screen and (max-width: $screen-sm) {
+                        height: 1.65vw !important;
+                    }
+                    @media screen and (max-width: $screen-xs) {
+                        height: 2.75vw !important;                      
+                    }
+                    @media screen and (max-width: $screen-xxs) {
+                        height: 3vw !important;
+                    }
                 }
             }
 
@@ -456,6 +815,19 @@
 
             & svg {
                 height: 1.5vw;
+
+                @media screen and (max-width: $screen-md) {
+                    height: 1.75vw;
+                }
+                @media screen and (max-width: $screen-sm) {
+                    height: 2.35vw;
+                }
+                @media screen and (max-width: $screen-xs) {
+                    height: 3.5vw;                 
+                }
+                @media screen and (max-width: $screen-xxs) {
+                    height: 4vw;                 
+                }
             }
         }
 
@@ -464,6 +836,19 @@
             width: fit-content;
             display: flex;
             align-items: center;
+
+            @media screen and (max-width: $screen-md) {
+                font-size: 1.35vw;
+            }
+            @media screen and (max-width: $screen-sm) {
+                font-size: 1.65vw;
+            }
+            @media screen and (max-width: $screen-xs) {
+                font-size: 2.5vw;
+            }
+            @media screen and (max-width: $screen-xxs) {
+                font-size: 3vw;
+            }
         }
     }
 
@@ -471,6 +856,19 @@
         display: flex;
         justify-content: flex-start;
         padding: 0.25vw 0.5vw;
+
+        @media screen and (max-width: $screen-md) {
+            padding: 0.33vw 0.66vw;      
+        }
+        @media screen and (max-width: $screen-sm) {
+            padding: 0.5vw 0.75vw;      
+        }
+        @media screen and (max-width: $screen-xs) {
+            padding: 0.75vw 1.25vw;      
+        }
+        @media screen and (max-width: $screen-xxs) {
+            
+        }
 
         &-copy {
             &:hover {

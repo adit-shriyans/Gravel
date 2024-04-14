@@ -2,6 +2,24 @@
   height: 100vh;
   width: 76.949vw;
 }
+@media screen and (max-width: 1024px) {
+  .MapComponent {
+    width: 75vw;
+    height: calc(100vh - 2rem);
+  }
+}
+@media screen and (max-width: 768px) {
+  .MapComponent {
+    width: 73vw;
+    height: calc(100vh - 2rem);
+  }
+}
+@media screen and (max-width: 640px) {
+  .MapComponent {
+    width: 100vw;
+    flex-basis: 150%;
+  }
+}
 .MapComponent .MapContainer {
   height: 100%;
   width: 100%;
@@ -13,6 +31,24 @@
   flex-direction: column;
   height: calc(100vh - 5vw);
   overflow-y: auto;
+}
+@media screen and (max-width: 1024px) {
+  .MapComponent .MapContainer__routes {
+    top: calc(2vw + 2rem);
+  }
+}
+@media screen and (max-width: 640px) {
+  .MapComponent .MapContainer__routes {
+    height: calc(52.5vh - 5vw);
+  }
+}
+@media screen and (max-width: 468px) {
+  .MapComponent .MapContainer__routes {
+    top: calc(58vh + 2rem);
+    height: 33vh;
+    position: fixed;
+    z-index: 9999;
+  }
 }
 .MapComponent .MapContainer__routes.hidden {
   display: none;
@@ -43,25 +79,90 @@
   flex-direction: row;
   align-items: center;
 }
+@media screen and (max-width: 1024px) {
+  .MapComponent .MapContainer__userBtns {
+    top: calc(1vw + 2rem);
+  }
+}
+@media screen and (max-width: 468px) {
+  .MapComponent .MapContainer__userBtns {
+    display: flex;
+    flex-direction: column;
+    height: 56vh;
+    justify-content: space-between;
+  }
+}
 .MapComponent .MapContainer__carIcon {
   z-index: 2000;
   background-color: #fff;
   color: #ff5a01;
   border-radius: 50%;
   padding: 0.5vw;
-  border: 1.7px solid #1a1a1a;
+  border: 0.165vw solid #1a1a1a;
   cursor: pointer;
   margin-left: 1vw;
+  height: 1.5vw;
+  width: 1.5vw;
+}
+@media screen and (max-width: 1024px) {
+  .MapComponent .MapContainer__carIcon {
+    height: 1.85vw;
+    width: 1.85vw;
+  }
+}
+@media screen and (max-width: 768px) {
+  .MapComponent .MapContainer__carIcon {
+    height: 2.5vw;
+    width: 2.5vw;
+    border: 0.25vw solid #1a1a1a;
+  }
+}
+@media screen and (max-width: 640px) {
+  .MapComponent .MapContainer__carIcon {
+    height: 3vw;
+    width: 3vw;
+    border: 0.33vw solid #1a1a1a;
+  }
+}
+@media screen and (max-width: 468px) {
+  .MapComponent .MapContainer__carIcon {
+    height: 4.5vw;
+    width: 4.5vw;
+    border: 0.4vw solid #1a1a1a;
+  }
 }
 .MapComponent .MapContainer__save {
   z-index: 2000;
   background-color: #fff;
-  padding: 0.3vw 0.5vw;
-  border: 1.7px solid #1a1a1a;
+  padding: 0.3rem 0.5rem;
+  border: 0.165vw solid #1a1a1a;
   border-radius: 5px;
   font-family: sans-serif;
   font-size: 1vw;
   cursor: pointer;
+}
+@media screen and (max-width: 1024px) {
+  .MapComponent .MapContainer__save {
+    font-size: 1.25vw;
+  }
+}
+@media screen and (max-width: 768px) {
+  .MapComponent .MapContainer__save {
+    font-size: 1.5vw;
+    border: 0.25vw solid #1a1a1a;
+  }
+}
+@media screen and (max-width: 640px) {
+  .MapComponent .MapContainer__save {
+    font-size: 2vw;
+    border: 0.33vw solid #1a1a1a;
+  }
+}
+@media screen and (max-width: 468px) {
+  .MapComponent .MapContainer__save {
+    font-size: 2.5vw;
+    border: 0.4vw solid #1a1a1a;
+  }
 }
 .MapComponent .leaflet-marker-icon {
   width: 25px !important;

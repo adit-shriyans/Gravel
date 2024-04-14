@@ -223,108 +223,112 @@ const SidePanel = ({ distances, stops, setStops, setZoomLocation, coord, userId 
 
   return (
     <div className={`SidePanel ${scrolled ? 'SideWindow' : ''}`}>
-      <h1 className='SidePanel__heading'>Travel List!</h1>
-      <div className='TripInfo'>
-        <div className='TripInfo__dist'>
-          <div className='TripInfo__dist-img'>
-            <Image src={totalDistImg} alt='total distance' />
-          </div>
-          <div className='TripInfo__dist-text'>
-            {totalDistance ? totalDistance.toFixed(2) : 0}km
-          </div>
-        </div>
-
-        <div className='TripInfo__days'>
-          <div className='TripInfo__days-img'>
-            <EventNoteIcon />
-          </div>
-          <div className='TripInfo__days-text'>
-            {noOfDays} Days
-          </div>
-        </div>
-      </div>
-      <div
-        className='addStop'
-        ref={addStopRef}
-      >
-        <div
-          className='addStop__content'
-          tabIndex={0}
-          onClick={() => setAddingLocation((prev) => !prev)}
-        >
-          <div
-            className='addStop__img'
-          >
-            <AddLocationAltIcon />
-          </div>
-          <div
-            className='addStop__heading'
-          >
-            Add Location
-          </div>
-        </div>
-        <form className={`addStop__form ${addingLocation ? '' : 'hidden'}`}>
-          <input
-            className='addStop__input'
-            value={reqLocation}
-            onChange={handleAddFormChange}
-            onKeyDown={handleInputKeyDown}
-            ref={inputRef}
-            placeholder='Enter Location Name'
-          />
-        </form>
-      </div>
-      {searchResults.length > 0 && addingLocation ? (<div className='addStop__searchResult'>
-        {searchResults.map((res, index) => {
-          return (
-            <div className='addStop__result' key={index} onClick={(e) => handleSearchResultsClick(res, e as unknown as MouseEvent)}>
-              {res.label}
+      <section className='SidePanel__section-info'>
+        <h1 className='SidePanel__heading'>Travel List!</h1>
+        <div className='TripInfo'>
+          <div className='TripInfo__dist'>
+            <div className='TripInfo__dist-img'>
+              <Image src={totalDistImg} alt='total distance' />
             </div>
-          )
-        })}
-      </div>) : ''}
-      <div
-        className='SidePanel__Home'
-        onClick={() => { setZoomLocation(coord) }}
-      >
-        <div className='SidePanel__Home-img'>
-          <MyLocationIcon />
+            <div className='TripInfo__dist-text'>
+              {totalDistance ? totalDistance.toFixed(2) : 0}km
+            </div>
+          </div>
+
+          <div className='TripInfo__days'>
+            <div className='TripInfo__days-img'>
+              <EventNoteIcon />
+            </div>
+            <div className='TripInfo__days-text'>
+              {noOfDays} Days
+            </div>
+          </div>
         </div>
         <div
-          className='SidePanel__Home-text'
+          className='addStop'
+          ref={addStopRef}
         >
-          Your Location
-        </div>
-      </div>
-      <div className='DragNDrop'>
-        <input 
-          className='DragNDrop__box' 
-          onChange={() => setDndEnable(prev => !prev)} 
-          type="checkbox" 
-          checked={dndEnable}
-        />
-        <div className='DragNDrop__text'>Reorder</div>
-      </div>
-      {stops.length > 0 ? (
-        <div className='StopInfo__container'>
-          <SortableContext 
-            items={stops}
-            strategy={verticalListSortingStrategy}
+          <div
+            className='addStop__content'
+            tabIndex={0}
+            onClick={() => setAddingLocation((prev) => !prev)}
           >
-            {stops.map((stop) => (
-              <div key={stop.id} className='StopInfo'>
-                <PlaceInfo key={stop.id} distances={distances} stop={stop} stops={stops} setStops={setStops} setTotalDistance={setTotalDistance} setZoomLocation={setZoomLocation} dndEnable={dndEnable} isEditable={isEditable} />
-              </div>
-            ))}
-          </SortableContext>
-        </div>
-      ) :
-        (
-          <div className='SidePanel__filler'>
-            <p>or</p>
-            <h2>Click on the map!</h2>
+            <div
+              className='addStop__img'
+            >
+              <AddLocationAltIcon />
+            </div>
+            <div
+              className='addStop__heading'
+            >
+              Add Location
+            </div>
           </div>
-        )}
+          <form className={`addStop__form ${addingLocation ? '' : 'hidden'}`}>
+            <input
+              className='addStop__input'
+              value={reqLocation}
+              onChange={handleAddFormChange}
+              onKeyDown={handleInputKeyDown}
+              ref={inputRef}
+              placeholder='Enter Location Name'
+            />
+          </form>
+        </div>
+        {searchResults.length > 0 && addingLocation ? (<div className='addStop__searchResult'>
+          {searchResults.map((res, index) => {
+            return (
+              <div className='addStop__result' key={index} onClick={(e) => handleSearchResultsClick(res, e as unknown as MouseEvent)}>
+                {res.label}
+              </div>
+            )
+          })}
+        </div>) : ''}
+        <div
+          className='SidePanel__Home'
+          onClick={() => { setZoomLocation(coord) }}
+        >
+          <div className='SidePanel__Home-img'>
+            <MyLocationIcon />
+          </div>
+          <div
+            className='SidePanel__Home-text'
+          >
+            Your Location
+          </div>
+        </div>
+      </section>
+      <section className='SidePanel__section-stops'>
+        <div className='DragNDrop'>
+          <input 
+            className='DragNDrop__box' 
+            onChange={() => setDndEnable(prev => !prev)} 
+            type="checkbox" 
+            checked={dndEnable}
+          />
+          <div className='DragNDrop__text'>Reorder</div>
+        </div>
+        {stops.length > 0 ? (
+          <div className='StopInfo__container'>
+            <SortableContext 
+              items={stops}
+              strategy={verticalListSortingStrategy}
+            >
+              {stops.map((stop) => (
+                <div key={stop.id} className='StopInfo'>
+                  <PlaceInfo key={stop.id} distances={distances} stop={stop} stops={stops} setStops={setStops} setTotalDistance={setTotalDistance} setZoomLocation={setZoomLocation} dndEnable={dndEnable} isEditable={isEditable} />
+                </div>
+              ))}
+            </SortableContext>
+          </div>
+        ) :
+          (
+            <div className='SidePanel__filler'>
+              <p>or</p>
+              <h2>Click on the map!</h2>
+            </div>
+          )}
+      </section>
     </div>
   )
 }

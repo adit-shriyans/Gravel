@@ -2,12 +2,24 @@
 
 .App {
     width: 100%;
+
+    @media screen and (max-width: $screen-md) {
+        height: calc(100vh - 2rem);
+    }
 }
 
 .TripPage {
     height: 100vh;
     display: flex;
     flex-direction: row;
+
+    @media screen and (max-width: $screen-md) {
+        height: calc(100vh - 2rem);
+    }
+    @media screen and (max-width: $screen-xs) {
+        display: flex;
+        flex-direction: column-reverse;
+    }
 }
 
 .Page {

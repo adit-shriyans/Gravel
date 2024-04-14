@@ -1,5 +1,5 @@
 import { useEffect, useState, useRef, useMemo, useCallback, FC } from 'react';
-import L, { LatLngExpression } from 'leaflet';
+import L, { LatLngExpression, PointExpression } from 'leaflet';
 import { MapContainer, TileLayer, Marker, Popup, useMap } from 'react-leaflet';
 import { MarkerLocation } from '@assets/types/types';
 import MarkerIcon from '../node_modules/leaflet/dist/images/marker-icon.png';
@@ -18,6 +18,23 @@ interface DraggableMarkerProps {
 export default function DraggableMarker({ stops, setStops, center, id, setZoomLocation }: DraggableMarkerProps) {
   const [position, setPosition] = useState<L.LatLngTuple>(center);
   const markerRef = useRef<L.Marker | null>(null);
+  const [iconSize, setIconSize] = useState<PointExpression>([25, 41]);
+
+  const mapContainerWidth = useMemo(() => {
+    const container = document.getElementById('MapComponent');
+    return container ? container.offsetWidth : 500;
+  }, []);
+
+  useEffect(() => {
+    const updateIconSize = () => {
+      const iconWidth = mapContainerWidth / 59.84; 
+      const iconHeight = iconWidth * 1.64;
+      const newIconSize = [iconWidth, iconHeight] as PointExpression;
+      setIconSize(newIconSize);
+    };
+    
+    updateIconSize();
+  }, [mapContainerWidth]);
 
   const eventHandlers = useMemo(
     () => ({
@@ -66,7 +83,7 @@ export default function DraggableMarker({ stops, setStops, center, id, setZoomLo
         new L.Icon({
             iconUrl: MarkerIcon.src,
             iconRetinaUrl: MarkerIcon.src,
-            iconSize: [25, 41],
+            iconSize: iconSize,
             iconAnchor: [12.5, 41],
             popupAnchor: [0, -41],
         })
