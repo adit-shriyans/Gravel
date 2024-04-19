@@ -25,7 +25,6 @@ const TripModal = ({ stops, setShowModal, tripId }: ModalPropsType) => {
 
         if (tripName) {
             setShowModal(false);
-
             try {
                 const response = await fetch(`/api/trip/${tripId}`, {
                     method: "PATCH",
