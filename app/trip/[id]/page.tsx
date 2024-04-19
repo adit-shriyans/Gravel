@@ -58,8 +58,8 @@ const MyPage = () => {
       const response = await fetch(`/api/stop/${params?.id}`, {
         method: 'GET'
       });
-      const data = await response.json();
-      // data.sort((a: { id: number; }, b: { id: number; }) => a.id-b.id);
+      const data = await response.json();      
+      data.sort((a: { id: number; }, b: { id: number; }) => a.id-b.id);
 
       setStops(data.map((stop: StopResponseType) => {
         return { id: stop._id, location: stop.location, locationName: stop.locationName, startDate: stop.startDate, endDate: stop.endDate, notes: stop.notes }
