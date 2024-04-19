@@ -152,6 +152,31 @@
     font-size: 4vw;
   }
 }
+.Page__NA {
+  color: #4d2c2c;
+  margin: 0 auto;
+  font-size: 1rem;
+}
+@media screen and (max-width: 1024px) {
+  .Page__NA {
+    font-size: 1.5vw;
+  }
+}
+@media screen and (max-width: 768px) {
+  .Page__NA {
+    font-size: 1.75vw;
+  }
+}
+@media screen and (max-width: 640px) {
+  .Page__NA {
+    font-size: 2.25vw;
+  }
+}
+@media screen and (max-width: 468px) {
+  .Page__NA {
+    font-size: 2.75vw;
+  }
+}
 
 .hidden {
   display: none;

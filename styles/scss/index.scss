@@ -138,6 +138,25 @@
             font-size: 4vw;
         }
     }
+
+    &__NA {
+        color: #4d2c2c;
+        margin: 0 auto;
+        font-size: 1rem;
+
+        @media screen and (max-width: $screen-md) {
+            font-size: 1.5vw;
+        }
+        @media screen and (max-width: $screen-sm) {
+            font-size: 1.75vw;
+        }
+        @media screen and (max-width: $screen-xs) {
+            font-size: 2.25vw;
+        }
+        @media screen and (max-width: $screen-xxs) {
+            font-size: 2.75vw;
+        }
+    }
 }
 
 .hidden {

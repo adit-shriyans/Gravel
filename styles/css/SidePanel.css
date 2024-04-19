@@ -53,6 +53,7 @@
     overflow-y: scroll;
     margin-top: 0.5vw;
     flex: 1 1 90%;
+    overflow-y: hidden;
   }
 }
 .SidePanel__filler {
@@ -401,7 +402,7 @@
   position: absolute;
   width: 16.5vw;
   left: 4.5vw;
-  top: 13.25vw;
+  top: calc(15vw - 0.5rem);
   max-height: 200px;
   overflow-y: auto;
   background-color: #fff;
@@ -411,8 +412,42 @@
   z-index: 1000;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
+@media screen and (max-width: 1024px) {
+  .addStop__searchResult {
+    top: calc(18vw + 2.5rem);
+    left: 1.5vw;
+    width: 21vw;
+    font-size: 1.25vw;
+  }
+}
+@media screen and (max-width: 768px) {
+  .addStop__searchResult {
+    top: calc(30vw - 2rem);
+    left: 1.5vw;
+    font-size: 1.5vw;
+    width: 24vw;
+  }
+}
+@media screen and (max-width: 640px) {
+  .addStop__searchResult {
+    top: calc(72.5vh + 17.5vw);
+    left: 1.5vw;
+    font-size: 2.1vw;
+    width: 44vw;
+    height: calc(10rem - 16vw);
+  }
+}
+@media screen and (max-width: 468px) {
+  .addStop__searchResult {
+    top: calc(72.5vh + 19vw);
+    left: 1.5vw;
+    font-size: 2.5vw;
+    width: 38.5vw;
+    height: calc(10rem - 16vw);
+  }
+}
 .addStop__searchResult .addStop__result {
-  padding: 10px;
+  padding: 0.6vw;
   cursor: pointer;
 }
 .addStop__searchResult .addStop__result:hover {

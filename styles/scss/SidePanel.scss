@@ -54,6 +54,7 @@
                 overflow-y: scroll;
                 margin-top: 0.5vw;
                 flex: 1 1 90%;
+                overflow-y: hidden;
             }
         }
     }
@@ -365,7 +366,7 @@
         position: absolute;
         width: calc(20vw - 3.5vw);
         left: 4.5vw;
-        top: 13.25vw;
+        top: calc(15vw - 0.5rem);
         max-height: 200px;
         overflow-y: auto;
         background-color: #fff;
@@ -374,9 +375,36 @@
         border-radius: 5px;
         z-index: 1000;
         box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+
+        @media screen and (max-width: $screen-md) {
+            top: calc(18vw + 2.5rem);
+            left: 1.5vw;
+            width: calc(24.5vw - 3.5vw);
+            font-size: 1.25vw;
+        }
+        @media screen and (max-width: $screen-sm) {
+            top: calc(30vw - 2rem);
+            left: 1.5vw;
+            font-size: 1.5vw;
+            width: calc(27.5vw - 3.5vw);
+        }
+        @media screen and (max-width: $screen-xs) {
+            top: calc(72.5vh + 17.5vw);
+            left: 1.5vw;
+            font-size: 2.1vw;
+            width: calc(47.5vw - 3.5vw);
+            height: calc(10rem - 16vw);
+        }
+        @media screen and (max-width: $screen-xxs) {
+            top: calc(72.5vh + 19vw);
+            left: 1.5vw;
+            font-size: 2.5vw;
+            width: calc(42vw - 3.5vw);
+            height: calc(10rem - 16vw);
+        }
       
         .addStop__result {
-          padding: 10px;
+          padding: 0.6vw;
           cursor: pointer;
       
           &:hover {
