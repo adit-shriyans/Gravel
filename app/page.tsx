@@ -20,47 +20,18 @@ declare module 'next-auth' {
 }
 
 const MyPage = () => {
-  const [trips, setTrips] = useState<TripType[]>([]);
-  const [tripStatus, setTripStatus] = useState<String>('')
   const { data: session } = useSession();
-  // const [showedTrips, setShowedTrips] = useState<TripType[]>(trips);
-  const [tripLoading, setTripLoading] = useState(true);
+  const {trips, tripLoading, setTripLoading, setTrips} = useTrips(session?.user?.id || '')
+  const [tripStatus, setTripStatus] = useState<String>('')
+
   const showedTrips = useMemo(() => {
     if (tripStatus === '') return trips;
-    return trips.filter((trip) => trip.status === tripStatus as StatusType | '');
+    return trips.filter((trip: TripType) => trip.status === tripStatus as StatusType | '');
   }, [tripStatus, trips]);
 
   const router = useRouter();
 
-  // const filterTrips = (status: String) => {
-  //   setTripStatus(status);
-  //   if (status !== '') setShowedTrips(trips.filter((trip) => (trip.status === status as StatusType | '')));
-  //   else setShowedTrips(trips);
-  // }
-
-  const fetchTrips = async () => {
-    if(session && session.user && session.user.id) {
-      try {
-        const response = await fetch(`/api/trip/user/${session.user.id}`);
-        const data = await response.json();
-        
-        const allTrips: TripType[] = data.map((trip: any) => {
-            return { _id: trip._id, name: trip.name || 'Your Trip', stops: [], status: trip.status }
-        });
-
-        setTrips(allTrips);
-      } catch (error) {
-          console.error('Error fetching trips:', error);
-      }
-    }
-  }
-
   useEffect(() => {
-    fetchTrips();
-  }, [session]);
-
-  useEffect(() => {
-    // filterTrips(tripStatus);
     if(trips.length) setTripLoading(false);
   }, [trips]);
 
@@ -133,7 +104,7 @@ const MyPage = () => {
         </div>
         <div className='Page__trips'>
           {showedTrips.length !== 0 ? (
-            showedTrips.map((trip) => (
+            showedTrips.map((trip: TripType) => (
               <TripCard key={trip._id} trip={trip} trips={trips} setTrips={setTrips} />
             ))) :
             (
@@ -158,5 +129,38 @@ const MyPage = () => {
     </div>
   );
 };
+
+const useTrips = (userId: String) => {
+  const [trips, setTrips] = useState<TripType[]>([]);
+  const [tripLoading, setTripLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchTrips = async () => {
+      if (userId) {
+        try {
+          const response = await fetch(`/api/trip/user/${userId}`);
+          const data = await response.json();
+
+          const allTrips = data.map((trip: TripType) => ({
+            _id: trip._id,
+            name: trip.name || 'Your Trip',
+            stops: [],
+            status: trip.status,
+          }));
+
+          setTrips(allTrips);
+        } catch (error) {
+          console.error('Error fetching trips:', error);
+        } finally {
+          setTripLoading(false);
+        }
+      }
+    };
+
+    fetchTrips();
+  }, [userId]);
+
+  return { trips, tripLoading, setTripLoading, setTrips };
+}
 
 export default MyPage;
