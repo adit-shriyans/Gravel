@@ -1,7 +1,7 @@
 "use client";
 import '@styles/css/index.css'
 import { StatusType, TripType, VoidFunctionType } from '@assets/types/types';
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { usePathname, useRouter } from 'next/navigation';
 import { useSession } from 'next-auth/react';
 import type { DefaultSession } from 'next-auth';
@@ -23,15 +23,20 @@ const MyPage = () => {
   const [trips, setTrips] = useState<TripType[]>([]);
   const [tripStatus, setTripStatus] = useState<String>('')
   const { data: session } = useSession();
-  const [showedTrips, setShowedTrips] = useState<TripType[]>(trips);
+  // const [showedTrips, setShowedTrips] = useState<TripType[]>(trips);
+  const [tripLoading, setTripLoading] = useState(true);
+  const showedTrips = useMemo(() => {
+    if (tripStatus === '') return trips;
+    return trips.filter((trip) => trip.status === tripStatus as StatusType | '');
+  }, [tripStatus, trips]);
 
   const router = useRouter();
 
-  const filterTrips = (status: String) => {
-    setTripStatus(status);
-    if (status !== '') setShowedTrips(trips.filter((trip) => (trip.status === status as StatusType | '')));
-    else setShowedTrips(trips);
-  }
+  // const filterTrips = (status: String) => {
+  //   setTripStatus(status);
+  //   if (status !== '') setShowedTrips(trips.filter((trip) => (trip.status === status as StatusType | '')));
+  //   else setShowedTrips(trips);
+  // }
 
   const fetchTrips = async () => {
     if(session && session.user && session.user.id) {
@@ -55,7 +60,8 @@ const MyPage = () => {
   }, [session]);
 
   useEffect(() => {
-    filterTrips(tripStatus);
+    // filterTrips(tripStatus);
+    if(trips.length) setTripLoading(false);
   }, [trips]);
 
   const handleCreateClick = async () => {
@@ -91,10 +97,10 @@ const MyPage = () => {
   };
 
   const handleToggleClick = (slug: String) => {
-    if (slug === "one") filterTrips('');
-    else if (slug === "two") filterTrips('upcoming');
-    else if (slug === "three") filterTrips('ongoing');
-    else if (slug === "four") filterTrips('completed');
+    if (slug === "one") setTripStatus('');
+    else if (slug === "two") setTripStatus('upcoming');
+    else if (slug === "three") setTripStatus('ongoing');
+    else if (slug === "four") setTripStatus('completed');
     // filterTrips();
   }
 
@@ -132,7 +138,11 @@ const MyPage = () => {
             ))) :
             (
               <div className='Page__NA'>
-                {session?.user.id ? trips.length ? (
+                {session?.user.id ? 
+                  tripLoading?(
+                    'loading...'
+                  ):
+                  trips.length ? (
                   `No ${tripStatus} trips`
                 ) : (
                   'No trips planned'
