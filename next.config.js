@@ -6,7 +6,7 @@ function validateEnvAtStartup() {
   if (process.env.JEST_WORKER_ID !== undefined || process.env.NODE_ENV === 'test') {
     return;
   }
-  const required = ['MONGODB_URI', 'JWT_SECRET'];
+  const required = ['MONGODB_URI', 'JWT_SECRET', 'NEXTAUTH_SECRET'];
   const missing = required.filter((name) => {
     const value = process.env[name];
     return value === undefined || String(value).trim() === '';

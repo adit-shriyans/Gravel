@@ -6,6 +6,7 @@
 const REQUIRED_ENV_VARS = [
   'MONGODB_URI',
   'JWT_SECRET',
+  'NEXTAUTH_SECRET',
 ] as const;
 
 const OPTIONAL_ENV_VARS = [

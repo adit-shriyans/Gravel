@@ -53,7 +53,8 @@ Create a `.env` or `.env.local` in the project root. The app validates these at 
 | Variable | Required | Description |
 |----------|----------|-------------|
 | `MONGODB_URI` | Yes | MongoDB connection string (e.g. `mongodb://localhost:27017/map_project`) |
-| `JWT_SECRET`  | Yes | Secret for signing JWTs (use a long, random string) |
+| `JWT_SECRET`  | Yes | Secret for signing JWTs for email/password login (use a long, random string) |
+| `NEXTAUTH_SECRET` | Yes | Secret for NextAuth session/token signing (e.g. `openssl rand -base64 32`) |
 | `GOOGLE_ID`   | No  | Google OAuth client ID (for “Sign in with Google”) |
 | `GOOGLE_CLIENT_SECRET` | No | Google OAuth client secret |
 | `NEXT_PUBLIC_GOOGLE_CLIENT_ID` | No | Same as `GOOGLE_ID` for client-side redirect |
@@ -63,6 +64,7 @@ Example:
 ```env
 MONGODB_URI=mongodb://localhost:27017/map_project
 JWT_SECRET=your-secret-at-least-32-characters-long
+NEXTAUTH_SECRET=another-long-random-string-for-nextauth
 ```
 
 ### 3. Run the app
