@@ -1,36 +1,145 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Travel Planner
+
+A full-stack travel planning app built with Next.js. Create trips, add stops, view them on an interactive map, and manage your itinerary with drag-and-drop. Includes authentication (email/password and Google OAuth), trip status tracking, and route visualization.
+
+---
+
+## Features
+
+- **Authentication** — Sign up, sign in (email/password or Google), and secure session handling with JWT
+- **Trips** — Create trips, set status (pending, confirmed, completed, cancelled), and filter your list
+- **Stops** — Add and manage stops for each trip
+- **Map** — Interactive map (Leaflet) with geosearch and routing between stops
+- **Startup validation** — Required environment variables are checked at startup so missing config fails fast with a clear error
+
+---
+
+## Tech Stack
+
+| Layer        | Technology                    |
+|-------------|--------------------------------|
+| Framework  | Next.js 14 (App Router)       |
+| Language   | TypeScript                    |
+| Database   | MongoDB (Mongoose)            |
+| Auth       | NextAuth, JWT, bcrypt         |
+| Map        | Leaflet, react-leaflet, OSM   |
+| UI         | React, MUI, Tailwind, SASS    |
+| Testing    | Jest, ts-jest                 |
+
+---
+
+## Prerequisites
+
+- **Node.js** 18+
+- **MongoDB** (local or Atlas)
+- **npm** or **yarn**
+
+---
 
 ## Getting Started
 
-First, run the development server:
+### 1. Clone and install
+
+```bash
+git clone <repository-url>
+cd Gravel
+npm install
+```
+
+### 2. Environment variables
+
+Create a `.env` or `.env.local` in the project root. The app validates these at startup and will not start if they are missing:
+
+| Variable | Required | Description |
+|----------|----------|-------------|
+| `MONGODB_URI` | Yes | MongoDB connection string (e.g. `mongodb://localhost:27017/map_project`) |
+| `JWT_SECRET`  | Yes | Secret for signing JWTs (use a long, random string) |
+| `GOOGLE_ID`   | No  | Google OAuth client ID (for “Sign in with Google”) |
+| `GOOGLE_CLIENT_SECRET` | No | Google OAuth client secret |
+| `NEXT_PUBLIC_GOOGLE_CLIENT_ID` | No | Same as `GOOGLE_ID` for client-side redirect |
+
+Example:
+
+```env
+MONGODB_URI=mongodb://localhost:27017/map_project
+JWT_SECRET=your-secret-at-least-32-characters-long
+```
+
+### 3. Run the app
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000). Sign up or log in, then create and manage trips and stops.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+---
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+## Scripts
 
-## Learn More
+| Command | Description |
+|---------|-------------|
+| `npm run dev` | Start development server |
+| `npm run build` | Build for production |
+| `npm run start` | Start production server |
+| `npm run lint` | Run ESLint |
+| `npm test` | Run unit tests (Jest) |
+| `npm run test:watch` | Run tests in watch mode |
+| `npm run test:coverage` | Run tests with coverage report |
 
-To learn more about Next.js, take a look at the following resources:
+---
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Project structure (overview)
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+```
+├── app/
+│   ├── api/           # API routes (auth, trip, stop)
+│   ├── login/         # Login / sign-up page
+│   ├── trip/[id]/     # Trip detail + map
+│   └── page.tsx       # Home (trip list)
+├── components/        # React components
+├── models/            # Mongoose models (User, Trip, etc.)
+├── utils/             # Helpers (DB, env validation)
+└── next.config.js     # Next config + startup env validation
+```
 
-## Deploy on Vercel
+---
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Testing
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+Unit tests cover the auth API routes (login and register). Required env vars are not validated when `NODE_ENV=test` or under Jest, so tests run without a real `.env`.
+
+```bash
+npm test
+```
+
+With coverage:
+
+```bash
+npm run test:coverage
+```
+
+Test files:
+
+- `app/api/auth/login/__tests__/route.test.ts`
+- `app/api/auth/register/__tests__/route.test.ts`
+
+---
+
+## Deployment
+
+1. Set the required environment variables in your hosting provider (Vercel, Railway, etc.).
+2. Build and start:
+
+   ```bash
+   npm run build
+   npm run start
+   ```
+
+For [Vercel](https://vercel.com), connect the repo and add `MONGODB_URI` and `JWT_SECRET` in the project’s Environment Variables.
+
+---
+
+## License
+
+Private / educational use.

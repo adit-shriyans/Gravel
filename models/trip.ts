@@ -10,7 +10,7 @@ const TripSchema = new Schema({
         required: [true, 'Trip Name is required'],
     },
     status: {
-        type: String,
+        type: ["pending", "confirmed", "completed", "cancelled"],
         required: [true, 'Status is required'],
     },
 })
